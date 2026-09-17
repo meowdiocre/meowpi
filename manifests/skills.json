@@ -9,6 +9,7 @@
     "comment-audit",
     "durable-objects",
     "modern-cpp",
+    "orwell-writing",
     "rust-best-practices",
     "sandbox-sdk",
     "systems-coding-style",
@@ -18,6 +19,9 @@
     "workers-best-practices",
     "wrangler",
     "writing-great-agents-md"
+  ],
+  "additionalSkills": [
+    "orwell-writing"
   ],
   "targets": [
     {

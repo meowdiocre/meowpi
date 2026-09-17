@@ -120,14 +120,25 @@ async function main() {
 
   const liveSkillRoot = path.join(options.piHome, 'skills');
   const repoSkillRoot = path.join(repoRoot, 'skills');
+  const skillManifestPath = path.join(manifestRoot, 'skills.json');
+  const skillManifest = await readJson(skillManifestPath);
+  const additionalSkills = skillManifest.additionalSkills || [];
   const liveSkills = (await readdir(liveSkillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
     .map((entry) => entry.name)
     .sort((left, right) => left.localeCompare(right));
+  const snapshotSkills = [...new Set([...liveSkills, ...additionalSkills])]
+    .sort((left, right) => left.localeCompare(right));
+
+  for (const skillName of additionalSkills) {
+    if (!(await pathExists(path.join(repoSkillRoot, skillName, 'SKILL.md')))) {
+      throw new Error(`Additional portable skill is missing: ${skillName}`);
+    }
+  }
 
   const existingSkills = await readdir(repoSkillRoot, { withFileTypes: true });
   for (const entry of existingSkills) {
-    if (entry.isDirectory() && !liveSkills.includes(entry.name)) {
+    if (entry.isDirectory() && !snapshotSkills.includes(entry.name)) {
       await rm(path.join(repoSkillRoot, entry.name), { recursive: true, force: true });
     }
   }
@@ -143,9 +154,7 @@ async function main() {
     });
   }
 
-  const skillManifestPath = path.join(manifestRoot, 'skills.json');
-  const skillManifest = await readJson(skillManifestPath);
-  skillManifest.skills = liveSkills;
+  skillManifest.skills = snapshotSkills;
   await writeJson(skillManifestPath, skillManifest);
 
   await verifyRepository();

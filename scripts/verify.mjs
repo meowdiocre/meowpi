@@ -75,6 +75,18 @@ export async function verifyRepository() {
   }
 
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
+  const additionalSkills = skillManifest.additionalSkills || [];
+  if (!Array.isArray(additionalSkills) || additionalSkills.some((name) => typeof name !== 'string')) {
+    throw new Error('manifests/skills.json additionalSkills must be an array of names');
+  }
+  if (new Set(skillManifest.skills).size !== skillManifest.skills.length) {
+    throw new Error('manifests/skills.json contains duplicate skill names');
+  }
+  for (const skillName of additionalSkills) {
+    if (!skillManifest.skills.includes(skillName)) {
+      throw new Error(`Additional portable skill is absent from skills: ${skillName}`);
+    }
+  }
   const skillRoot = path.join(repoRoot, 'skills');
   const skillDirectories = (await readdir(skillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())

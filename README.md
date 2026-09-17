@@ -7,7 +7,8 @@ This repository recreates the same Pi configuration and complete skill set on Wi
 - Pi fork `@earendil-works/pi-coding-agent`, pinned to the exported version.
 - All configured Pi npm packages at their installed versions.
 - Settings, provider/model definitions, MCP definitions, and the Herdr integration.
-- A vendored snapshot of all 18 skills currently present in Pi—not only a selected subset.
+- A vendored snapshot of every skill currently present in Pi, plus intentional portable additions.
+- `orwell-writing` for clear documentation, combining Orwell's six rules with an ASD-STE100 baseline.
 - Skill deployment to Pi, the shared Agent Skills directory, Claude Code, and OpenCode.
 - Secret checks and automatic backups before replacing live files.
 
@@ -63,7 +64,7 @@ npm test
 git diff
 ```
 
-`npm run export` snapshots every current Pi skill into `skills/`, refreshes configuration, and updates pinned package versions. Review the diff before committing.
+`npm run export` snapshots every current Pi skill into `skills/`, preserves the additions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Review the diff before committing.
 
 ## Verification
 
