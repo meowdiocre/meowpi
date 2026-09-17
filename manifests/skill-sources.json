@@ -1,0 +1,26 @@
+[
+  {
+    "name": "plain-english",
+    "repository": "https://github.com/b1rdmania/claude-plain-english-skill",
+    "path": "skills/plain-english",
+    "ref": "1e1501e0e4da21d63b6611e2f258cf28c356a86c",
+    "license": "MIT",
+    "modified": true
+  },
+  {
+    "name": "simple-english",
+    "repository": "https://github.com/b1rdmania/claude-plain-english-skill",
+    "path": "skills/simple-english",
+    "ref": "1e1501e0e4da21d63b6611e2f258cf28c356a86c",
+    "license": "MIT",
+    "modified": true
+  },
+  {
+    "name": "style-review",
+    "repository": "https://github.com/yzhao062/agent-style",
+    "path": "skills/style-review",
+    "ref": "99722a59e5ab654bafe68788f3bff7d1c8237f5a",
+    "license": "CC-BY-4.0",
+    "modified": true
+  }
+]

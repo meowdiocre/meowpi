@@ -8,11 +8,32 @@ This repository recreates the same Pi configuration and complete skill set on Wi
 - All configured Pi npm packages at their installed versions.
 - Settings, provider/model definitions, MCP definitions, and the Herdr integration.
 - A vendored snapshot of every skill currently present in Pi, plus intentional portable additions.
-- `orwell-writing` for clear documentation, combining Orwell's six rules with an ASD-STE100 baseline.
+- A routed writing suite for natural prose, technical documentation, and post-draft review.
 - Skill deployment to Pi, the shared Agent Skills directory, Claude Code, and OpenCode.
 - Secret checks and automatic backups before replacing live files.
 
 Credentials, sessions, caches, and `node_modules` are never stored.
+
+## Writing suite
+
+The writing skills use separate rule sets for separate readers:
+
+- `writing-router` selects the workflow when the request is ambiguous.
+- `plain-english` edits voice-led nonfiction with Orwell/Gowers rules and a model-writing-tic pass.
+- `simple-english` writes technical documentation with pragmatic or strict ASD-STE100-derived rules plus audience and evidence checks.
+- `style-review` audits technical Markdown with a bundled dependency-free Node script and a semantic checklist derived from *The Elements of Agent Style*.
+- `orwell-writing` remains as a compatibility alias for older prompts.
+
+Plain English and Simple English must not process the same passage. The suite targets clarity, accuracy, and natural voice; it does not promise AI-detector evasion.
+
+Audit a technical Markdown file on any supported operating system:
+
+```sh
+npm run review-docs -- README.md
+npm run review-docs -- --compare before.md after.md
+```
+
+The reviewer ignores frontmatter, fenced code, and inline code. Its mechanical pass is only one part of review; factual claims and reader fit still require semantic and project-source checks.
 
 ## Requirements
 
@@ -64,7 +85,9 @@ npm test
 git diff
 ```
 
-`npm run export` snapshots every current Pi skill into `skills/`, preserves the additions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Review the diff before committing.
+`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
+
+Vendored writing sources are pinned to full commit SHAs in `manifests/skill-sources.json`. Review upstream changes and licenses before changing those pins.
 
 ## Verification
 

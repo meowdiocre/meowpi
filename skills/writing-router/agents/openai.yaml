@@ -1,0 +1,4 @@
+interface:
+  display_name: "Writing Router"
+  short_description: "Route requests to the right writing workflow"
+  default_prompt: "Use $writing-router to choose and apply the correct writing workflow."

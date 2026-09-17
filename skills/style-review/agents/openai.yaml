@@ -1,0 +1,4 @@
+interface:
+  display_name: "Style Review"
+  short_description: "Audit technical Markdown without external tools"
+  default_prompt: "Use $style-review to audit this technical Markdown file and report actionable findings."

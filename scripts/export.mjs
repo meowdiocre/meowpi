@@ -5,6 +5,7 @@ import {
   commandName,
   parseCommonArgs,
   pathExists,
+  planSkillSnapshot,
   readJson,
   repoRoot,
   run,
@@ -127,8 +128,10 @@ async function main() {
     .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
     .map((entry) => entry.name)
     .sort((left, right) => left.localeCompare(right));
-  const snapshotSkills = [...new Set([...liveSkills, ...additionalSkills])]
-    .sort((left, right) => left.localeCompare(right));
+  const { copyFromPi, snapshot: snapshotSkills } = planSkillSnapshot(
+    liveSkills,
+    additionalSkills,
+  );
 
   for (const skillName of additionalSkills) {
     if (!(await pathExists(path.join(repoSkillRoot, skillName, 'SKILL.md')))) {
@@ -142,7 +145,7 @@ async function main() {
       await rm(path.join(repoSkillRoot, entry.name), { recursive: true, force: true });
     }
   }
-  for (const skillName of liveSkills) {
+  for (const skillName of copyFromPi) {
     const source = path.join(liveSkillRoot, skillName);
     const target = path.join(repoSkillRoot, skillName);
     await rm(target, { recursive: true, force: true });

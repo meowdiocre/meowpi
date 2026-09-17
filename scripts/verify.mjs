@@ -7,6 +7,7 @@ import { pathExists, readJson, repoRoot, userHome } from './lib.mjs';
 const requiredFiles = [
   '.gitignore',
   'README.md',
+  'THIRD_PARTY_NOTICES.md',
   'package.json',
   'scripts/bootstrap.mjs',
   'scripts/export.mjs',
@@ -17,6 +18,7 @@ const requiredFiles = [
   'config/mcp.json.template',
   'manifests/pi.json',
   'manifests/pi-packages.json',
+  'manifests/skill-sources.json',
   'manifests/skills.json',
   'manifests/extensions.json',
 ];
@@ -82,6 +84,9 @@ export async function verifyRepository() {
   if (new Set(skillManifest.skills).size !== skillManifest.skills.length) {
     throw new Error('manifests/skills.json contains duplicate skill names');
   }
+  if (new Set(additionalSkills).size !== additionalSkills.length) {
+    throw new Error('manifests/skills.json contains duplicate additional skill names');
+  }
   for (const skillName of additionalSkills) {
     if (!skillManifest.skills.includes(skillName)) {
       throw new Error(`Additional portable skill is absent from skills: ${skillName}`);
@@ -103,6 +108,42 @@ export async function verifyRepository() {
     const declaredName = frontmatter?.[1].match(/^name:\s*([^\r\n]+)$/m)?.[1]?.trim();
     if (declaredName !== skillName) {
       throw new Error(`Skill name mismatch: directory=${skillName}, frontmatter=${declaredName || 'missing'}`);
+    }
+  }
+
+  const sourceManifest = await readJson(path.join(repoRoot, 'manifests', 'skill-sources.json'));
+  if (!Array.isArray(sourceManifest)) throw new Error('manifests/skill-sources.json must be an array');
+  const sourceNames = new Set();
+  for (const source of sourceManifest) {
+    if (!source || typeof source !== 'object') throw new Error('Invalid skill source entry');
+    if (sourceNames.has(source.name)) throw new Error(`Duplicate skill source: ${source.name}`);
+    sourceNames.add(source.name);
+    if (!additionalSkills.includes(source.name)) {
+      throw new Error(`Vendored source is not an additional skill: ${source.name}`);
+    }
+    if (!/^https:\/\/github\.com\/[^/]+\/[^/]+$/.test(source.repository || '')) {
+      throw new Error(`Invalid GitHub repository for skill source: ${source.name}`);
+    }
+    if (!/^[0-9a-f]{40}$/.test(source.ref || '')) {
+      throw new Error(`Skill source must pin a full commit SHA: ${source.name}`);
+    }
+    if (!source.path || !source.license || source.modified !== true) {
+      throw new Error(`Incomplete skill source metadata: ${source.name}`);
+    }
+  }
+
+  const writingSuiteFiles = [
+    'skills/plain-english/REFERENCE.md',
+    'skills/simple-english/references/agent-style-quality.md',
+    'skills/style-review/references/rules.md',
+    'skills/style-review/references/revision-prompt.md',
+    'skills/style-review/scripts/audit.mjs',
+    'skills/style-review/tests/run.mjs',
+    'skills/writing-router/agents/openai.yaml',
+  ];
+  for (const relative of writingSuiteFiles) {
+    if (!(await pathExists(path.join(repoRoot, relative)))) {
+      throw new Error(`Writing suite file is missing: ${relative}`);
     }
   }
 

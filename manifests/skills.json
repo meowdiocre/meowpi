@@ -10,18 +10,26 @@
     "durable-objects",
     "modern-cpp",
     "orwell-writing",
+    "plain-english",
     "rust-best-practices",
     "sandbox-sdk",
+    "simple-english",
+    "style-review",
     "systems-coding-style",
     "turnstile-spin",
     "verify",
     "web-perf",
     "workers-best-practices",
     "wrangler",
-    "writing-great-agents-md"
+    "writing-great-agents-md",
+    "writing-router"
   ],
   "additionalSkills": [
-    "orwell-writing"
+    "orwell-writing",
+    "plain-english",
+    "simple-english",
+    "style-review",
+    "writing-router"
   ],
   "targets": [
     {

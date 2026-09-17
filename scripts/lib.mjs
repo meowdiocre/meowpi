@@ -133,6 +133,17 @@ export function collapseTokens(value, replacements) {
   );
 }
 
+export function planSkillSnapshot(liveSkills, additionalSkills) {
+  const additional = new Set(additionalSkills);
+  return {
+    copyFromPi: [...liveSkills]
+      .filter((skillName) => !additional.has(skillName))
+      .sort((left, right) => left.localeCompare(right)),
+    snapshot: [...new Set([...liveSkills, ...additionalSkills])]
+      .sort((left, right) => left.localeCompare(right)),
+  };
+}
+
 export function parseCommonArgs(argv) {
   const options = {
     dryRun: false,
