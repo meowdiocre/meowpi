@@ -1,866 +1,866 @@
-﻿{
-    "providers":  {
-                      "zendyxbr":  {
-                                       "baseUrl":  "https://router.zendyxbr.my.id/v1",
-                                       "api":  "openai-completions",
-                                       "authHeader":  true,
-                                       "compat":  {
-                                                      "supportsStore":  false,
-                                                      "supportsDeveloperRole":  false,
-                                                      "supportsReasoningEffort":  false,
-                                                      "supportsUsageInStreaming":  false,
-                                                      "supportsStrictMode":  false,
-                                                      "supportsLongCacheRetention":  false,
-                                                      "maxTokensField":  "max_tokens"
-                                                  },
-                                       "models":  [
-                                                      {
-                                                          "id":  "deepseek"
-                                                      },
-                                                      {
-                                                          "id":  "glm-5.2"
-                                                      },
-                                                      {
-                                                          "id":  "glmqoder"
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.5"
-                                                      },
-                                                      {
-                                                          "id":  "ling"
-                                                      },
-                                                      {
-                                                          "id":  "mimo"
-                                                      },
-                                                      {
-                                                          "id":  "minimax"
-                                                      },
-                                                      {
-                                                          "id":  "mistral-large"
-                                                      },
-                                                      {
-                                                          "id":  "mistral-medium"
-                                                      },
-                                                      {
-                                                          "id":  "mistral-small"
-                                                      },
-                                                      {
-                                                          "id":  "nemotron_ultra"
-                                                      },
-                                                      {
-                                                          "id":  "qwen"
-                                                      },
-                                                      {
-                                                          "id":  "sonnet-5"
-                                                      }
-                                                  ]
-                                   },
-                      "heraxles":  {
-                                       "name":  "Heraxles",
-                                       "baseUrl":  "https://api.heraxles.my.id/v1",
-                                       "api":  "openai-completions",
-                                       "authHeader":  true,
-                                       "compat":  {
-                                                      "supportsStore":  false,
-                                                      "supportsDeveloperRole":  false,
-                                                      "supportsReasoningEffort":  false,
-                                                      "supportsUsageInStreaming":  false,
-                                                      "supportsStrictMode":  false,
-                                                      "supportsLongCacheRetention":  false,
-                                                      "maxTokensField":  "max_tokens"
-                                                  },
-                                       "models":  [
-                                                      {
-                                                          "id":  "claude-opus-4.8",
-                                                          "name":  "Claude Opus 4.8"
-                                                      },
-                                                      {
-                                                          "id":  "grok-4.5",
-                                                          "name":  "Grok 4.5"
-                                                      }
-                                                  ]
-                                   },
-                      "inferhub":  {
-                                       "name":  "InferHub",
-                                       "baseUrl":  "https://api.inferhub.dev/v1",
-                                       "api":  "openai-completions",
-                                       "authHeader":  true,
-                                       "compat":  {
-                                                      "supportsStore":  false,
-                                                      "supportsDeveloperRole":  false,
-                                                      "supportsReasoningEffort":  false,
-                                                      "supportsUsageInStreaming":  false,
-                                                      "supportsStrictMode":  false,
-                                                      "supportsLongCacheRetention":  false,
-                                                      "maxTokensField":  "max_tokens"
-                                                  },
-                                       "models":  [
-                                                      {
-                                                          "id":  "cb/claude-opus-4.6",
-                                                          "name":  "Claude Opus 4.6",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/claude-opus-4.7-1m",
-                                                          "name":  "Claude Opus 4.7 (1M)",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ],
-                                                          "contextWindow":  1000000
-                                                      },
-                                                      {
-                                                          "id":  "cb/gemini-3.1-pro",
-                                                          "name":  "Gemini 3.1 Pro",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/glm-5.2",
-                                                          "name":  "GLM 5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.3-codex",
-                                                          "name":  "GPT 5.3 Codex",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.4",
-                                                          "name":  "GPT 5.4",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.5",
-                                                          "name":  "GPT 5.5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.6-luna",
-                                                          "name":  "GPT 5.6 Luna",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.6-sol",
-                                                          "name":  "GPT 5.6 Sol",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cb/gpt-5.6-terra",
-                                                          "name":  "GPT 5.6 Terra",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/kimi-k2.5",
-                                                          "name":  "Kimi K2.5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cb/kimi-k3",
-                                                          "name":  "Kimi K3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cb/minimax-m3",
-                                                          "name":  "MiniMax M3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/deepseek-v4-flash",
-                                                          "name":  "DeepSeek V4 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/deepseek-v4-pro",
-                                                          "name":  "DeepSeek V4 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/glm-5.2",
-                                                          "name":  "GLM 5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/kimi-k2.6",
-                                                          "name":  "Kimi K2.6",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/kimi-k2.7",
-                                                          "name":  "Kimi K2.7 Code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/kimi-k3",
-                                                          "name":  "Kimi K3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/minimax-m2.7",
-                                                          "name":  "MiniMax M2.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cbcn/minimax-m3",
-                                                          "name":  "MiniMax M3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-fable-5",
-                                                          "name":  "cc/claude-fable-5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-haiku-4-5",
-                                                          "name":  "cc/claude-haiku-4-5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-opus-4-6",
-                                                          "name":  "Claude Opus 4.6",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-opus-4-7",
-                                                          "name":  "Claude Opus 4.7",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-opus-4-8",
-                                                          "name":  "Claude Opus 4.8",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-opus-5",
-                                                          "name":  "Claude Opus 5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-sonnet-4-5",
-                                                          "name":  "cc/claude-sonnet-4-5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-sonnet-4-6",
-                                                          "name":  "Claude Sonnet 4.6",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cc/claude-sonnet-5",
-                                                          "name":  "cc/claude-sonnet-5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "claude-fable-5",
-                                                          "name":  "claude-fable-5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-haiku-4.5",
-                                                          "name":  "claude-haiku-4.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-opus-4.6",
-                                                          "name":  "claude-opus-4.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-opus-4.7",
-                                                          "name":  "claude-opus-4.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-opus-4.8",
-                                                          "name":  "claude-opus-4.8",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-opus-5",
-                                                          "name":  "claude-opus-5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-sonnet-4.5",
-                                                          "name":  "claude-sonnet-4.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-sonnet-4.6",
-                                                          "name":  "claude-sonnet-4.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "claude-sonnet-5",
-                                                          "name":  "claude-sonnet-5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/deepseek/deepseek-v4-flash",
-                                                          "name":  "DeepSeek V4 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/deepseek/deepseek-v4-pro",
-                                                          "name":  "DeepSeek V4 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/MiniMaxAI/MiniMax-M2.5",
-                                                          "name":  "MiniMax M2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/MiniMaxAI/MiniMax-M2.7",
-                                                          "name":  "MiniMax M2.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/moonshotai/Kimi-K2.5",
-                                                          "name":  "Kimi K2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/moonshotai/Kimi-K2.6",
-                                                          "name":  "Kimi K2.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/moonshotai/Kimi-K2.7-Code",
-                                                          "name":  "Kimi K2.7 Code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/moonshotai/Kimi-K3",
-                                                          "name":  "Kimi K3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/Qwen/Qwen3.6-Max-Preview",
-                                                          "name":  "Qwen 3.6 Max Preview",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/Qwen/Qwen3.6-Plus",
-                                                          "name":  "Qwen 3.6 Plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/stepfun/Step-3.5-Flash",
-                                                          "name":  "Step 3.5 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/zai-org/GLM-5",
-                                                          "name":  "GLM 5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/zai-org/GLM-5.1",
-                                                          "name":  "GLM 5.1",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cmc/zai-org/GLM-5.2",
-                                                          "name":  "cmc/zai-org/GLM-5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/deepseek-v4-flash",
-                                                          "name":  "DeepSeek V4 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/deepseek-v4-pro",
-                                                          "name":  "DeepSeek V4 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/glm-5.2",
-                                                          "name":  "GLM 5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/kimi-k2.6",
-                                                          "name":  "Kimi K2.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/kimi-k2.7-code",
-                                                          "name":  "Kimi K2.7 Code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/mimo-v2.5",
-                                                          "name":  "MiMo V2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/mimo-v2.5-pro",
-                                                          "name":  "MiMo V2.5 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/minimax-m3",
-                                                          "name":  "MiniMax M3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/qwen3.7-max",
-                                                          "name":  "Qwen3.7 Max",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cp/cline-pass/qwen3.7-plus",
-                                                          "name":  "Qwen3.7 Plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.4",
-                                                          "name":  "cx/gpt-5.4",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.4-mini",
-                                                          "name":  "GPT 5.4 Mini",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.5",
-                                                          "name":  "GPT 5.5",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.6-luna",
-                                                          "name":  "GPT 5.6 Luna",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.6-sol",
-                                                          "name":  "GPT 5.6 Sol",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "cx/gpt-5.6-terra",
-                                                          "name":  "Terra",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "deepseek-v4-flash",
-                                                          "name":  "deepseek-v4-flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "deepseek-v4-pro",
-                                                          "name":  "deepseek-v4-pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gemini-3.1-pro",
-                                                          "name":  "gemini-3.1-pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-4.6v",
-                                                          "name":  "glm-4.6v",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-4.7",
-                                                          "name":  "glm-4.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-5",
-                                                          "name":  "glm-5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-5-turbo",
-                                                          "name":  "glm-5-turbo",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-5.1",
-                                                          "name":  "glm-5.1",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "glm-5.2",
-                                                          "name":  "glm-5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.3-codex",
-                                                          "name":  "gpt-5.3-codex",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.4",
-                                                          "name":  "gpt-5.4",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.4-mini",
-                                                          "name":  "gpt-5.4-mini",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.5",
-                                                          "name":  "gpt-5.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.6-luna",
-                                                          "name":  "gpt-5.6-luna",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.6-sol",
-                                                          "name":  "gpt-5.6-sol",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "gpt-5.6-terra",
-                                                          "name":  "gpt-5.6-terra",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "grok-4.5",
-                                                          "name":  "grok-4.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "hy3",
-                                                          "name":  "hy3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "kimi-k2.5",
-                                                          "name":  "kimi-k2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "kimi-k2.6",
-                                                          "name":  "kimi-k2.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "kimi-k2.7",
-                                                          "name":  "kimi-k2.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "kimi-k2.7-code",
-                                                          "name":  "kimi-k2.7-code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "kimi-k3",
-                                                          "name":  "kimi-k3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "mimo-v2.5",
-                                                          "name":  "mimo-v2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "mimo-v2.5-pro",
-                                                          "name":  "mimo-v2.5-pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "mimo/mimo-v2.5",
-                                                          "name":  "MiMo V2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "mimo/mimo-v2.5-pro",
-                                                          "name":  "MiMo V2.5 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "minimax-m2.5",
-                                                          "name":  "minimax-m2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "minimax-m2.7",
-                                                          "name":  "minimax-m2.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "minimax-m3",
-                                                          "name":  "minimax-m3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/deepseek-v4-flash",
-                                                          "name":  "DeepSeek V4 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/deepseek-v4-pro",
-                                                          "name":  "DeepSeek V4 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/glm-5.1",
-                                                          "name":  "GLM-5.1",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/kimi-k2.6",
-                                                          "name":  "Kimi K2.6",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "ocg/kimi-k2.7-code",
-                                                          "name":  "Kimi K2.7 Code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/kimi-k3",
-                                                          "name":  "Kimi K3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/mimo-v2.5",
-                                                          "name":  "MiMo V2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/mimo-v2.5-pro",
-                                                          "name":  "MiMo V2.5 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/minimax-m2.5",
-                                                          "name":  "MiniMax M2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/minimax-m2.7",
-                                                          "name":  "MiniMax M2.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/minimax-m3",
-                                                          "name":  "MiniMax M3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/qwen3.6-plus",
-                                                          "name":  "Qwen3.6 Plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "ocg/qwen3.7-plus",
-                                                          "name":  "Qwen3.7 Plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "qwen3.6-max-preview",
-                                                          "name":  "qwen3.6-max-preview",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "qwen3.6-plus",
-                                                          "name":  "qwen3.6-plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "qwen3.7-max",
-                                                          "name":  "qwen3.7-max",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "qwen3.7-plus",
-                                                          "name":  "qwen3.7-plus",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/deepseek-ai/DeepSeek-V4-Flash",
-                                                          "name":  "DeepSeek V4 Flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/deepseek-ai/DeepSeek-V4-Pro",
-                                                          "name":  "DeepSeek V4 Pro",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/MiniMaxAI/MiniMax-M3",
-                                                          "name":  "MiniMax M3",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/moonshotai/Kimi-K2.5",
-                                                          "name":  "Kimi K2.5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/moonshotai/Kimi-K2.6",
-                                                          "name":  "Kimi K2.6",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/moonshotai/Kimi-K2.7-Code",
-                                                          "name":  "Kimi K2.7 Code",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/zai-org/GLM-5",
-                                                          "name":  "GLM 5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/zai-org/GLM-5.1",
-                                                          "name":  "GLM 5.1",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "sf/zai-org/GLM-5.2",
-                                                          "name":  "GLM 5.2",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "step-3.5-flash",
-                                                          "name":  "step-3.5-flash",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-4.6v",
-                                                          "name":  "GLM-4.6V (vision)",
-                                                          "reasoning":  true,
-                                                          "input":  [
-                                                                        "text",
-                                                                        "image"
-                                                                    ]
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-4.7",
-                                                          "name":  "GLM-4.7",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-5",
-                                                          "name":  "GLM-5",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-5-turbo",
-                                                          "name":  "GLM-5 Turbo (fast)",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-5.1",
-                                                          "name":  "GLM-5.1 (flagship)",
-                                                          "reasoning":  true
-                                                      },
-                                                      {
-                                                          "id":  "zai/glm-5.2",
-                                                          "name":  "zai/glm-5.2",
-                                                          "reasoning":  true
-                                                      }
-                                                  ]
-                                   }
-                  }
+{
+  "providers": {
+    "zendyxbr": {
+      "baseUrl": "https://router.zendyxbr.my.id/v1",
+      "api": "openai-completions",
+      "authHeader": true,
+      "compat": {
+        "supportsStore": false,
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": false,
+        "supportsStrictMode": false,
+        "supportsLongCacheRetention": false,
+        "maxTokensField": "max_tokens"
+      },
+      "models": [
+        {
+          "id": "deepseek"
+        },
+        {
+          "id": "glm-5.2"
+        },
+        {
+          "id": "glmqoder"
+        },
+        {
+          "id": "gpt-5.5"
+        },
+        {
+          "id": "ling"
+        },
+        {
+          "id": "mimo"
+        },
+        {
+          "id": "minimax"
+        },
+        {
+          "id": "mistral-large"
+        },
+        {
+          "id": "mistral-medium"
+        },
+        {
+          "id": "mistral-small"
+        },
+        {
+          "id": "nemotron_ultra"
+        },
+        {
+          "id": "qwen"
+        },
+        {
+          "id": "sonnet-5"
+        }
+      ]
+    },
+    "heraxles": {
+      "name": "Heraxles",
+      "baseUrl": "https://api.heraxles.my.id/v1",
+      "api": "openai-completions",
+      "authHeader": true,
+      "compat": {
+        "supportsStore": false,
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": false,
+        "supportsStrictMode": false,
+        "supportsLongCacheRetention": false,
+        "maxTokensField": "max_tokens"
+      },
+      "models": [
+        {
+          "id": "claude-opus-4.8",
+          "name": "Claude Opus 4.8"
+        },
+        {
+          "id": "grok-4.5",
+          "name": "Grok 4.5"
+        }
+      ]
+    },
+    "inferhub": {
+      "name": "InferHub",
+      "baseUrl": "https://api.inferhub.dev/v1",
+      "api": "openai-completions",
+      "authHeader": true,
+      "compat": {
+        "supportsStore": false,
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "supportsUsageInStreaming": false,
+        "supportsStrictMode": false,
+        "supportsLongCacheRetention": false,
+        "maxTokensField": "max_tokens"
+      },
+      "models": [
+        {
+          "id": "cb/claude-opus-4.6",
+          "name": "Claude Opus 4.6",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/claude-opus-4.7-1m",
+          "name": "Claude Opus 4.7 (1M)",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ],
+          "contextWindow": 1000000
+        },
+        {
+          "id": "cb/gemini-3.1-pro",
+          "name": "Gemini 3.1 Pro",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/glm-5.2",
+          "name": "GLM 5.2",
+          "reasoning": true
+        },
+        {
+          "id": "cb/gpt-5.3-codex",
+          "name": "GPT 5.3 Codex",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/gpt-5.4",
+          "name": "GPT 5.4",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/gpt-5.5",
+          "name": "GPT 5.5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/gpt-5.6-luna",
+          "name": "GPT 5.6 Luna",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/gpt-5.6-sol",
+          "name": "GPT 5.6 Sol",
+          "reasoning": true
+        },
+        {
+          "id": "cb/gpt-5.6-terra",
+          "name": "GPT 5.6 Terra",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/kimi-k2.5",
+          "name": "Kimi K2.5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cb/kimi-k3",
+          "name": "Kimi K3",
+          "reasoning": true
+        },
+        {
+          "id": "cb/minimax-m3",
+          "name": "MiniMax M3",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/glm-5.2",
+          "name": "GLM 5.2",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/kimi-k2.6",
+          "name": "Kimi K2.6",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cbcn/kimi-k2.7",
+          "name": "Kimi K2.7 Code",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/kimi-k3",
+          "name": "Kimi K3",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/minimax-m2.7",
+          "name": "MiniMax M2.7",
+          "reasoning": true
+        },
+        {
+          "id": "cbcn/minimax-m3",
+          "name": "MiniMax M3",
+          "reasoning": true
+        },
+        {
+          "id": "cc/claude-fable-5",
+          "name": "cc/claude-fable-5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-haiku-4-5",
+          "name": "cc/claude-haiku-4-5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-opus-4-6",
+          "name": "Claude Opus 4.6",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-opus-4-7",
+          "name": "Claude Opus 4.7",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-opus-4-8",
+          "name": "Claude Opus 4.8",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-opus-5",
+          "name": "Claude Opus 5",
+          "reasoning": true
+        },
+        {
+          "id": "cc/claude-sonnet-4-5",
+          "name": "cc/claude-sonnet-4-5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-sonnet-4-6",
+          "name": "Claude Sonnet 4.6",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cc/claude-sonnet-5",
+          "name": "cc/claude-sonnet-5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "claude-fable-5",
+          "name": "claude-fable-5",
+          "reasoning": true
+        },
+        {
+          "id": "claude-haiku-4.5",
+          "name": "claude-haiku-4.5",
+          "reasoning": true
+        },
+        {
+          "id": "claude-opus-4.6",
+          "name": "claude-opus-4.6",
+          "reasoning": true
+        },
+        {
+          "id": "claude-opus-4.7",
+          "name": "claude-opus-4.7",
+          "reasoning": true
+        },
+        {
+          "id": "claude-opus-4.8",
+          "name": "claude-opus-4.8",
+          "reasoning": true
+        },
+        {
+          "id": "claude-opus-5",
+          "name": "claude-opus-5",
+          "reasoning": true
+        },
+        {
+          "id": "claude-sonnet-4.5",
+          "name": "claude-sonnet-4.5",
+          "reasoning": true
+        },
+        {
+          "id": "claude-sonnet-4.6",
+          "name": "claude-sonnet-4.6",
+          "reasoning": true
+        },
+        {
+          "id": "claude-sonnet-5",
+          "name": "claude-sonnet-5",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/deepseek/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/deepseek/deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/MiniMaxAI/MiniMax-M2.5",
+          "name": "MiniMax M2.5",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/MiniMaxAI/MiniMax-M2.7",
+          "name": "MiniMax M2.7",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/moonshotai/Kimi-K2.5",
+          "name": "Kimi K2.5",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/moonshotai/Kimi-K2.6",
+          "name": "Kimi K2.6",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/moonshotai/Kimi-K2.7-Code",
+          "name": "Kimi K2.7 Code",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/moonshotai/Kimi-K3",
+          "name": "Kimi K3",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/Qwen/Qwen3.6-Max-Preview",
+          "name": "Qwen 3.6 Max Preview",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/Qwen/Qwen3.6-Plus",
+          "name": "Qwen 3.6 Plus",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/stepfun/Step-3.5-Flash",
+          "name": "Step 3.5 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/zai-org/GLM-5",
+          "name": "GLM 5",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/zai-org/GLM-5.1",
+          "name": "GLM 5.1",
+          "reasoning": true
+        },
+        {
+          "id": "cmc/zai-org/GLM-5.2",
+          "name": "cmc/zai-org/GLM-5.2",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/glm-5.2",
+          "name": "GLM 5.2",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/kimi-k2.6",
+          "name": "Kimi K2.6",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/kimi-k2.7-code",
+          "name": "Kimi K2.7 Code",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/mimo-v2.5",
+          "name": "MiMo V2.5",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/mimo-v2.5-pro",
+          "name": "MiMo V2.5 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/minimax-m3",
+          "name": "MiniMax M3",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/qwen3.7-max",
+          "name": "Qwen3.7 Max",
+          "reasoning": true
+        },
+        {
+          "id": "cp/cline-pass/qwen3.7-plus",
+          "name": "Qwen3.7 Plus",
+          "reasoning": true
+        },
+        {
+          "id": "cx/gpt-5.4",
+          "name": "cx/gpt-5.4",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cx/gpt-5.4-mini",
+          "name": "GPT 5.4 Mini",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cx/gpt-5.5",
+          "name": "GPT 5.5",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cx/gpt-5.6-luna",
+          "name": "GPT 5.6 Luna",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cx/gpt-5.6-sol",
+          "name": "GPT 5.6 Sol",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "cx/gpt-5.6-terra",
+          "name": "Terra",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "deepseek-v4-flash",
+          "name": "deepseek-v4-flash",
+          "reasoning": true
+        },
+        {
+          "id": "deepseek-v4-pro",
+          "name": "deepseek-v4-pro",
+          "reasoning": true
+        },
+        {
+          "id": "gemini-3.1-pro",
+          "name": "gemini-3.1-pro",
+          "reasoning": true
+        },
+        {
+          "id": "glm-4.6v",
+          "name": "glm-4.6v",
+          "reasoning": true
+        },
+        {
+          "id": "glm-4.7",
+          "name": "glm-4.7",
+          "reasoning": true
+        },
+        {
+          "id": "glm-5",
+          "name": "glm-5",
+          "reasoning": true
+        },
+        {
+          "id": "glm-5-turbo",
+          "name": "glm-5-turbo",
+          "reasoning": true
+        },
+        {
+          "id": "glm-5.1",
+          "name": "glm-5.1",
+          "reasoning": true
+        },
+        {
+          "id": "glm-5.2",
+          "name": "glm-5.2",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.3-codex",
+          "name": "gpt-5.3-codex",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.4",
+          "name": "gpt-5.4",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.4-mini",
+          "name": "gpt-5.4-mini",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.5",
+          "name": "gpt-5.5",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.6-luna",
+          "name": "gpt-5.6-luna",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.6-sol",
+          "name": "gpt-5.6-sol",
+          "reasoning": true
+        },
+        {
+          "id": "gpt-5.6-terra",
+          "name": "gpt-5.6-terra",
+          "reasoning": true
+        },
+        {
+          "id": "grok-4.5",
+          "name": "grok-4.5",
+          "reasoning": true
+        },
+        {
+          "id": "hy3",
+          "name": "hy3",
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k2.5",
+          "name": "kimi-k2.5",
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k2.6",
+          "name": "kimi-k2.6",
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k2.7",
+          "name": "kimi-k2.7",
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k2.7-code",
+          "name": "kimi-k2.7-code",
+          "reasoning": true
+        },
+        {
+          "id": "kimi-k3",
+          "name": "kimi-k3",
+          "reasoning": true
+        },
+        {
+          "id": "mimo-v2.5",
+          "name": "mimo-v2.5",
+          "reasoning": true
+        },
+        {
+          "id": "mimo-v2.5-pro",
+          "name": "mimo-v2.5-pro",
+          "reasoning": true
+        },
+        {
+          "id": "mimo/mimo-v2.5",
+          "name": "MiMo V2.5",
+          "reasoning": true
+        },
+        {
+          "id": "mimo/mimo-v2.5-pro",
+          "name": "MiMo V2.5 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "minimax-m2.5",
+          "name": "minimax-m2.5",
+          "reasoning": true
+        },
+        {
+          "id": "minimax-m2.7",
+          "name": "minimax-m2.7",
+          "reasoning": true
+        },
+        {
+          "id": "minimax-m3",
+          "name": "minimax-m3",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/deepseek-v4-pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/glm-5.1",
+          "name": "GLM-5.1",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/kimi-k2.6",
+          "name": "Kimi K2.6",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "ocg/kimi-k2.7-code",
+          "name": "Kimi K2.7 Code",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/kimi-k3",
+          "name": "Kimi K3",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/mimo-v2.5",
+          "name": "MiMo V2.5",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/mimo-v2.5-pro",
+          "name": "MiMo V2.5 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/minimax-m2.5",
+          "name": "MiniMax M2.5",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/minimax-m2.7",
+          "name": "MiniMax M2.7",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/minimax-m3",
+          "name": "MiniMax M3",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/qwen3.6-plus",
+          "name": "Qwen3.6 Plus",
+          "reasoning": true
+        },
+        {
+          "id": "ocg/qwen3.7-plus",
+          "name": "Qwen3.7 Plus",
+          "reasoning": true
+        },
+        {
+          "id": "qwen3.6-max-preview",
+          "name": "qwen3.6-max-preview",
+          "reasoning": true
+        },
+        {
+          "id": "qwen3.6-plus",
+          "name": "qwen3.6-plus",
+          "reasoning": true
+        },
+        {
+          "id": "qwen3.7-max",
+          "name": "qwen3.7-max",
+          "reasoning": true
+        },
+        {
+          "id": "qwen3.7-plus",
+          "name": "qwen3.7-plus",
+          "reasoning": true
+        },
+        {
+          "id": "sf/deepseek-ai/DeepSeek-V4-Flash",
+          "name": "DeepSeek V4 Flash",
+          "reasoning": true
+        },
+        {
+          "id": "sf/deepseek-ai/DeepSeek-V4-Pro",
+          "name": "DeepSeek V4 Pro",
+          "reasoning": true
+        },
+        {
+          "id": "sf/MiniMaxAI/MiniMax-M3",
+          "name": "MiniMax M3",
+          "reasoning": true
+        },
+        {
+          "id": "sf/moonshotai/Kimi-K2.5",
+          "name": "Kimi K2.5",
+          "reasoning": true
+        },
+        {
+          "id": "sf/moonshotai/Kimi-K2.6",
+          "name": "Kimi K2.6",
+          "reasoning": true
+        },
+        {
+          "id": "sf/moonshotai/Kimi-K2.7-Code",
+          "name": "Kimi K2.7 Code",
+          "reasoning": true
+        },
+        {
+          "id": "sf/zai-org/GLM-5",
+          "name": "GLM 5",
+          "reasoning": true
+        },
+        {
+          "id": "sf/zai-org/GLM-5.1",
+          "name": "GLM 5.1",
+          "reasoning": true
+        },
+        {
+          "id": "sf/zai-org/GLM-5.2",
+          "name": "GLM 5.2",
+          "reasoning": true
+        },
+        {
+          "id": "step-3.5-flash",
+          "name": "step-3.5-flash",
+          "reasoning": true
+        },
+        {
+          "id": "zai/glm-4.6v",
+          "name": "GLM-4.6V (vision)",
+          "reasoning": true,
+          "input": [
+            "text",
+            "image"
+          ]
+        },
+        {
+          "id": "zai/glm-4.7",
+          "name": "GLM-4.7",
+          "reasoning": true
+        },
+        {
+          "id": "zai/glm-5",
+          "name": "GLM-5",
+          "reasoning": true
+        },
+        {
+          "id": "zai/glm-5-turbo",
+          "name": "GLM-5 Turbo (fast)",
+          "reasoning": true
+        },
+        {
+          "id": "zai/glm-5.1",
+          "name": "GLM-5.1 (flagship)",
+          "reasoning": true
+        },
+        {
+          "id": "zai/glm-5.2",
+          "name": "zai/glm-5.2",
+          "reasoning": true
+        }
+      ]
+    }
+  }
 }

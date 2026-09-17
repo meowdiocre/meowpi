@@ -1,0 +1,16 @@
+{
+  "name": "pi-portable-config",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Cross-platform, secret-safe Pi configuration and skill snapshot",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "bootstrap": "node scripts/bootstrap.mjs",
+    "export": "node scripts/export.mjs",
+    "verify": "node scripts/verify.mjs",
+    "test": "node scripts/verify.mjs && node scripts/bootstrap.mjs --dry-run"
+  }
+}

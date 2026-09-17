@@ -1,18 +1,18 @@
-﻿[
-    {
-        "name":  "@firstpick/pi-themes-bundle",
-        "version":  "0.1.6"
-    },
-    {
-        "name":  "@luminascale/pi-shepherd",
-        "version":  "0.3.0"
-    },
-    {
-        "name":  "@neilurk12/pi-9router",
-        "version":  "0.1.2"
-    },
-    {
-        "name":  "pi-mcp-adapter",
-        "version":  "2.34.0"
-    }
+[
+  {
+    "name": "@firstpick/pi-themes-bundle",
+    "version": "0.1.6"
+  },
+  {
+    "name": "@luminascale/pi-shepherd",
+    "version": "0.3.0"
+  },
+  {
+    "name": "@neilurk12/pi-9router",
+    "version": "0.1.2"
+  },
+  {
+    "name": "pi-mcp-adapter",
+    "version": "2.34.0"
+  }
 ]

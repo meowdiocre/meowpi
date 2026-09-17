@@ -1,80 +1,97 @@
 # Portable Pi setup
 
-This repository rebuilds the current Pi environment on a new Windows machine without committing credentials or runtime state.
+This repository recreates the same Pi configuration and complete skill set on Windows, macOS, or Linux. It uses dependency-free Node.js scripts because Pi and the Skills ecosystem already require Node.
 
-It contains:
+## Included
 
-- Pi fork `@earendil-works/pi-coding-agent` pinned to `0.85.1`.
-- Pi packages pinned to the currently installed versions.
-- Portable settings, provider/model definitions, MCP definitions, and the Herdr integration extension.
-- Reproducible installs for the selected third-party skills.
-- The local `systems-coding-style` skill for concise, idiomatic C, C++, Rust, and systems code.
+- Pi fork `@earendil-works/pi-coding-agent`, pinned to the exported version.
+- All configured Pi npm packages at their installed versions.
+- Settings, provider/model definitions, MCP definitions, and the Herdr integration.
+- A vendored snapshot of all 18 skills currently present in Pi—not only a selected subset.
+- Skill deployment to Pi, the shared Agent Skills directory, Claude Code, and OpenCode.
+- Secret checks and automatic backups before replacing live files.
 
-## New device
+Credentials, sessions, caches, and `node_modules` are never stored.
 
-Install Git and Node.js 20 or newer, then clone this repository and run:
+## Requirements
 
-```powershell
-.\bootstrap.cmd
+- Git
+- Node.js 20 or newer
+- Network access while installing Pi and its npm packages
+
+## Install on a new device
+
+```sh
+git clone <private-repository-url>
+cd pi-portable-config
+npm run bootstrap
 ```
 
-The bootstrap command:
+The same command works in PowerShell, Command Prompt, Bash, and zsh.
 
-1. installs the pinned Pi fork;
-2. installs the pinned Pi packages;
-3. restores portable settings, models, MCP servers, and extensions;
-4. installs third-party skills for Pi, Codex, OpenCode, and Claude Code as configured;
-5. installs the local systems coding skill.
+Then start Pi and authenticate each provider locally:
 
-Existing destination configuration files are backed up under `~/.pi/agent/portable-backups/` before replacement.
-
-After bootstrap, start Pi and authenticate providers on that device:
-
-```powershell
-pi.cmd
+```sh
+pi
 ```
 
-Provider credentials are intentionally not stored here. Use Pi's login flow or recreate the credentials locally.
+Use a custom Pi directory when needed:
 
-## Refresh this repository
+```sh
+npm run bootstrap -- --pi-home /path/to/pi/agent
+```
 
-After changing Pi settings or package versions on your main machine:
+Useful options:
 
-```powershell
-.\export.cmd
-.\verify.cmd
+```text
+--dry-run
+--skip-pi
+--skip-packages
+--skip-skills
+--pi-home <path>
+```
+
+Existing files and skill directories are copied to `~/.pi/agent/portable-backups/<timestamp>/` before replacement.
+
+## Refresh after changing Pi
+
+Run this on the device whose Pi installation is the source of truth:
+
+```sh
+npm run export
+npm test
 git diff
 ```
 
-Review the diff before committing. `export.cmd` refuses JSON containing credential-shaped property names.
+`npm run export` snapshots every current Pi skill into `skills/`, refreshes configuration, and updates pinned package versions. Review the diff before committing.
 
-## Verify without changing the machine
+## Verification
 
-```powershell
-.\verify.cmd
-.\bootstrap.cmd -DryRun
+```sh
+npm run verify
+npm test
 ```
 
-## MCP prerequisites
+`npm test` validates the repository and performs a full bootstrap dry run without modifying the machine.
 
-The repository restores MCP configuration but does not install every external executable. Install the tools you use on the destination machine:
+## MCP portability
 
-- `chunkhound`
-- `codegraph`
-- Python with `ida_pro_mcp`
-- Windows Debugging Tools and `mcp-windbg`
-- `notebooklm-mcp`
-- Node.js/npm for `chrome-devtools-mcp`
+Common MCP servers are restored on every operating system. Platform-specific servers live under `platformServers` in `config/mcp.json.template`:
 
-Missing tools do not expose secrets; their MCP servers simply will not start until the executable is installed.
+- `windbg` is installed only on Windows.
+- macOS and Linux currently have no platform-only MCP entries.
+- `npx` automatically becomes `npx.cmd` on Windows.
+- Home and system paths are expanded for the destination device.
+
+External MCP executables still need to exist on the destination device, including the tools you use from this list: `chunkhound`, `codegraph`, `ida_pro_mcp`, `mcp-windbg`, `notebooklm-mcp`, and Node/npm for `chrome-devtools-mcp`.
 
 ## Publish
 
-Create an empty private repository on your Git host, then connect and push this local repository:
+The local repository is already initialized. Create an empty private repository, then run:
 
-```powershell
-git remote add origin <your-private-repository-url>
+```sh
+git remote add origin <private-repository-url>
 git push -u origin main
 ```
 
-A private repository is recommended because model endpoints and personal workflow choices are still configuration metadata, even though credentials are excluded.
+A private remote is recommended because provider endpoints and personal workflow choices remain configuration metadata even though credentials are excluded.
