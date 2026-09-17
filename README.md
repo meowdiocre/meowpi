@@ -1,82 +1,63 @@
-# Portable Pi setup
+# Portable Pi configuration
 
-This repository recreates the same Pi configuration and complete skill set on Windows, macOS, or Linux. It uses dependency-free Node.js scripts because Pi and the Skills ecosystem already require Node.
+Use this repository to reproduce the same Pi setup on Windows, macOS, or Linux. The Node.js scripts restore portable configuration and skills. Authentication stays local to each device.
 
-## Included
+## What it restores
 
-- Pi fork `@earendil-works/pi-coding-agent`, pinned to the exported version.
-- All configured Pi npm packages at their installed versions.
-- Settings, provider/model definitions, MCP definitions, and the Herdr integration.
-- A vendored snapshot of every skill currently present in Pi, plus intentional portable additions.
-- A routed writing suite for natural prose, technical documentation, and post-draft review.
-- Skill deployment to Pi, the shared Agent Skills directory, Claude Code, and OpenCode.
-- Secret checks and automatic backups before replacing live files.
+- The Pi version in `manifests/pi.json`.
+- The Pi packages in `manifests/pi-packages.json`.
+- Settings, model definitions, MCP servers, and the Herdr extension.
+- The skills listed in `manifests/skills.json`.
+- Skills for Pi, Claude Code, OpenCode, and Codex through the shared Agent Skills directory.
 
-Credentials, sessions, caches, and `node_modules` are never stored.
-
-## Writing suite
-
-The writing skills use separate rule sets for separate readers:
-
-- `writing-router` selects the workflow when the request is ambiguous.
-- `plain-english` edits voice-led nonfiction with Orwell/Gowers rules and a model-writing-tic pass.
-- `simple-english` writes technical documentation with pragmatic or strict ASD-STE100-derived rules plus audience and evidence checks.
-- `style-review` audits technical Markdown with a bundled dependency-free Node script and a semantic checklist derived from *The Elements of Agent Style*.
-
-Plain English and Simple English must not process the same passage. The suite targets clarity, accuracy, and natural voice; it does not promise AI-detector evasion.
-
-Audit a technical Markdown file on any supported operating system:
-
-```sh
-npm run review-docs -- README.md
-npm run review-docs -- --compare before.md after.md
-```
-
-The reviewer ignores frontmatter, fenced code, and inline code. Its mechanical pass is only one part of review; factual claims and reader fit still require semantic and project-source checks.
+The repository does not store credentials, sessions, caches, or `node_modules`. The bootstrap script backs up existing files before it replaces them.
 
 ## Requirements
 
 - Git
 - Node.js 20 or newer
-- Network access while installing Pi and its npm packages
+- Network access during installation
 
-## Install on a new device
+## Set up a new device
 
 ```sh
-git clone <private-repository-url>
+git clone https://github.com/meowdiocre/pi-portable-config.git
 cd pi-portable-config
 npm run bootstrap
 ```
 
-The same command works in PowerShell, Command Prompt, Bash, and zsh.
+If PowerShell blocks `.ps1` launchers, use `npm.cmd` and `pi.cmd` instead. You do not need to change the system execution policy.
 
-Then start Pi and authenticate each provider locally:
+Start Pi after the bootstrap completes:
 
 ```sh
 pi
 ```
 
-Use a custom Pi directory when needed:
+Authenticate each provider on the new device. Credentials are not part of the repository.
+
+The bootstrap stores backups in `~/.pi/agent/portable-backups/<timestamp>/`.
+
+### Bootstrap options
+
+| Option | Effect |
+|---|---|
+| `--dry-run` | Show the planned changes without writing files. |
+| `--skip-pi` | Do not install the Pi CLI. |
+| `--skip-packages` | Do not install Pi packages. |
+| `--skip-skills` | Do not install skills. |
+| `--pi-home <path>` | Use a different Pi configuration directory. |
+
+Pass options after `--`:
 
 ```sh
+npm run bootstrap -- --dry-run
 npm run bootstrap -- --pi-home /path/to/pi/agent
 ```
 
-Useful options:
+## Update the snapshot
 
-```text
---dry-run
---skip-pi
---skip-packages
---skip-skills
---pi-home <path>
-```
-
-Existing files and skill directories are copied to `~/.pi/agent/portable-backups/<timestamp>/` before replacement.
-
-## Refresh after changing Pi
-
-Run this on the device whose Pi installation is the source of truth:
+Run the export on the device whose Pi installation is the source of truth:
 
 ```sh
 npm run export
@@ -84,37 +65,41 @@ npm test
 git diff
 ```
 
-`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
+The export refreshes the portable configuration, installed Pi package versions, and the complete Pi skill snapshot. It preserves repository-owned skills listed in `additionalSkills`.
 
-Vendored writing sources are pinned to full commit SHAs in `manifests/skill-sources.json`. Review upstream changes and licenses before changing those pins.
+Edit an `additionalSkills` entry in this repository. Do not edit its installed copy. Review the diff before you commit and push it.
 
-## Verification
+Vendored sources are pinned in `manifests/skill-sources.json`. Their licenses are recorded in `THIRD_PARTY_NOTICES.md`.
+
+## Writing skills
+
+The writing suite keeps each rule set separate:
+
+| Skill | Use |
+|---|---|
+| `writing-router` | Select the correct writing workflow. |
+| `plain-english` | Tighten natural prose and remove model-writing habits. |
+| `simple-english` | Write clear technical documentation and procedures. |
+| `style-review` | Audit technical Markdown after drafting. |
+
+Audit or compare Markdown files with these commands:
+
+```sh
+npm run review-docs -- README.md
+npm run review-docs -- --compare before.md after.md
+```
+
+## MCP servers
+
+The shared MCP configuration defines servers for ChunkHound, Exa, Chrome DevTools, CodeGraph, IDA Pro, and NotebookLM. WinDbg is enabled only on Windows.
+
+The bootstrap restores these definitions but does not install their external executables. See `config/mcp.json.template` for the commands and platform-specific paths.
+
+## Checks
 
 ```sh
 npm run verify
 npm test
 ```
 
-`npm test` validates the repository and performs a full bootstrap dry run without modifying the machine.
-
-## MCP portability
-
-Common MCP servers are restored on every operating system. Platform-specific servers live under `platformServers` in `config/mcp.json.template`:
-
-- `windbg` is installed only on Windows.
-- macOS and Linux currently have no platform-only MCP entries.
-- `npx` automatically becomes `npx.cmd` on Windows.
-- Home and system paths are expanded for the destination device.
-
-External MCP executables still need to exist on the destination device, including the tools you use from this list: `chunkhound`, `codegraph`, `ida_pro_mcp`, `mcp-windbg`, `notebooklm-mcp`, and Node/npm for `chrome-devtools-mcp`.
-
-## Publish
-
-The local repository is already initialized. Create an empty private repository, then run:
-
-```sh
-git remote add origin <private-repository-url>
-git push -u origin main
-```
-
-A private remote is recommended because provider endpoints and personal workflow choices remain configuration metadata even though credentials are excluded.
+`npm run verify` checks repository structure, skill metadata, portability, and common secret patterns. `npm test` also runs unit checks and a complete bootstrap dry run.
