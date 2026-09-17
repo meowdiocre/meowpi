@@ -12,6 +12,6 @@
     "export": "node scripts/export.mjs",
     "review-docs": "node skills/style-review/scripts/audit.mjs",
     "verify": "node scripts/verify.mjs",
-    "test": "node scripts/verify.mjs && node scripts/tests/export-skills.mjs && node skills/style-review/tests/run.mjs && node scripts/bootstrap.mjs --dry-run"
+    "test": "node scripts/verify.mjs && node scripts/tests/export-skills.mjs && node scripts/tests/retired-skills.mjs && node skills/style-review/tests/run.mjs && node scripts/bootstrap.mjs --dry-run"
   }
 }

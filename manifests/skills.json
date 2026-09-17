@@ -9,7 +9,6 @@
     "comment-audit",
     "durable-objects",
     "modern-cpp",
-    "orwell-writing",
     "plain-english",
     "rust-best-practices",
     "sandbox-sdk",
@@ -25,11 +24,13 @@
     "writing-router"
   ],
   "additionalSkills": [
-    "orwell-writing",
     "plain-english",
     "simple-english",
     "style-review",
     "writing-router"
+  ],
+  "removedSkills": [
+    "orwell-writing"
   ],
   "targets": [
     {

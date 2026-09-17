@@ -78,8 +78,12 @@ export async function verifyRepository() {
 
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
   const additionalSkills = skillManifest.additionalSkills || [];
+  const removedSkills = skillManifest.removedSkills || [];
   if (!Array.isArray(additionalSkills) || additionalSkills.some((name) => typeof name !== 'string')) {
     throw new Error('manifests/skills.json additionalSkills must be an array of names');
+  }
+  if (!Array.isArray(removedSkills) || removedSkills.some((name) => typeof name !== 'string')) {
+    throw new Error('manifests/skills.json removedSkills must be an array of names');
   }
   if (new Set(skillManifest.skills).size !== skillManifest.skills.length) {
     throw new Error('manifests/skills.json contains duplicate skill names');
@@ -87,9 +91,17 @@ export async function verifyRepository() {
   if (new Set(additionalSkills).size !== additionalSkills.length) {
     throw new Error('manifests/skills.json contains duplicate additional skill names');
   }
+  if (new Set(removedSkills).size !== removedSkills.length) {
+    throw new Error('manifests/skills.json contains duplicate removed skill names');
+  }
   for (const skillName of additionalSkills) {
     if (!skillManifest.skills.includes(skillName)) {
       throw new Error(`Additional portable skill is absent from skills: ${skillName}`);
+    }
+  }
+  for (const skillName of removedSkills) {
+    if (skillManifest.skills.includes(skillName) || additionalSkills.includes(skillName)) {
+      throw new Error(`Removed skill is still active: ${skillName}`);
     }
   }
   const skillRoot = path.join(repoRoot, 'skills');

@@ -3,16 +3,16 @@ import { planSkillSnapshot } from '../lib.mjs';
 
 const plan = planSkillSnapshot(
   ['z-live', 'orwell-writing', 'plain-english', 'a-live'],
-  ['orwell-writing', 'plain-english', 'writing-router'],
+  ['plain-english', 'writing-router'],
+  ['orwell-writing'],
 );
 
 assert.deepEqual(plan.copyFromPi, ['a-live', 'z-live']);
 assert.deepEqual(plan.snapshot, [
   'a-live',
-  'orwell-writing',
   'plain-english',
   'writing-router',
   'z-live',
 ]);
 
-console.log('PASS: repo-managed skills survive Pi export');
+console.log('PASS: repo-managed skills survive export and retired skills stay removed');

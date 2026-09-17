@@ -22,7 +22,6 @@ The writing skills use separate rule sets for separate readers:
 - `plain-english` edits voice-led nonfiction with Orwell/Gowers rules and a model-writing-tic pass.
 - `simple-english` writes technical documentation with pragmatic or strict ASD-STE100-derived rules plus audience and evidence checks.
 - `style-review` audits technical Markdown with a bundled dependency-free Node script and a semantic checklist derived from *The Elements of Agent Style*.
-- `orwell-writing` remains as a compatibility alias for older prompts.
 
 Plain English and Simple English must not process the same passage. The suite targets clarity, accuracy, and natural voice; it does not promise AI-detector evasion.
 
@@ -74,6 +73,7 @@ Useful options:
 ```
 
 Existing files and skill directories are copied to `~/.pi/agent/portable-backups/<timestamp>/` before replacement.
+Skills listed in `removedSkills` are also backed up and removed from each target during bootstrap. This prevents an export or old device from restoring a retired skill.
 
 ## Refresh after changing Pi
 
@@ -85,7 +85,7 @@ npm test
 git diff
 ```
 
-`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
+`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, excludes names listed in `removedSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
 
 Vendored writing sources are pinned to full commit SHAs in `manifests/skill-sources.json`. Review upstream changes and licenses before changing those pins.
 
