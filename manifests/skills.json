@@ -29,9 +29,6 @@
     "style-review",
     "writing-router"
   ],
-  "removedSkills": [
-    "orwell-writing"
-  ],
   "targets": [
     {
       "name": "shared",

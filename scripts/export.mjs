@@ -124,7 +124,6 @@ async function main() {
   const skillManifestPath = path.join(manifestRoot, 'skills.json');
   const skillManifest = await readJson(skillManifestPath);
   const additionalSkills = skillManifest.additionalSkills || [];
-  const removedSkills = skillManifest.removedSkills || [];
   const liveSkills = (await readdir(liveSkillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
     .map((entry) => entry.name)
@@ -132,7 +131,6 @@ async function main() {
   const { copyFromPi, snapshot: snapshotSkills } = planSkillSnapshot(
     liveSkills,
     additionalSkills,
-    removedSkills,
   );
 
   for (const skillName of additionalSkills) {

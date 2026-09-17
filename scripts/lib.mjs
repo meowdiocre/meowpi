@@ -101,17 +101,6 @@ export async function installDirectory(source, target, backupRoot, label, dryRun
   console.log(`installed: ${target}`);
 }
 
-export async function retireDirectory(target, backupRoot, label, dryRun) {
-  if (!(await pathExists(target))) return;
-  await backupExisting(target, backupRoot, label, dryRun);
-  if (dryRun) {
-    console.log(`[dry-run] remove retired directory ${target}`);
-    return;
-  }
-  await rm(target, { recursive: true, force: true });
-  console.log(`removed retired directory: ${target}`);
-}
-
 export function mapStrings(value, transform) {
   if (typeof value === 'string') return transform(value);
   if (Array.isArray(value)) return value.map((item) => mapStrings(item, transform));
@@ -144,15 +133,13 @@ export function collapseTokens(value, replacements) {
   );
 }
 
-export function planSkillSnapshot(liveSkills, additionalSkills, removedSkills = []) {
+export function planSkillSnapshot(liveSkills, additionalSkills) {
   const additional = new Set(additionalSkills);
-  const removed = new Set(removedSkills);
   return {
     copyFromPi: [...liveSkills]
-      .filter((skillName) => !additional.has(skillName) && !removed.has(skillName))
+      .filter((skillName) => !additional.has(skillName))
       .sort((left, right) => left.localeCompare(right)),
     snapshot: [...new Set([...liveSkills, ...additionalSkills])]
-      .filter((skillName) => !removed.has(skillName))
       .sort((left, right) => left.localeCompare(right)),
   };
 }

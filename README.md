@@ -73,7 +73,6 @@ Useful options:
 ```
 
 Existing files and skill directories are copied to `~/.pi/agent/portable-backups/<timestamp>/` before replacement.
-Skills listed in `removedSkills` are also backed up and removed from each target during bootstrap. This prevents an export or old device from restoring a retired skill.
 
 ## Refresh after changing Pi
 
@@ -85,7 +84,7 @@ npm test
 git diff
 ```
 
-`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, excludes names listed in `removedSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
+`npm run export` snapshots every current Pi skill into `skills/`, preserves the repo-owned versions listed in `additionalSkills`, refreshes configuration, and updates pinned package versions. Edit an additional skill in this repository, not in its installed copy. Review the diff before committing.
 
 Vendored writing sources are pinned to full commit SHAs in `manifests/skill-sources.json`. Review upstream changes and licenses before changing those pins.
 

@@ -9,7 +9,6 @@ import {
   parseCommonArgs,
   readJson,
   repoRoot,
-  retireDirectory,
   run,
   timestamp,
   userHome,
@@ -102,20 +101,11 @@ async function main() {
   if (!options.skipSkills) {
     console.log('\n==> Restore complete skill snapshot');
     const skillManifest = await readJson(path.join(manifestRoot, 'skills.json'));
-    const removedSkills = skillManifest.removedSkills || [];
     for (const target of skillManifest.targets) {
       const targetRoot = expandTokens(target.path, {
         HOME: userHome,
         PI_HOME: options.piHome,
       });
-      for (const skillName of removedSkills) {
-        await retireDirectory(
-          path.join(targetRoot, skillName),
-          backupRoot,
-          path.join('skills', target.name, 'retired', skillName),
-          options.dryRun,
-        );
-      }
       for (const skillName of skillManifest.skills) {
         await installDirectory(
           path.join(repoRoot, 'skills', skillName),
