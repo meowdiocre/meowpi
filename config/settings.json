@@ -1,0 +1,14 @@
+﻿{
+    "packages":  [
+                     "npm:@neilurk12/pi-9router",
+                     "npm:pi-mcp-adapter",
+                     "npm:@firstpick/pi-themes-bundle",
+                     "npm:@luminascale/pi-shepherd"
+                 ],
+    "theme":  "tokyo-night-storm",
+    "defaultProvider":  "inferhub",
+    "defaultModel":  "deepseek-v4-flash",
+    "defaultThinkingLevel":  "high",
+    "fullscreenScrollbar":  "always",
+    "hideThinkingBlock":  true
+}

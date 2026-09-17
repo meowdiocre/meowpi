@@ -1,0 +1,23 @@
+# Credentials and machine-local state
+**/auth.json
+**/.env
+**/.env.*
+!**/.env.example
+**/*credential*
+**/*secret*
+**/*.key
+**/*.pem
+
+# Pi runtime state
+sessions/
+caches/
+backups/
+node_modules/
+*.log
+*.tmp
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

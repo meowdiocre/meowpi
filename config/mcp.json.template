@@ -1,0 +1,66 @@
+﻿{
+    "mcpServers":  {
+                       "ChunkHound":  {
+                                          "command":  "chunkhound",
+                                          "args":  [
+                                                       "mcp",
+                                                       "--db",
+                                                       ".chunkhound/chunks.db",
+                                                       "--no-embeddings",
+                                                       "--no-daemon"
+                                                   ],
+                                          "directTools":  true,
+                                          "env":  {
+                                                      "PYTHONUTF8":  "1",
+                                                      "PYTHONIOENCODING":  "utf-8"
+                                                  }
+                                      },
+                       "exa":  {
+                                   "url":  "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa",
+                                   "directTools":  true
+                               },
+                       "chrome-devtools":  {
+                                               "command":  "npx",
+                                               "args":  [
+                                                            "-y",
+                                                            "chrome-devtools-mcp@latest",
+                                                            "--slim",
+                                                            "--autoConnect",
+                                                            "--no-usage-statistics"
+                                                        ]
+                                           },
+                       "codegraph":  {
+                                         "command":  "codegraph",
+                                         "args":  [
+                                                      "serve",
+                                                      "--mcp"
+                                                  ]
+                                     },
+                       "ida-pro-mcp":  {
+                                           "command":  "python",
+                                           "args":  [
+                                                        "-m",
+                                                        "ida_pro_mcp",
+                                                        "--install-plugin"
+                                                    ]
+                                       },
+                       "windbg":  {
+                                      "command":  "{{USERPROFILE}}\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\mcp-windbg.exe",
+                                      "args":  [
+                                                   "--transport",
+                                                   "stdio",
+                                                   "--cdb-path",
+                                                   "{{PROGRAMFILES_X86}}\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe",
+                                                   "--kd-path",
+                                                   "{{PROGRAMFILES_X86}}\\Windows Kits\\10\\Debuggers\\x64\\kd.exe",
+                                                   "--symbols-path",
+                                                   "srv*{{SYSTEMDRIVE}}\\Symbols*https://msdl.microsoft.com/download/symbols",
+                                                   "--timeout",
+                                                   "120"
+                                               ]
+                                  },
+                       "notebooklm-mcp":  {
+                                              "command":  "notebooklm-mcp"
+                                          }
+                   }
+}

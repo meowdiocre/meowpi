@@ -1,0 +1,54 @@
+{
+  "collections": [
+    {
+      "source": "ArdaYILDIZ-DEV/pi-skills-public",
+      "skills": [
+        "comment-audit",
+        "verify",
+        "writing-great-agents-md"
+      ],
+      "agents": [
+        "pi"
+      ]
+    },
+    {
+      "source": "tamdogood/builder-essential-skills",
+      "skills": [
+        "code-standards"
+      ],
+      "agents": [
+        "pi",
+        "codex",
+        "opencode",
+        "claude-code"
+      ]
+    },
+    {
+      "source": "apollographql/skills",
+      "skills": [
+        "rust-best-practices"
+      ],
+      "agents": [
+        "pi",
+        "codex",
+        "opencode",
+        "claude-code"
+      ]
+    },
+    {
+      "source": "trailofbits/skills",
+      "skills": [
+        "modern-cpp"
+      ],
+      "agents": [
+        "pi",
+        "codex",
+        "opencode",
+        "claude-code"
+      ]
+    }
+  ],
+  "localSkills": [
+    "systems-coding-style"
+  ]
+}
