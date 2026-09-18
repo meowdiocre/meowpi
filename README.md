@@ -4,7 +4,7 @@
   <img src="assets/meowpi-logo.jpg" alt="MeowPi logo" width="420">
 </p>
 
-MeowPi keeps the same my Pi Setup Across all my machine. Mainly used for OS internals and reverse engineering or help me doing small pentest.
+MeowPi keeps the same my Pi Setup Across all my machine. Mainly used for OS internals and reverse engineering or help me doing small pentest and  research
 
 ## Install
 
