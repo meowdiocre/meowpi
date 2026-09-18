@@ -4,7 +4,7 @@
   <img src="assets/meowpi-logo.jpg" alt="MeowPi logo" width="420">
 </p>
 
-MeowPi keeps the same Pi setup on Windows, macOS, and Linux. It stores portable configuration and shared agent skills in one private repository.
+MeowPi keeps the same my Pi Setup Across all my machine. Mainly used for OS internals and reverse engineering or help me doing small pentest.
 
 ## Install
 
