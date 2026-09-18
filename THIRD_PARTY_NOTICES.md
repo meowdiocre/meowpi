@@ -29,3 +29,23 @@ The MIT permission and warranty terms in the Plain English section apply to this
 Parts of `skills/simple-english/references/agent-style-quality.md` and `skills/style-review` are based on [The Elements of Agent Style](https://github.com/yzhao062/agent-style) by Yizhou Zhao.
 
 Licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). The portable adaptation changes the review mechanism and treats heading capitalization as a project convention.
+
+## Low-level development skills
+
+`skills/assembly-systems` is adapted from [mohitmishra786/low-level-dev-skills](https://github.com/mohitmishra786/low-level-dev-skills).
+
+MIT License
+
+Copyright (c) 2026 chessMan
+
+The MIT permission and warranty terms in the Plain English section apply to this adaptation.
+
+## Reverse skill
+
+`skills/reverse-skill-router` is adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill).
+
+MIT License
+
+Copyright (c) 2026 zhaoxuya520
+
+The MIT permission and warranty terms in the Plain English section apply to this adaptation.

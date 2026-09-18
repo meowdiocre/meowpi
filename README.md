@@ -26,6 +26,13 @@ The bootstrap stores replaced files in `~/.pi/agent/portable-backups/<timestamp>
 
 The repository does not store credentials, sessions, caches, or `node_modules`.
 
+## Systems skills
+
+- `assembly-systems` covers x86-64, AArch64, RISC-V, ABIs, compiler output, inline assembly, SIMD, and low-level verification.
+- `reverse-skill-router` selects an evidence-first workflow for authorized binary, IDA, Ghidra, radare2, firmware, protocol, malware, and forensic analysis.
+
+The reverse router is a portable adaptation. It excludes the upstream platform installers, persistent journal, and CTF sidecar.
+
 ## Update the snapshot
 
 Run these commands on the device whose Pi installation is the source of truth:

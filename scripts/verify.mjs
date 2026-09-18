@@ -116,6 +116,11 @@ export async function verifyRepository() {
       throw new Error(`Additional portable skill is absent from skills: ${skillName}`);
     }
   }
+  for (const skillName of ['assembly-systems', 'reverse-skill-router']) {
+    if (!additionalSkills.includes(skillName)) {
+      throw new Error(`Required portable skill is absent from additionalSkills: ${skillName}`);
+    }
+  }
   const skillRoot = path.join(repoRoot, 'skills');
   const skillDirectories = (await readdir(skillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())

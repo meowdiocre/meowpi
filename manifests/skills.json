@@ -1,6 +1,7 @@
 {
   "skills": [
     "agents-sdk",
+    "assembly-systems",
     "cloudflare",
     "cloudflare-email-service",
     "cloudflare-one",
@@ -10,6 +11,7 @@
     "durable-objects",
     "modern-cpp",
     "plain-english",
+    "reverse-skill-router",
     "rust-best-practices",
     "sandbox-sdk",
     "simple-english",
@@ -24,7 +26,9 @@
     "writing-router"
   ],
   "additionalSkills": [
+    "assembly-systems",
     "plain-english",
+    "reverse-skill-router",
     "simple-english",
     "style-review",
     "writing-router"

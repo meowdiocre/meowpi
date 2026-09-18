@@ -22,5 +22,21 @@
     "ref": "99722a59e5ab654bafe68788f3bff7d1c8237f5a",
     "license": "CC-BY-4.0",
     "modified": true
+  },
+  {
+    "name": "assembly-systems",
+    "repository": "https://github.com/mohitmishra786/low-level-dev-skills",
+    "path": "skills/low-level-programming",
+    "ref": "bdc58472fa9f309ed1b3f7d985a0d8e9bd8f4608",
+    "license": "MIT",
+    "modified": true
+  },
+  {
+    "name": "reverse-skill-router",
+    "repository": "https://github.com/zhaoxuya520/reverse-skill",
+    "path": "plugins/reverse-skill/skills/reverse-skill-router",
+    "ref": "7e2097fd90d25c2f976f6eba26d6c00aa88051df",
+    "license": "MIT",
+    "modified": true
   }
 ]
