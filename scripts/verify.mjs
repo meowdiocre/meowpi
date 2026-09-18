@@ -76,6 +76,30 @@ export async function verifyRepository() {
     }
   }
 
+  const mcp = await readJson(path.join(repoRoot, 'config', 'mcp.json.template'));
+  const expectedServers = ['codegraph', 'exa', 'ida', 'notebooklm-mcp'];
+  if (JSON.stringify(sorted(Object.keys(mcp.mcpServers || {}))) !== JSON.stringify(expectedServers)) {
+    throw new Error(`Portable MCP servers must be exactly: ${expectedServers.join(', ')}`);
+  }
+  if (mcp.mcpServers.exa.url !== 'https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa') {
+    throw new Error('Exa must expose only web search and fetch');
+  }
+  if ('directTools' in mcp.mcpServers.exa) {
+    throw new Error('Exa must use the adapter default instead of directTools');
+  }
+  if (
+    mcp.mcpServers.ida.command !== 'idalib-mcp' ||
+    JSON.stringify(mcp.mcpServers.ida.args) !== JSON.stringify(['--stdio', '--max-workers', '2'])
+  ) {
+    throw new Error('IDA must use the portable idalib-mcp stdio command');
+  }
+  if (mcp.mcpServers['notebooklm-mcp'].command !== 'notebooklm-mcp') {
+    throw new Error('NotebookLM MCP must remain available');
+  }
+  if (mcp.platformServers?.win32?.windbg?.command !== 'mcp-windbg') {
+    throw new Error('WinDbg must resolve mcp-windbg from PATH');
+  }
+
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
   const additionalSkills = skillManifest.additionalSkills || [];
   if (!Array.isArray(additionalSkills) || additionalSkills.some((name) => typeof name !== 'string')) {

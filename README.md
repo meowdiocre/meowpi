@@ -55,6 +55,6 @@ npm run review-docs -- README.md
 
 ## MCP servers
 
-The shared configuration defines servers for ChunkHound, Exa, Chrome DevTools, CodeGraph, IDA Pro, and NotebookLM. WinDbg is available only on Windows.
+The shared configuration defines servers for Exa, CodeGraph, IDA Pro, and NotebookLM. WinDbg is available only on Windows.
 
-The bootstrap restores the definitions but does not install external executables. See `config/mcp.json.template` for the required commands and paths.
+The bootstrap restores the definitions but does not install external executables. See `config/mcp.json.template` for the required commands.

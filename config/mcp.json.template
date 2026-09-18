@@ -1,33 +1,7 @@
 {
   "mcpServers": {
-    "ChunkHound": {
-      "command": "chunkhound",
-      "args": [
-        "mcp",
-        "--db",
-        ".chunkhound/chunks.db",
-        "--no-embeddings",
-        "--no-daemon"
-      ],
-      "directTools": true,
-      "env": {
-        "PYTHONUTF8": "1",
-        "PYTHONIOENCODING": "utf-8"
-      }
-    },
     "exa": {
-      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa",
-      "directTools": true
-    },
-    "chrome-devtools": {
-      "command": "{{NPX}}",
-      "args": [
-        "-y",
-        "chrome-devtools-mcp@latest",
-        "--slim",
-        "--autoConnect",
-        "--no-usage-statistics"
-      ]
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa"
     },
     "codegraph": {
       "command": "codegraph",
@@ -36,12 +10,12 @@
         "--mcp"
       ]
     },
-    "ida-pro-mcp": {
-      "command": "python",
+    "ida": {
+      "command": "idalib-mcp",
       "args": [
-        "-m",
-        "ida_pro_mcp",
-        "--install-plugin"
+        "--stdio",
+        "--max-workers",
+        "2"
       ]
     },
     "notebooklm-mcp": {
@@ -51,7 +25,7 @@
   "platformServers": {
     "win32": {
       "windbg": {
-        "command": "{{USERPROFILE}}\\AppData\\Local\\Programs\\Python\\Python314\\Scripts\\mcp-windbg.exe",
+        "command": "mcp-windbg",
         "args": [
           "--transport",
           "stdio",
