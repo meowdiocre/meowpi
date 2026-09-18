@@ -34,9 +34,9 @@
   {
     "name": "reverse-skill-router",
     "repository": "https://github.com/zhaoxuya520/reverse-skill",
-    "path": "plugins/reverse-skill/skills/reverse-skill-router",
+    "path": ".",
     "ref": "7e2097fd90d25c2f976f6eba26d6c00aa88051df",
-    "license": "MIT",
+    "license": "MIT; CTF-Sandbox-Orchestrator: GPL-3.0 (see bundled licenses)",
     "modified": true
   }
 ]

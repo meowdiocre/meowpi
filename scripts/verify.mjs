@@ -3,6 +3,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { pathExists, readJson, repoRoot, userHome } from './lib.mjs';
+import { verifyReverseBundle } from './reverse-bundle.mjs';
 
 const requiredFiles = [
   '.gitignore',
@@ -24,7 +25,7 @@ const requiredFiles = [
 ];
 
 const jsonFiles = requiredFiles.filter((name) => name.endsWith('.json'));
-const forbiddenFilePattern = /(^|\/)(auth\.json|\.env(?:\..*)?|[^/]+\.(?:pem|key)|[^/]+\.(?:ps1|cmd))$/i;
+const forbiddenFilePattern = /(^|\/)(auth\.json|\.env(?:\..*)?|[^/]+\.(?:pem|key))$/i;
 const secretPatterns = [
   /\b(?:sk|ghp|github_pat|xox[baprs])[-_][A-Za-z0-9_-]{16,}/i,
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
@@ -57,9 +58,11 @@ export async function verifyRepository() {
   for (const relative of jsonFiles) await readJson(path.join(repoRoot, relative));
 
   const files = await listFiles(repoRoot);
+  const reverseBundle = await verifyReverseBundle(path.join(repoRoot, 'skills/reverse-skill-router'));
   for (const relative of files) {
     const normalized = relative.split(path.sep).join('/');
-    if (forbiddenFilePattern.test(normalized)) {
+    const upstreamFile = normalized.startsWith('skills/reverse-skill-router/upstream/');
+    if (forbiddenFilePattern.test(normalized) || (!upstreamFile && /\.(?:ps1|cmd)$/i.test(normalized))) {
       throw new Error(`Forbidden platform-specific or credential file: ${normalized}`);
     }
     const text = await readFile(path.join(repoRoot, relative), 'utf8');
@@ -138,6 +141,9 @@ export async function verifyRepository() {
 
   const sourceManifest = await readJson(path.join(repoRoot, 'manifests', 'skill-sources.json'));
   if (!Array.isArray(sourceManifest)) throw new Error('manifests/skill-sources.json must be an array');
+  if (sourceManifest.find((source) => source.name === 'reverse-skill-router')?.ref !== reverseBundle.ref) {
+    throw new Error('Reverse-skill source pin does not match the bundled snapshot');
+  }
   const sourceNames = new Set();
   for (const source of sourceManifest) {
     if (!source || typeof source !== 'object') throw new Error('Invalid skill source entry');

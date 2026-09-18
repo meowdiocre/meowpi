@@ -29,9 +29,15 @@ The repository does not store credentials, sessions, caches, or `node_modules`.
 ## Systems skills
 
 - `assembly-systems` covers x86-64, AArch64, RISC-V, ABIs, compiler output, inline assembly, SIMD, and low-level verification.
-- `reverse-skill-router` selects an evidence-first workflow for authorized binary, IDA, Ghidra, radare2, firmware, protocol, malware, and forensic analysis.
+- `reverse-skill-router` includes the complete pinned upstream collection: 45 core modules, 42 CTF modules, shared references, scripts, and routing data.
 
-The reverse router is a portable adaptation. It excludes the upstream platform installers, persistent journal, and CTF sidecar.
+The reverse collection is bundled under `skills/reverse-skill-router/upstream/`, preserving the original layout and licenses. The baseline router loads the relevant module on demand. Its Node entry point works on Windows, macOS, and Linux; tool-specific upstream helpers retain their own runtime and OS requirements. Analysis tools are installed separately when needed.
+
+```sh
+node skills/reverse-skill-router/scripts/route.mjs "analyze a stripped Rust binary"
+```
+
+Keep case output and generated tool indexes in the project being analyzed. Verification checks the bundled files against the pinned upstream snapshot.
 
 ## Update the snapshot
 

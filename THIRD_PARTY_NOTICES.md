@@ -42,10 +42,10 @@ The MIT permission and warranty terms in the Plain English section apply to this
 
 ## Reverse skill
 
-`skills/reverse-skill-router` is adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill).
+`skills/reverse-skill-router/upstream` contains the complete unmodified snapshot of [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) at `7e2097fd90d25c2f976f6eba26d6c00aa88051df`. The surrounding skill entry point and Node router provide portable integration.
 
 MIT License
 
 Copyright (c) 2026 zhaoxuya520
 
-The MIT permission and warranty terms in the Plain English section apply to this adaptation.
+The MIT permission and warranty terms in the Plain English section apply to the upstream project's MIT-covered files. The bundled `CTF-Sandbox-Orchestrator` has its own GPL-3.0 license. Preserve all nested license files and notices; these retain their original scope. External tools referenced by the skills are subject to their own licenses and are not installed by this bundle.
