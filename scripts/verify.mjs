@@ -101,24 +101,20 @@ export async function verifyRepository() {
   }
 
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
-  const additionalSkills = skillManifest.additionalSkills || [];
-  if (!Array.isArray(additionalSkills) || additionalSkills.some((name) => typeof name !== 'string')) {
-    throw new Error('manifests/skills.json additionalSkills must be an array of names');
+  const unknownSkillManifestFields = Object.keys(skillManifest)
+    .filter((field) => !['skills', 'targets'].includes(field));
+  if (unknownSkillManifestFields.length > 0) {
+    throw new Error(`manifests/skills.json contains unknown fields: ${unknownSkillManifestFields.join(', ')}`);
+  }
+  if (!Array.isArray(skillManifest.skills)) {
+    throw new Error('manifests/skills.json skills must be an array');
   }
   if (new Set(skillManifest.skills).size !== skillManifest.skills.length) {
     throw new Error('manifests/skills.json contains duplicate skill names');
   }
-  if (new Set(additionalSkills).size !== additionalSkills.length) {
-    throw new Error('manifests/skills.json contains duplicate additional skill names');
-  }
-  for (const skillName of additionalSkills) {
-    if (!skillManifest.skills.includes(skillName)) {
-      throw new Error(`Additional portable skill is absent from skills: ${skillName}`);
-    }
-  }
   for (const skillName of ['assembly-systems', 'reverse-skill-router']) {
-    if (!additionalSkills.includes(skillName)) {
-      throw new Error(`Required portable skill is absent from additionalSkills: ${skillName}`);
+    if (!skillManifest.skills.includes(skillName)) {
+      throw new Error(`Required portable skill is absent from the baseline: ${skillName}`);
     }
   }
   const skillRoot = path.join(repoRoot, 'skills');
@@ -147,8 +143,8 @@ export async function verifyRepository() {
     if (!source || typeof source !== 'object') throw new Error('Invalid skill source entry');
     if (sourceNames.has(source.name)) throw new Error(`Duplicate skill source: ${source.name}`);
     sourceNames.add(source.name);
-    if (!additionalSkills.includes(source.name)) {
-      throw new Error(`Vendored source is not an additional skill: ${source.name}`);
+    if (!skillManifest.skills.includes(source.name)) {
+      throw new Error(`Vendored source is absent from the skill baseline: ${source.name}`);
     }
     if (!/^https:\/\/github\.com\/[^/]+\/[^/]+$/.test(source.repository || '')) {
       throw new Error(`Invalid GitHub repository for skill source: ${source.name}`);

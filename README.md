@@ -43,7 +43,7 @@ npm test
 git diff
 ```
 
-The export refreshes the portable configuration, package versions, and Pi skills. It preserves repository-owned skills listed in `additionalSkills`.
+The export refreshes the portable configuration, package versions, and complete Pi skill baseline from the current installation.
 
 Edit repository-owned skills here, not in their installed copies. Review the diff before you commit and push it.
 

@@ -3,9 +3,9 @@ import path from 'node:path';
 import {
   collapseTokens,
   commandName,
+  normalizeSkillSnapshot,
   parseCommonArgs,
   pathExists,
-  planSkillSnapshot,
   readJson,
   repoRoot,
   run,
@@ -123,21 +123,10 @@ async function main() {
   const repoSkillRoot = path.join(repoRoot, 'skills');
   const skillManifestPath = path.join(manifestRoot, 'skills.json');
   const skillManifest = await readJson(skillManifestPath);
-  const additionalSkills = skillManifest.additionalSkills || [];
   const liveSkills = (await readdir(liveSkillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
-    .map((entry) => entry.name)
-    .sort((left, right) => left.localeCompare(right));
-  const { copyFromPi, snapshot: snapshotSkills } = planSkillSnapshot(
-    liveSkills,
-    additionalSkills,
-  );
-
-  for (const skillName of additionalSkills) {
-    if (!(await pathExists(path.join(repoSkillRoot, skillName, 'SKILL.md')))) {
-      throw new Error(`Additional portable skill is missing: ${skillName}`);
-    }
-  }
+    .map((entry) => entry.name);
+  const snapshotSkills = normalizeSkillSnapshot(liveSkills);
 
   const existingSkills = await readdir(repoSkillRoot, { withFileTypes: true });
   for (const entry of existingSkills) {
@@ -145,7 +134,7 @@ async function main() {
       await rm(path.join(repoSkillRoot, entry.name), { recursive: true, force: true });
     }
   }
-  for (const skillName of copyFromPi) {
+  for (const skillName of snapshotSkills) {
     const source = path.join(liveSkillRoot, skillName);
     const target = path.join(repoSkillRoot, skillName);
     await rm(target, { recursive: true, force: true });

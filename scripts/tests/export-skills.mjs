@@ -1,17 +1,17 @@
 import assert from 'node:assert/strict';
-import { planSkillSnapshot } from '../lib.mjs';
+import { normalizeSkillSnapshot } from '../lib.mjs';
 
-const plan = planSkillSnapshot(
-  ['z-live', 'plain-english', 'a-live'],
-  ['plain-english', 'writing-router'],
-);
-
-assert.deepEqual(plan.copyFromPi, ['a-live', 'z-live']);
-assert.deepEqual(plan.snapshot, [
+const snapshot = normalizeSkillSnapshot([
+  'z-live',
+  'plain-english',
   'a-live',
   'plain-english',
-  'writing-router',
+]);
+
+assert.deepEqual(snapshot, [
+  'a-live',
+  'plain-english',
   'z-live',
 ]);
 
-console.log('PASS: repo-managed skills survive Pi export');
+console.log('PASS: all live Pi skills form the baseline snapshot');

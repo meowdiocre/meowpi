@@ -25,14 +25,6 @@
     "writing-great-agents-md",
     "writing-router"
   ],
-  "additionalSkills": [
-    "assembly-systems",
-    "plain-english",
-    "reverse-skill-router",
-    "simple-english",
-    "style-review",
-    "writing-router"
-  ],
   "targets": [
     {
       "name": "shared",
