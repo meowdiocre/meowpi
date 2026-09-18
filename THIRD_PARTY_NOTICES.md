@@ -32,13 +32,13 @@ Licensed under the [Creative Commons Attribution 4.0 International License](http
 
 ## ECC engineering workflow
 
-`skills/code-standards` and `skills/git-workflow` are adapted from the coding standards, Git workflow, common rules, testing, verification, and review workflows in [affaan-m/ECC](https://github.com/affaan-m/ECC) at `dd6ee538aee0f548d4a6b520118f875431fd749e`.
+`skills/code-standards`, `skills/git-workflow`, and `skills/modern-cpp/references/core-guidelines.md` are adapted from the coding standards, C++ Core Guidelines skill, Git workflow, common rules, testing, verification, and review workflows in [affaan-m/ECC](https://github.com/affaan-m/ECC) at `dd6ee538aee0f548d4a6b520118f875431fd749e`.
 
 MIT License
 
 Copyright (c) 2026 Affaan Mustafa
 
-The MIT permission and warranty terms in the Plain English section apply to these adaptations. They replace web-oriented universal rules with repository-aware and systems-aware decisions, add inspect-first history safety, and compose the existing language, review, verification, and commit-message skills.
+The MIT permission and warranty terms in the Plain English section apply to these adaptations. They replace universal rules with repository-aware and systems-aware decisions, add inspect-first history safety, and compose the existing language, review, verification, and commit-message skills. The C++ adaptation keeps ECC's high-signal interface, ownership, class, error, and concurrency guidance while deferring language level, ABI, naming, hardening, and error-model choices to the target repository.
 
 ## Caveman commit
 

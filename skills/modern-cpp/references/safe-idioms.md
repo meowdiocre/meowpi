@@ -6,7 +6,7 @@ Security patterns organized by vulnerability class. Each section explains what e
 
 ### Ownership: Smart Pointers
 
-Use smart pointers for all owning relationships. Raw pointers are only for non-owning observation.
+Use value members or smart pointers for ordinary owning relationships. Raw pointers and references normally express borrowing; C APIs, allocators, kernels, hardware, and stable ABIs may require an explicitly documented exception.
 
 ```cpp
 // Unique ownership (default choice)
@@ -23,10 +23,10 @@ std::weak_ptr<Config> watcher = shared;  // non-owning, expires safely
 ```
 
 **Selection guide:**
-- `std::unique_ptr` — default. Zero overhead vs raw pointer. Use for exclusive ownership.
+- `std::unique_ptr` — default heap-ownership type. Use for exclusive ownership without reference counting.
 - `std::shared_ptr` — only when multiple owners genuinely need to extend lifetime. Has overhead (refcount, control block).
 - `std::weak_ptr` — observe shared objects without preventing destruction. Use to break cycles.
-- Raw `T*` / `T&` — non-owning only. Never `delete` a raw pointer you didn't `new`.
+- Raw `T*` / `T&` — normally non-owning. Follow the actual boundary contract; never release a resource through the wrong allocator or API.
 
 ### Non-Owning Views
 
@@ -34,7 +34,7 @@ std::weak_ptr<Config> watcher = shared;  // non-owning, expires safely
 // DANGEROUS: pointer + length — no size information
 void process(const char* data, size_t len);
 
-// SAFE: carries size, bounds-checkable
+// SAFER INTERFACE: carries size; access still requires a valid index
 void process(std::span<const char> data);
 
 // DANGEROUS: null-terminated assumption
@@ -45,9 +45,9 @@ void log(std::string_view message);
 ```
 
 **Rules:**
-- Function parameters: `std::span<T>` for arrays, `std::string_view` for strings
-- Return values: return owned types (`std::vector`, `std::string`), not views
-- Never return a `span` or `string_view` to a local
+- Prefer `std::span<T>` for borrowed contiguous ranges and `std::string_view` for borrowed length-delimited text when the project standard supports them.
+- Return owned types by default. Return a view only when the API makes the source lifetime unambiguous.
+- Never return a `span` or `string_view` to a local or temporary.
 
 ### Optional vs Nullable Pointers
 
@@ -55,7 +55,7 @@ void log(std::string_view message);
 // DANGEROUS: null pointer used as "no value"
 Widget* find(int id);  // caller might forget to check
 
-// SAFE: explicit optionality
+// VALUE ABSENCE: explicit optionality when identity and borrowing are irrelevant
 std::optional<Widget> find(int id);  // caller must unwrap
 
 // Check before use
@@ -184,7 +184,7 @@ mtx.unlock();
     do_work();  // mutex released when lock goes out of scope
 }
 
-// Multiple mutexes — deadlock-free (sorted lock acquisition)
+// Multiple mutexes — coordinated acquisition for this lock set
 std::scoped_lock lock(mutex_a, mutex_b);
 ```
 
@@ -210,16 +210,16 @@ std::jthread t([](std::stop_token stoken) {
 // DANGEROUS: volatile does NOT provide atomicity or ordering
 volatile int counter = 0;  // data race in multi-threaded code
 
-// SAFE: atomic with explicit memory ordering
+// Atomic with ordering chosen from the synchronization invariant
 std::atomic<int> counter{0};
-counter.fetch_add(1, std::memory_order_relaxed);  // specify ordering
+counter.fetch_add(1, std::memory_order_relaxed);  // valid only if the counter carries no other synchronization
 ```
 
 ## Initialization Safety
 
 ### constexpr / consteval
 
-Computation at compile time is UB-free by design — the compiler rejects any undefined behavior in constant expressions.
+Constant evaluation rejects operations that are not permitted in a core constant expression. This catches many errors when evaluation is actually required at compile time; it is not a blanket proof that the same function is safe for every runtime input.
 
 ```cpp
 constexpr int factorial(int n) {
@@ -247,7 +247,7 @@ int y{};         // value-initialized (zero for scalars)
 auto z = compute_value();
 ```
 
-Enable `-ftrivial-auto-var-init=zero` to catch cases you miss.
+Where supported, `-ftrivial-auto-var-init=zero` can reduce disclosure and nondeterminism from missed initialization. It does not fix the underlying logic error; use warnings and MemorySanitizer where practical to detect it.
 
 ### Rule of Five / Zero
 

@@ -217,6 +217,7 @@ export async function verifyRepository() {
     'skills/code-standards/references/engineering-principles.md',
     'skills/code-standards/references/language-routing.md',
     'skills/code-standards/references/testing-and-verification.md',
+    'skills/modern-cpp/references/core-guidelines.md',
   ];
   for (const relative of codeStandardsFiles) {
     if (!(await pathExists(path.join(repoRoot, relative)))) {

@@ -2,6 +2,8 @@
 
 Security-focused compiler and linker configuration for C++ projects. Based on the [OpenSSF Compiler Options Hardening Guide](https://best.openssf.org/Compiler-Hardening-Guides/Compiler-Options-Hardening-Guide-for-C-and-C++.html) and Trail of Bits recommendations.
 
+Treat every flag as a candidate, not a portable preset. Check the target compiler, linker, operating system, C library, standard library, optimization level, dependencies, and deployment policy. Add flags incrementally and verify the produced binary. Use `-Werror` only where the project controls warning stability; third-party headers and compiler upgrades often need a different policy.
+
 ## Essential Compiler Flags
 
 ### Warnings
@@ -11,7 +13,7 @@ Security-focused compiler and linker configuration for C++ projects. Based on th
 | `-Wall` | Core warnings | Yes | Yes |
 | `-Wextra` | Additional warnings | Yes | Yes |
 | `-Wpedantic` | Strict ISO compliance | Yes | Yes |
-| `-Werror` | Treat warnings as errors | Yes | Yes |
+| `-Werror` | Treat warnings as errors; usually a project CI policy | Yes | Yes |
 | `-Wconversion` | Implicit narrowing conversions | Yes | Yes |
 | `-Wsign-conversion` | Signed/unsigned conversion | Yes | Yes |
 | `-Wformat=2` | Format string issues | Yes | Yes |
@@ -47,7 +49,7 @@ Trail of Bits found [20+ projects on GitHub](https://blog.trailofbits.com/2023/0
 -ftrivial-auto-var-init=zero
 ```
 
-Zero-initializes all local variables that would otherwise be uninitialized. Eliminates information leaks from stack variables at minimal performance cost.
+Zero-initializes trivial automatic variables that would otherwise be uninitialized on supported compilers. It can reduce disclosure and nondeterminism, but it may mask logic bugs and its cost must be measured.
 
 ### Position-Independent Code
 
@@ -56,7 +58,7 @@ Zero-initializes all local variables that would otherwise be uninitialized. Elim
 -fPIC -shared           # for shared libraries
 ```
 
-Required for ASLR to work effectively.
+These are ELF-oriented examples. PIE supports executable randomization on relevant platforms, but toolchain defaults and flags differ on Windows, macOS, embedded systems, and some Linux distributions.
 
 ### Linker Hardening
 
@@ -92,7 +94,7 @@ libc++ provides hardening modes that add bounds-checking to standard containers 
 
 ### Recommendation
 
-- **All builds**: Enable `_FAST` mode — Google measured 0.3% overhead across their fleet
+- **Compatible libc++ builds**: Consider `_FAST` mode after testing and benchmarking; Google's workload is evidence, not a universal cost guarantee
 - **Security-critical code**: Enable `_EXTENSIVE` mode
 - **Development/testing**: Enable `_DEBUG` mode
 
@@ -129,7 +131,7 @@ Overhead: minimal (~5-10%). Safe for most CI runs.
 
 ### ThreadSanitizer (TSan)
 
-Detects: data races, lock-order inversions, deadlocks.
+Primarily detects data races and some synchronization misuse. Do not rely on it as a complete deadlock detector.
 
 ```
 -fsanitize=thread
@@ -204,7 +206,9 @@ readelf -s ./my_binary | grep _chk
 
 For quick verification during development, compile on [Compiler Explorer](https://godbolt.org/) and inspect the generated assembly for canary checks and fortified function calls.
 
-## Complete Hardened Compilation Example
+## Linux/ELF starting point
+
+This example is intentionally not a copy-paste universal profile. Remove unsupported flags, separate project warnings from dependency warnings, and verify the result for the target environment.
 
 ```bash
 # GCC

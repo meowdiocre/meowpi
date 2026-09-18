@@ -16,6 +16,14 @@
     "modified": true
   },
   {
+    "name": "modern-cpp",
+    "repository": "https://github.com/affaan-m/ECC",
+    "path": "skills/cpp-coding-standards",
+    "ref": "dd6ee538aee0f548d4a6b520118f875431fd749e",
+    "license": "MIT",
+    "modified": true
+  },
+  {
     "name": "caveman-commit",
     "repository": "https://github.com/JuliusBrussee/caveman",
     "path": "skills/caveman-commit",

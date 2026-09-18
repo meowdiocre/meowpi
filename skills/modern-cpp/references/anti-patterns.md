@@ -1,6 +1,6 @@
-# Anti-Patterns: Legacy to Modern C++
+# Legacy-to-modern C++ options
 
-Comprehensive reference of legacy C++ patterns and their modern replacements. Each entry explains WHY the modern version is better — not just that it exists.
+Use this as a decision aid, not a replacement script. Confirm the repository's language level, error model, ABI, allocator, platform, and performance constraints first. A C API, embedded target, kernel, hardware register, wire format, or stable ABI can make a lower-level representation the correct choice.
 
 ## Memory Management
 
@@ -14,9 +14,9 @@ Comprehensive reference of legacy C++ patterns and their modern replacements. Ea
 | `malloc`/`free` | Containers or smart pointers | C++11 | Type-safe, exception-safe, RAII |
 | `memcpy(dst, src, n)` | `std::copy(src, src+n, dst)` or container assignment | C++98 | Type-safe, works with non-trivial types |
 | `memset(buf, 0, n)` | Value initialization or `std::fill` | C++98 | No risk of zeroing non-trivially-constructible types |
-| Pointer + length parameter pairs | `std::span<T>` | C++20 | Carries size, bounds-checkable with hardened mode |
-| `const char*` for non-owning strings | `std::string_view` | C++17 | Carries length, no null-terminator assumption |
-| Nullable `T*` for optional values | `std::optional<T>` | C++17 | Explicit intent, no null dereference risk |
+| Pointer + length parameter pairs | `std::span<T>` | C++20 | Carries an extent and integrates with supported bounds-hardening modes |
+| `const char*` for length-delimited text | `std::string_view` | C++17 | Carries length without requiring a terminator; preserve C and null-terminated APIs |
+| Nullable `T*` used only as an optional value | `std::optional<T>` | C++17 | Makes value absence explicit; keep pointers for borrowed object identity |
 
 ## Type Safety
 
@@ -36,8 +36,8 @@ Comprehensive reference of legacy C++ patterns and their modern replacements. Ea
 
 | Avoid | Use Instead | Standard | Why |
 |-------|-------------|----------|-----|
-| Error codes + out-params | `std::expected<T, E>` | C++23 | Composable with `.and_then()`, `.transform()`, `.or_else()` |
-| `assert()` macro | `contract_assert` | C++26 | Visible to tooling, configurable enforcement modes |
+| Ad hoc error codes + out-params | Repository result type or `std::expected<T, E>` | C++23 | Makes typed expected failures composable without replacing an established exception or status model |
+| API preconditions hidden in implementation asserts | Contracts where supported, or the repository's assertion facility | C++26 | Makes boundary intent clearer without assuming immature toolchain support |
 | Unchecked `errno` | `std::expected` or exceptions | C++23 | Forces caller to handle the error path |
 | Throwing in constructor for expected failures | Factory returning `std::expected` | C++23 | No exception overhead for expected failure paths |
 
@@ -45,7 +45,7 @@ Comprehensive reference of legacy C++ patterns and their modern replacements. Ea
 
 | Avoid | Use Instead | Standard | Why |
 |-------|-------------|----------|-----|
-| `printf` / `sprintf` | `std::format` / `std::print` | C++20/23 | Type-safe, no format string vulnerabilities |
+| Unsafe or hand-sized formatting | `std::format` / `std::print` | C++20/23 | Type-safe formatting when library support and project logging policy permit it |
 | `snprintf` for string building | `std::format` | C++20 | Returns `std::string`, no buffer management |
 | `std::cout << a << b << c` | `std::println("{} {} {}", a, b, c)` | C++23 | Readable, no stream state issues, faster |
 
@@ -53,10 +53,10 @@ Comprehensive reference of legacy C++ patterns and their modern replacements. Ea
 
 | Avoid | Use Instead | Standard | Why |
 |-------|-------------|----------|-----|
-| `mutex.lock()` / `mutex.unlock()` | `std::scoped_lock` | C++17 | Exception-safe, supports multiple mutexes (no deadlock) |
+| `mutex.lock()` / `mutex.unlock()` | Named RAII guard or `std::scoped_lock` | C++11/17 | Releases on every exit path and supports coordinated multiple-mutex acquisition |
 | `std::thread` + manual `.join()` | `std::jthread` | C++20 | Auto-joins on destruction, supports stop tokens |
 | `volatile` for thread sync | `std::atomic<T>` | C++11 | Actually guarantees atomic operations and memory ordering |
-| Manual condition variable notify | `std::latch`, `std::barrier` | C++20 | Higher-level, less error-prone synchronization |
+| Hand-rolled one-shot or phase coordination | `std::latch`, `std::barrier` | C++20 | Expresses those coordination patterns directly; it does not replace condition variables generally |
 | Hand-rolled atomic CAS loops | `std::atomic::fetch_max/fetch_min` | C++26 | Standard, correct, optimized |
 
 ## Metaprogramming
@@ -73,7 +73,7 @@ Comprehensive reference of legacy C++ patterns and their modern replacements. Ea
 
 | Avoid | Use Instead | Standard | Why |
 |-------|-------------|----------|-----|
-| `std::map` for read-heavy lookups | `std::flat_map` | C++23 | Cache-friendly, 8-17x faster lookup for small-medium maps |
+| Node-based map when ordered contiguous storage fits | `std::flat_map` | C++23 | Can improve locality; benchmark updates and lookups for the actual workload |
 | `boost::static_vector` | `std::inplace_vector` | C++26 | Standard, no Boost dependency, fallible API |
 | `std::function` (when non-owning) | `std::function_ref` | C++26 | Zero allocation overhead |
 | Raw pointer polymorphism | `std::indirect<T>`, `std::polymorphic<T>` | C++26 | Value semantics, copyable, no manual lifetime management |

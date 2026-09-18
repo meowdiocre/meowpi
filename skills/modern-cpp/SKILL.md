@@ -1,187 +1,65 @@
 ---
 name: modern-cpp
-description: Guides C++ code toward modern idioms (C++20/23/26). Use when writing new C++ code, modernizing legacy patterns, or working on security-critical C++. Replaces raw pointers with smart pointers, SFINAE with concepts, printf with std::print, error codes with std::expected.
+description: Write, review, and modernize C++ with repository-compatible language features, precise interfaces, RAII, explicit ownership, safe concurrency, and measured hardening. Use for C++ implementation, refactoring, API design, or safety review; do not use for pure C or build-system-only work.
 ---
 
 # Modern C++
 
-Guide for writing modern C++ using C++20, C++23, and C++26 idioms. Focuses on patterns that eliminate vulnerability classes and reduce boilerplate, with a security emphasis from Trail of Bits.
+Write the smallest clear C++ that fits the repository. Inspect the configured language standard, supported compilers, ABI constraints, formatter, warning policy, error model, and nearby code before choosing an idiom. Repository constraints and user requirements take precedence over newer syntax.
 
-## When to Use This Skill
+Keep changes focused. Do not upgrade the language standard, replace a project-wide error strategy, or modernize unrelated code unless the task requires it.
 
-- Writing new C++ functions, classes, or libraries
-- Modernizing existing C++ code (pre-C++20 patterns)
-- Choosing between legacy and modern approaches
-- Working on security-critical or safety-sensitive C++
-- Reviewing C++ code for modern idiom adoption
+## Design baseline
 
-## When NOT to Use This Skill
+- Make ownership, lifetime, nullability, units, valid states, and failure behavior visible in types and interfaces.
+- Prefer value semantics, deterministic cleanup, ordinary control flow, and standard-library facilities.
+- Use RAII for every resource, including files, handles, locks, mappings, sockets, and transactions.
+- Prefer scoped objects and `std::unique_ptr`. Use `std::shared_ptr` only for genuine shared lifetime. Raw pointers and references are normally non-owning.
+- Initialize objects before use. Apply `const` when a value should remain stable and doing so clarifies the design; do not force immutability when localized mutation better represents the algorithm.
+- Preserve public behavior and ABI unless the requested change requires otherwise.
+- Comment invariants, ownership exceptions, synchronization rules, ABI constraints, and non-obvious tradeoffs. Do not narrate the code.
 
-- **User explicitly requires older standard**: Respect constraints (embedded, legacy ABI)
-- **Pure C code**: This skill is C++-specific
-- **Build system questions**: CMake, Meson, Bazel configuration is out of scope
-- **Non-C++ projects**: Mixed codebases where C++ isn't primary
+For interface, function, class, ownership, error-handling, concurrency, template, and source-file decisions, read [core-guidelines.md](./references/core-guidelines.md).
 
-## Anti-Patterns to Avoid
+## Feature selection
 
-| Avoid | Use Instead | Why |
-|-------|-------------|-----|
-| `new`/`delete` | `std::make_unique`, `std::make_shared` | Eliminates leaks, double-free |
-| Raw owning pointers | `std::unique_ptr`, `std::shared_ptr` | RAII ownership semantics |
-| C arrays (`int arr[N]`) | `std::array<int, N>` | Bounds-aware, value semantics |
-| Pointer + length params | `std::span<T>` | Non-owning, bounds-checkable |
-| `printf` / `sprintf` | `std::format`, `std::print` | Type-safe, no buffer overflow |
-| C-style casts `(int)x` | `static_cast<int>(x)` | Explicit intent, auditable |
-| `#define` constants | `constexpr` variables | Scoped, typed, debuggable |
-| SFINAE / `enable_if` | Concepts + `requires` | Readable constraints and errors |
-| Error codes + out params | `std::expected<T, E>` | Composable, type-safe errors |
-| `union` | `std::variant` | Type-safe, no silent UB |
-| Raw `mutex.lock()/unlock()` | `std::scoped_lock` | Exception-safe, no deadlocks |
-| `std::thread` | `std::jthread` | Auto-join, stop token support |
-| `assert()` macro | `contract_assert` (C++26) | Visible to tooling, configurable |
-| Manual CRTP | Deducing `this` (C++23) | Simpler, no template boilerplate |
-| Macro code generation | Reflection (C++26) | Zero-overhead, composable |
+Use a feature only when the project's selected standard and supported toolchains implement it well.
 
-See [anti-patterns.md](./references/anti-patterns.md) for the full table (30+ patterns).
+| Need | Prefer when available | Important boundary |
+|---|---|---|
+| Non-owning contiguous input | `std::span` | The source must outlive the view. |
+| Non-owning text input | `std::string_view` | Do not retain a view into temporary or mutable storage. |
+| Optional value | `std::optional` | A pointer can still be clearer for optional object identity. |
+| Closed alternatives | `std::variant` | C unions may still be required at ABI or hardware boundaries. |
+| Typed expected failure | `std::expected` | Follow the repository's established exception, status, or result model. |
+| Constrained generic code | concepts and `requires` | Requires C++20; do not add templates without a useful abstraction. |
+| Thread with owned lifetime | `std::jthread` | Requires C++20 and does not replace a clear shutdown protocol. |
+| Multiple mutex acquisition | `std::scoped_lock` | Define the protected invariant and lock scope first. |
+| Type-safe formatting | `std::format` or `std::print` | Confirm library support and preserve logging facilities. |
+| Type punning | `std::bit_cast` | Types must satisfy its size and trivial-copyability requirements. |
 
-## Decision Tree
+Read the version-specific reference only when that version is available or under consideration:
 
-```
-What are you doing?
-|
-+-- Writing new C++ code?
-|   +-- Use modern idioms by default (C++20/23)
-|   +-- Choose the newest standard your compiler supports
-|   +-- See Feature Tiers below
-|
-+-- Modernizing existing code?
-|   +-- Start with Tier 1 (C++20/23) replacements
-|   +-- Prioritize by security impact (memory > types > style)
-|   +-- See anti-patterns.md for the migration table
-|
-+-- Security-critical code?
-|   +-- Enable compiler hardening flags (see below)
-|   +-- Enable hardened libc++ mode
-|   +-- Run sanitizers in CI
-|   +-- See safe-idioms.md and compiler-hardening.md
-|
-+-- Using C++26 features?
-    +-- Reflection: YES, plan for it (GCC 16+)
-    +-- Contracts: cautiously, for new API boundaries
-    +-- std::execution: wait for ecosystem maturity
-    +-- See cpp26-features.md
-```
+- [cpp20-features.md](./references/cpp20-features.md)
+- [cpp23-features.md](./references/cpp23-features.md)
+- [cpp26-features.md](./references/cpp26-features.md)
 
-## Feature Tiers
+Use [anti-patterns.md](./references/anti-patterns.md) to evaluate a legacy replacement. Treat the table as options, not mechanical rewrite rules: C APIs, embedded targets, kernels, allocators, stable ABIs, and older toolchains often require lower-level representations.
 
-Features are ranked by **practical usability today**, not by standard version.
+## Safety and hardening
 
-### Tier 1: Use Today (C++20/23, solid compiler support)
+For security-sensitive or boundary-heavy code, read [safe-idioms.md](./references/safe-idioms.md). Check sizes, conversions, bounds, iterator validity, lifetime, partial operations, cleanup after failure, and concurrency invariants.
 
-| Feature | Replaces | Standard |
-|---------|----------|----------|
-| Concepts + `requires` | SFINAE, `enable_if` | C++20 |
-| Ranges + views | Raw iterator loops | C++20 |
-| `std::span<T>` | Pointer + length | C++20 |
-| `std::format` | `sprintf`, iostream chains | C++20 |
-| Three-way comparison `<=>` | Manual comparison operators | C++20 |
-| `std::jthread` | `std::thread` + manual join | C++20 |
-| Designated initializers | Positional struct init | C++20 |
-| `std::expected<T,E>` | Error codes, exceptions at boundaries | C++23 |
-| `std::print` / `std::println` | `printf`, `std::cout <<` | C++23 |
-| Deducing `this` | CRTP, const/non-const duplication | C++23 |
-| `std::flat_map` | `std::map` for read-heavy use | C++23 |
-| Monadic `std::optional` | Nested if-checks on optionals | C++23 |
+For compiler and CI hardening, read [compiler-hardening.md](./references/compiler-hardening.md). Select flags by compiler, platform, build type, dependency policy, and measured overhead. Do not apply `-Werror`, sanitizer settings, linker flags, or a standard-library hardening mode universally without checking compatibility.
 
-See [cpp20-features.md](./references/cpp20-features.md) and [cpp23-features.md](./references/cpp23-features.md).
+## Review
 
-### Tier 2: Deploy Now (no standard bump needed)
+Before finishing:
 
-These improve safety without changing your C++ standard version:
-
-- **Compiler hardening flags** — `-D_FORTIFY_SOURCE=3`, `-fstack-protector-strong`, `-ftrivial-auto-var-init=zero`
-- **Hardened libc++** — `-D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST` for ~0.3% overhead bounds-checking
-- **Sanitizers in CI** — ASan + UBSan as minimum; TSan for concurrent code
-- **Warning flags** — `-Wall -Wextra -Wpedantic -Werror`
-
-See [compiler-hardening.md](./references/compiler-hardening.md).
-
-### Tier 3: Plan For (C++26, worth restructuring around)
-
-**Reflection** is the single most transformative C++26 feature. It eliminates:
-- Serialization boilerplate (one generic function replaces per-struct `to_json`)
-- Code generators (protobuf codegen, Qt MOC)
-- Macro-based registration and enum-to-string hacks
-
-GCC 16 (April 2026) has reflection merged. Plan new code to benefit from it.
-
-### Tier 4: Watch (C++26, needs maturation)
-
-- **Contracts** (`pre`/`post`/`contract_assert`) — Better than `assert()`, but no virtual function support and limited compiler support. Adopt cautiously for new API boundaries.
-- **std::execution** (senders/receivers) — Powerful async framework, but steep learning curve, no scheduler ships with it, and poor documentation. Wait for ecosystem maturity.
-
-See [cpp26-features.md](./references/cpp26-features.md).
-
-## Compiler Hardening Quick Reference
-
-### Essential Flags (GCC + Clang)
-
-```
--Wall -Wextra -Wpedantic -Werror
--D_FORTIFY_SOURCE=3
--fstack-protector-strong
--fstack-clash-protection
--ftrivial-auto-var-init=zero
--fPIE -pie
--Wl,-z,relro,-z,now
-```
-
-### Clang-Specific
-
-```
--Wunsafe-buffer-usage
-```
-
-### Hardened libc++ (Clang/libc++ only)
-
-```
--D_LIBCPP_HARDENING_MODE=_LIBCPP_HARDENING_MODE_FAST
-```
-
-Google deployed this across Chrome and their server fleet: ~0.3% overhead, 1000+ bugs found, 30% reduction in production segfaults.
-
-See [compiler-hardening.md](./references/compiler-hardening.md) for the full guide.
-
-## Rationalizations to Reject
-
-| Rationalization | Why It's Wrong |
-|----------------|----------------|
-| "It compiles without warnings" | Warnings depend on which flags you enable. Add `-Wall -Wextra -Wpedantic`. |
-| "ASan is too slow for production" | Use GWP-ASan for sampling-based production detection (~0% overhead). |
-| "We only use safe containers" | Iterator invalidation and unchecked `optional` access are still exploitable. |
-| "Smart pointers are slower" | `std::unique_ptr` has zero overhead vs raw pointers. Measure before claiming. |
-| "Our code doesn't have memory bugs" | Google found 1000+ bugs when enabling hardened libc++. So did everyone else. |
-| "C++26 features aren't available yet" | C++20/23 features are. Hardening flags work on any standard. Start there. |
-| "Modern C++ is harder to read" | `std::expected` is more readable than checking error codes across 5 out-params. |
-
-## Best Practices Checklist
-
-- [ ] Use smart pointers for ownership, raw pointers only for non-owning observation
-- [ ] Prefer `std::span` over pointer + length for function parameters
-- [ ] Use `std::expected` for functions that can fail with typed errors
-- [ ] Constrain templates with concepts, not SFINAE
-- [ ] Enable compiler hardening flags and hardened libc++ in all builds
-- [ ] Run ASan + UBSan in CI; add TSan for concurrent code
-- [ ] Use `constexpr` / `consteval` where possible (UB-free by design)
-- [ ] Mark functions `[[nodiscard]]` when ignoring the return value is likely a bug
-- [ ] Prefer value semantics; use `std::variant` over `union`, `enum class` over `enum`
-- [ ] Initialize all variables at declaration
-
-## Read Next
-
-- [anti-patterns.md](./references/anti-patterns.md) — Full legacy-to-modern migration table (30+ patterns)
-- [cpp20-features.md](./references/cpp20-features.md) — Concepts, ranges, span, format, coroutines
-- [cpp23-features.md](./references/cpp23-features.md) — expected, print, deducing this, flat_map
-- [cpp26-features.md](./references/cpp26-features.md) — Reflection, contracts, memory safety improvements
-- [compiler-hardening.md](./references/compiler-hardening.md) — Flags, sanitizers, hardened libc++
-- [safe-idioms.md](./references/safe-idioms.md) — Security patterns by vulnerability class
+- Confirm the code builds under the repository's actual standard and supported toolchains.
+- Check that ownership and borrowed lifetimes remain valid across every exit path.
+- Check narrowing, signedness, overflow, bounds, invalid states, and ignored failures at affected boundaries.
+- Check Rule of Zero/Five and polymorphic destruction when special members or inheritance are involved.
+- Check lock scope, wait predicates, callbacks under locks, cancellation, and shutdown when concurrency is involved.
+- Run the repository formatter and the narrowest relevant build, tests, static analysis, or sanitizers.
+- Keep performance claims tied to equivalent benchmarks or a clear complexity result.
