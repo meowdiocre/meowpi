@@ -9,6 +9,7 @@ const requiredFiles = [
   '.gitignore',
   'README.md',
   'THIRD_PARTY_NOTICES.md',
+  'assets/meowpi-logo.jpg',
   'package.json',
   'scripts/bootstrap.mjs',
   'scripts/export.mjs',
@@ -106,6 +107,9 @@ export async function verifyRepository() {
   const settings = await readJson(path.join(repoRoot, 'config', 'settings.json'));
   const piPackages = await readJson(path.join(repoRoot, 'manifests', 'pi-packages.json'));
   const projectPackage = await readJson(path.join(repoRoot, 'package.json'));
+  if (projectPackage.name !== 'meowpi') {
+    throw new Error('Package name must match the MeowPi repository brand');
+  }
   if (projectPackage.engines?.node !== '>=22.19.0') {
     throw new Error('Grill Me requires the repository to declare Node.js >=22.19.0');
   }

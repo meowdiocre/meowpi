@@ -1,9 +1,9 @@
 {
-  "name": "pi-portable-config",
+  "name": "meowpi",
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Cross-platform, secret-safe Pi configuration and skill snapshot",
+  "description": "Portable Pi configuration and shared agent skills for Pi, Codex, Claude Code, and OpenCode",
   "engines": {
     "node": ">=22.19.0"
   },

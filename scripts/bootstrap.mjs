@@ -46,7 +46,7 @@ async function main() {
     }
   }
 
-  console.log('\n==> Restore portable Pi configuration');
+  console.log('\n==> Restore MeowPi configuration');
   if (!options.dryRun) await mkdir(options.piHome, { recursive: true });
   await installFile(
     path.join(configRoot, 'settings.json'),
@@ -119,7 +119,7 @@ async function main() {
   }
 
   console.log('\n==> Complete');
-  console.log('Portable Pi configuration is installed. Authenticate providers locally on this device.');
+  console.log('MeowPi is installed. Authenticate providers locally on this device.');
   if (!options.dryRun) console.log(`Backups: ${backupRoot}`);
 }
 

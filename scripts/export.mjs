@@ -150,7 +150,7 @@ async function main() {
   await writeJson(skillManifestPath, skillManifest);
 
   await verifyRepository();
-  console.log('Safe configuration and complete Pi skill snapshot refreshed. Review git diff.');
+  console.log('MeowPi configuration and complete skill snapshot refreshed. Review git diff.');
 }
 
 main().catch((error) => {

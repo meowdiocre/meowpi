@@ -1,14 +1,18 @@
-# Portable Pi configuration
+# MeowPi
 
-Use the same Pi setup on Windows, macOS, or Linux. This repository stores portable configuration and shared agent skills.
+<p align="center">
+  <img src="assets/meowpi-logo.jpg" alt="MeowPi logo" width="420">
+</p>
+
+MeowPi keeps the same Pi setup on Windows, macOS, and Linux. It stores portable configuration and shared agent skills in one private repository.
 
 ## Install
 
 Install Git and Node.js 22.19 or later. Make sure that the device has network access.
 
 ```sh
-git clone https://github.com/meowdiocre/pi-portable-config.git
-cd pi-portable-config
+git clone https://github.com/meowdiocre/meowpi.git
+cd meowpi
 npm run bootstrap
 pi
 ```

@@ -1,6 +1,6 @@
 # Repository rules
 
-- Treat this repository as the source of truth for portable Pi configuration.
+- Treat this repository as the source of truth for MeowPi's portable Pi configuration.
 - Never add `auth.json`, API keys, access tokens, session transcripts, caches, or generated `node_modules`.
 - Keep the complete Pi skill baseline under `skills/`; `manifests/skills.json` must list every directory.
 - Pin vendored skill sources in `manifests/skill-sources.json` and preserve their notices in `THIRD_PARTY_NOTICES.md`.
