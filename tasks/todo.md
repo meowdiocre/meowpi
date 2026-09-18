@@ -33,3 +33,12 @@ Risks: generic web-development rules overriding systems idioms, duplicated speci
 - [x] Validate, install across all configured agents, commit, and push.
 
 Risks: destructive history advice, accidental publication, hidden user changes, and duplicated commit-message rules.
+
+## Consultant skill
+
+- [x] Add the user-provided `consult` skill to the baseline.
+- [x] Pin and configure the Pi subagent extension that provides its tools.
+- [x] Add validation for the skill and package configuration.
+- [x] Install, verify, commit, and push the updated baseline.
+
+Risks: unavailable consultant models, silent model fallback, writable consultant tools, and unnecessary escalation.

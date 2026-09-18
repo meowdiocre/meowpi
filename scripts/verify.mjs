@@ -103,6 +103,17 @@ export async function verifyRepository() {
     throw new Error('WinDbg must resolve mcp-windbg from PATH');
   }
 
+  const settings = await readJson(path.join(repoRoot, 'config', 'settings.json'));
+  const piPackages = await readJson(path.join(repoRoot, 'manifests', 'pi-packages.json'));
+  const configuredPackages = sorted(settings.packages || []);
+  const pinnedPackages = sorted(piPackages.map((entry) => `npm:${entry.name}`));
+  if (JSON.stringify(configuredPackages) !== JSON.stringify(pinnedPackages)) {
+    throw new Error('Pi settings packages must match the pinned package manifest');
+  }
+  if (piPackages.find((entry) => entry.name === '@arhen/pi-core-subagent')?.version !== '1.3.55') {
+    throw new Error('The consult skill requires @arhen/pi-core-subagent@1.3.55');
+  }
+
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
   const unknownSkillManifestFields = Object.keys(skillManifest)
     .filter((field) => !['skills', 'targets'].includes(field));
@@ -119,6 +130,7 @@ export async function verifyRepository() {
     'assembly-systems',
     'caveman-commit',
     'code-standards',
+    'consult',
     'git-workflow',
     'modern-cpp',
     'reverse-skill-router',

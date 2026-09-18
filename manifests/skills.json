@@ -9,6 +9,7 @@
     "cloudflare-one-migrations",
     "code-standards",
     "comment-audit",
+    "consult",
     "durable-objects",
     "git-workflow",
     "modern-cpp",

@@ -1,5 +1,6 @@
 {
   "packages": [
+    "npm:@arhen/pi-core-subagent",
     "npm:@neilurk12/pi-9router",
     "npm:pi-mcp-adapter",
     "npm:@firstpick/pi-themes-bundle",
