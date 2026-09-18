@@ -9,7 +9,7 @@ Use this skill as the shared engineering lifecycle. Repository instructions and 
 
 ## Compose the workflow
 
-Before editing, read [language routing](references/language-routing.md) and load only the companion skills that match the code being changed. The shared workflow decides how to work; the companion skill decides how good code looks in that language or domain.
+Before editing, read [language routing](references/language-routing.md) and load only the companion skills that match the code or repository operation. The shared workflow decides how to work; companion skills decide how good code or history looks in that language or domain.
 
 For decisions about abstraction, state, interfaces, errors, comments, dependencies, security, or performance, read [engineering principles](references/engineering-principles.md). For choosing and running evidence, read [testing and verification](references/testing-and-verification.md).
 
@@ -21,7 +21,7 @@ For decisions about abstraction, state, interfaces, errors, comments, dependenci
 4. **Create evidence.** Reproduce a bug before fixing it. For new behavior, add a stable contract or regression test when the behavior is observable and the test adds confidence. Use an explicit manual check when automation would be brittle or would only restate the implementation.
 5. **Implement the smallest coherent change.** Follow local patterns. Keep data flow, ownership, state changes, and failure behavior visible. Avoid speculative abstraction, unrelated cleanup, hidden allocation, unnecessary dependencies, and mass formatting.
 6. **Review the diff.** Check correctness, error paths, public interfaces, compatibility, trust boundaries, ownership and lifetime, concurrency, resource cleanup, undefined behavior, and likely performance regressions. Fix findings supported by the diff.
-7. **Verify and hand off.** Run focused checks first, then the repository's required formatter, compiler, linter, static analysis, tests, and build. Report the commands and results that support completion. Update user-facing documentation when behavior or interfaces changed. Commit or publish only when the task includes it.
+7. **Verify and hand off.** Run focused checks first, then the repository's required formatter, compiler, linter, static analysis, tests, and build. Report the commands and results that support completion. Update user-facing documentation when behavior or interfaces changed. When the task includes commits, branches, pull requests, or releases, load `git-workflow`; use `caveman-commit` to name a commit. Commit or publish only when the task includes it.
 
 ## Failure discipline
 

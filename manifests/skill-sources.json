@@ -8,6 +8,22 @@
     "modified": true
   },
   {
+    "name": "git-workflow",
+    "repository": "https://github.com/affaan-m/ECC",
+    "path": "skills/git-workflow and rules/common/git-workflow.md",
+    "ref": "dd6ee538aee0f548d4a6b520118f875431fd749e",
+    "license": "MIT",
+    "modified": true
+  },
+  {
+    "name": "caveman-commit",
+    "repository": "https://github.com/JuliusBrussee/caveman",
+    "path": "skills/caveman-commit",
+    "ref": "542442bab314973709f95b85b1ac0b3f6f5b5dc6",
+    "license": "MIT",
+    "modified": true
+  },
+  {
     "name": "plain-english",
     "repository": "https://github.com/b1rdmania/claude-plain-english-skill",
     "path": "skills/plain-english",

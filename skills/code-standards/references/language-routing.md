@@ -11,6 +11,7 @@ Load the smallest useful combination. Do not copy a specialist skill's rules int
 | Comments or API documentation across C, C++, Rust, JavaScript, TypeScript, Python, Go, or shell | `comment-audit` when comment quality is part of the task | Idiomatic comments and docstrings without narration or boilerplate. |
 | Whole binaries, malware, firmware, symbol recovery, or reverse engineering | `reverse-skill-router` instead of treating the work as an ordinary source change | Full analysis routing, evidence handling, and tool-specific workflows. |
 | High-risk proof or a user request to demonstrate correctness | `verify` | Fail-first evidence, targeted checks, live output, and explicit limitations. |
+| Commits, branches, merges, rebases, conflicts, pull requests, tags, or releases | `git-workflow`; add `caveman-commit` when naming a commit | Inspect-first repository operations, history safety, atomic staging, concise messages, and publication boundaries. |
 
 For other languages, follow repository-native conventions and tooling. Add a specialist only when it materially improves the current change.
 

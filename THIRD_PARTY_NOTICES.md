@@ -32,13 +32,23 @@ Licensed under the [Creative Commons Attribution 4.0 International License](http
 
 ## ECC engineering workflow
 
-`skills/code-standards` is adapted from the coding standards, common rules, testing, verification, and review workflows in [affaan-m/ECC](https://github.com/affaan-m/ECC) at `dd6ee538aee0f548d4a6b520118f875431fd749e`.
+`skills/code-standards` and `skills/git-workflow` are adapted from the coding standards, Git workflow, common rules, testing, verification, and review workflows in [affaan-m/ECC](https://github.com/affaan-m/ECC) at `dd6ee538aee0f548d4a6b520118f875431fd749e`.
 
 MIT License
 
 Copyright (c) 2026 Affaan Mustafa
 
-The MIT permission and warranty terms in the Plain English section apply to this adaptation. The adaptation replaces web-oriented universal rules with repository-aware and systems-aware decisions, and composes the existing C, C++, Rust, assembly, comment, reverse-engineering, and verification skills.
+The MIT permission and warranty terms in the Plain English section apply to these adaptations. They replace web-oriented universal rules with repository-aware and systems-aware decisions, add inspect-first history safety, and compose the existing language, review, verification, and commit-message skills.
+
+## Caveman commit
+
+`skills/caveman-commit` is adapted from [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman), path `skills/caveman-commit`, at `542442bab314973709f95b85b1ac0b3f6f5b5dc6`.
+
+MIT License
+
+Copyright (c) 2026 Julius Brussee
+
+The MIT permission and warranty terms in the Plain English section apply to this adaptation.
 
 ## Low-level development skills
 

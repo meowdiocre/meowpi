@@ -2,6 +2,7 @@
   "skills": [
     "agents-sdk",
     "assembly-systems",
+    "caveman-commit",
     "cloudflare",
     "cloudflare-email-service",
     "cloudflare-one",
@@ -9,6 +10,7 @@
     "code-standards",
     "comment-audit",
     "durable-objects",
+    "git-workflow",
     "modern-cpp",
     "plain-english",
     "reverse-skill-router",

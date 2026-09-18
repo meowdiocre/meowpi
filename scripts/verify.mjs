@@ -117,7 +117,9 @@ export async function verifyRepository() {
   }
   for (const skillName of [
     'assembly-systems',
+    'caveman-commit',
     'code-standards',
+    'git-workflow',
     'modern-cpp',
     'reverse-skill-router',
     'rust-best-practices',
@@ -193,6 +195,17 @@ export async function verifyRepository() {
   for (const relative of codeStandardsFiles) {
     if (!(await pathExists(path.join(repoRoot, relative)))) {
       throw new Error(`Code standards reference is missing: ${relative}`);
+    }
+  }
+
+  const gitWorkflowFiles = [
+    'skills/git-workflow/references/branches-and-conflicts.md',
+    'skills/git-workflow/references/commits-and-history.md',
+    'skills/git-workflow/references/prs-and-releases.md',
+  ];
+  for (const relative of gitWorkflowFiles) {
+    if (!(await pathExists(path.join(repoRoot, relative)))) {
+      throw new Error(`Git workflow reference is missing: ${relative}`);
     }
   }
 

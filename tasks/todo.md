@@ -24,3 +24,12 @@ Risks: missing shared dependencies, platform-specific upstream helpers, and expo
 - [x] Validate the skill, run repository tests, and install it across all targets.
 
 Risks: generic web-development rules overriding systems idioms, duplicated specialist guidance, and rigid test requirements that do not fit every change.
+
+## Git workflow skills
+
+- [x] Add `git-workflow` and `caveman-commit` as separate baseline skills.
+- [x] Route Git operations from `code-standards` without loading Git guidance for every code task.
+- [x] Record pinned sources and licenses, then update repository documentation and validation.
+- [x] Validate, install across all configured agents, commit, and push.
+
+Risks: destructive history advice, accidental publication, hidden user changes, and duplicated commit-message rules.

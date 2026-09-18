@@ -26,9 +26,10 @@ The bootstrap stores replaced files in `~/.pi/agent/portable-backups/<timestamp>
 
 The repository does not store credentials, sessions, caches, or `node_modules`.
 
-## Systems skills
+## Engineering and systems skills
 
 - `code-standards` provides the shared research, planning, implementation, review, and verification lifecycle for every code change.
+- `git-workflow` handles safe commits, branches, merges, rebases, conflicts, pull requests, tags, and releases. It loads `caveman-commit` for concise Conventional Commit messages.
 - `systems-coding-style` supplies the minimalist low-level baseline, with `modern-cpp`, `rust-best-practices`, and `assembly-systems` loaded only for matching work.
 - `assembly-systems` covers x86-64, AArch64, RISC-V, ABIs, compiler output, inline assembly, SIMD, and low-level verification.
 - `reverse-skill-router` includes the complete pinned upstream collection: 45 core modules, 42 CTF modules, shared references, scripts, and routing data.
