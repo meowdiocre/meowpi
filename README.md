@@ -28,8 +28,12 @@ The repository does not store credentials, sessions, caches, or `node_modules`.
 
 ## Systems skills
 
+- `code-standards` provides the shared research, planning, implementation, review, and verification lifecycle for every code change.
+- `systems-coding-style` supplies the minimalist low-level baseline, with `modern-cpp`, `rust-best-practices`, and `assembly-systems` loaded only for matching work.
 - `assembly-systems` covers x86-64, AArch64, RISC-V, ABIs, compiler output, inline assembly, SIMD, and low-level verification.
 - `reverse-skill-router` includes the complete pinned upstream collection: 45 core modules, 42 CTF modules, shared references, scripts, and routing data.
+
+The code standards workflow is adapted from ECC, with repository-native conventions taking precedence. It uses risk-based evidence instead of fixed coverage, file-size, function-size, or immutability rules that do not fit every systems project.
 
 The reverse collection is bundled under `skills/reverse-skill-router/upstream/`, preserving the original layout and licenses. The baseline router loads the relevant module on demand. Its Node entry point works on Windows, macOS, and Linux; tool-specific upstream helpers retain their own runtime and OS requirements. Analysis tools are installed separately when needed.
 

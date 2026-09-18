@@ -15,3 +15,12 @@ Risks: conflicting prose and STE rules, upstream license attribution, and accide
 - [x] Update documentation and install the corrected baseline locally.
 
 Risks: missing shared dependencies, platform-specific upstream helpers, and export of generated case data.
+
+## Code standards rebuild
+
+- [x] Replace the old Builder Essential workflow with an ECC-derived engineering lifecycle.
+- [x] Add focused references for engineering principles, verification, and low-level language routing.
+- [x] Record the ECC source and license, update repository documentation, and remove obsolete skill packaging text.
+- [x] Validate the skill, run repository tests, and install it across all targets.
+
+Risks: generic web-development rules overriding systems idioms, duplicated specialist guidance, and rigid test requirements that do not fit every change.

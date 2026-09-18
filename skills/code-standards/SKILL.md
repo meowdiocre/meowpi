@@ -1,51 +1,33 @@
 ---
 name: code-standards
-description: >-
-  Apply a disciplined engineering workflow to any code change. Use whenever
-  implementing a feature, fixing a bug, or refactoring — before writing code,
-  not after. Walks orient → baseline → smallest change → test → verify →
-  self-review, and enforces language-agnostic hard gates (don't mass-reformat,
-  keep the linter and type-checker clean, keep the build and tests green, make
-  interface changes additive, protect security invariants).
-compatibility: claude-code
+description: Govern implementation, bug fixes, and refactors from repository orientation through scoped research, planning, evidence-led tests, implementation, review, verification, and handoff. Use for any code change; combine it with the relevant language skill for C, C++, Rust, assembly, or another stack.
 ---
 
-# Code standards — the change workflow
+# Code standards
 
-You are making a code change. This skill is the execution order; it is
-stack-agnostic. Adapt every command to the project's actual toolchain: read the
-project's own docs (README, CONTRIBUTING, `AGENTS.md`/`CLAUDE.md`, a Makefile or
-package scripts) once to learn its build, test, lint, and format commands before
-you start.
+Use this skill as the shared engineering lifecycle. Repository instructions and the user's requested behavior take precedence. Existing project conventions govern language version, architecture, naming, formatting, error handling, and tooling unless the task explicitly changes them.
 
-## Steps
+## Compose the workflow
 
-1. **Orient.** Read any project lessons/gotchas file (e.g. `tasks/lessons.md`) and obey it.
-   Find and read the one doc for the subsystem you're changing, not the whole tree.
-2. **Plan if non-trivial** (3+ steps or an architectural choice): short plan in `tasks/todo.md` —
-   files touched, tests to add, risks. Going sideways → stop and re-plan.
-3. **Baseline:** get the project's build + test command green *before* touching anything. A
-   pre-existing red is the first task; never build on top of a broken baseline.
-4. **Implement** the smallest root-cause change. Hand-match the surrounding style.
-   **Don't run a mass auto-formatter** on files you touch; it buries your real diff in noise.
-5. **Test:** new behavior gets a test that fails without the change; security gates get
-   negative-assertion tests (wrong token → denied, state unchanged, no data leak).
-6. **Verify:** run the full check suite (build + lint + type-check + tests) until green
-   before you call it "done".
-7. **Self-review** your own diff as if it were someone else's PR (or invoke a review
-   skill). Fix findings before presenting.
-8. **Close out:** update docs in the same change; append to a lessons file if you were
-   corrected or surprised; write a conventional commit message (`feat|fix|docs(scope): …`).
+Before editing, read [language routing](references/language-routing.md) and load only the companion skills that match the code being changed. The shared workflow decides how to work; the companion skill decides how good code looks in that language or domain.
 
-## Tripwires — stop and re-check the project's guidelines when you're about to…
+For decisions about abstraction, state, interfaces, errors, comments, dependencies, security, or performance, read [engineering principles](references/engineering-principles.md). For choosing and running evidence, read [testing and verification](references/testing-and-verification.md).
 
-- change a public or shared interface (API, wire format, schema) → check every caller; prefer additive changes
-- add a dependency → weigh transitive weight and licenses, and whether the stdlib already covers it
-- touch auth, tokens, or permissions → audit every writer and reader path, add negative tests
-- write a secret to disk → use the platform's atomic create-private API, never write-then-chmod
-- hold a lock across an `await`/blocking call, or read env inside logic → extract a pure decision function
+## Change lifecycle
 
-## No-progress guard
+1. **Establish the contract.** Identify the requested behavior, constraints, acceptance evidence, files in scope, and actions that require separate authorization. Inspect repository instructions, relevant documentation, the working tree, and current callers before editing. Preserve unrelated user changes.
+2. **Research proportionally.** Search the repository before inventing a pattern. Check primary documentation when an API, toolchain, standard, or dependency may have changed. Look outside the repository only when it resolves a real uncertainty or avoids reimplementing a substantial proven solution.
+3. **Plan and baseline.** For a multi-file, risky, or architectural change, record a short plan with risks and verification. Run the narrowest relevant existing check before editing. If it already fails, distinguish the pre-existing failure from the requested work instead of silently expanding scope.
+4. **Create evidence.** Reproduce a bug before fixing it. For new behavior, add a stable contract or regression test when the behavior is observable and the test adds confidence. Use an explicit manual check when automation would be brittle or would only restate the implementation.
+5. **Implement the smallest coherent change.** Follow local patterns. Keep data flow, ownership, state changes, and failure behavior visible. Avoid speculative abstraction, unrelated cleanup, hidden allocation, unnecessary dependencies, and mass formatting.
+6. **Review the diff.** Check correctness, error paths, public interfaces, compatibility, trust boundaries, ownership and lifetime, concurrency, resource cleanup, undefined behavior, and likely performance regressions. Fix findings supported by the diff.
+7. **Verify and hand off.** Run focused checks first, then the repository's required formatter, compiler, linter, static analysis, tests, and build. Report the commands and results that support completion. Update user-facing documentation when behavior or interfaces changed. Commit or publish only when the task includes it.
 
-The same failure surviving two fix attempts means stop: write the finding to your lessons
-file, mark the item `[BLOCKED]`, and surface it. Don't thrash.
+## Failure discipline
+
+- Do not weaken, delete, or bypass a valid test to make a change pass.
+- Do not hide warnings, errors, or partial verification behind a success claim.
+- After the same failure survives two informed attempts, stop repeating the approach. Re-read the evidence, revise the hypothesis and plan, and record a concrete blocker only if progress truly requires external input.
+- Keep temporary probes and generated artifacts out of the final diff unless they are useful project assets.
+
+The goal is a small change whose behavior, design, and verification are easy for another engineer to inspect.

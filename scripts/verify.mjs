@@ -115,7 +115,14 @@ export async function verifyRepository() {
   if (new Set(skillManifest.skills).size !== skillManifest.skills.length) {
     throw new Error('manifests/skills.json contains duplicate skill names');
   }
-  for (const skillName of ['assembly-systems', 'reverse-skill-router']) {
+  for (const skillName of [
+    'assembly-systems',
+    'code-standards',
+    'modern-cpp',
+    'reverse-skill-router',
+    'rust-best-practices',
+    'systems-coding-style',
+  ]) {
     if (!skillManifest.skills.includes(skillName)) {
       throw new Error(`Required portable skill is absent from the baseline: ${skillName}`);
     }
@@ -175,6 +182,17 @@ export async function verifyRepository() {
   for (const relative of writingSuiteFiles) {
     if (!(await pathExists(path.join(repoRoot, relative)))) {
       throw new Error(`Writing suite file is missing: ${relative}`);
+    }
+  }
+
+  const codeStandardsFiles = [
+    'skills/code-standards/references/engineering-principles.md',
+    'skills/code-standards/references/language-routing.md',
+    'skills/code-standards/references/testing-and-verification.md',
+  ];
+  for (const relative of codeStandardsFiles) {
+    if (!(await pathExists(path.join(repoRoot, relative)))) {
+      throw new Error(`Code standards reference is missing: ${relative}`);
     }
   }
 

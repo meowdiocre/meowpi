@@ -30,6 +30,16 @@ Parts of `skills/simple-english/references/agent-style-quality.md` and `skills/s
 
 Licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). The portable adaptation changes the review mechanism and treats heading capitalization as a project convention.
 
+## ECC engineering workflow
+
+`skills/code-standards` is adapted from the coding standards, common rules, testing, verification, and review workflows in [affaan-m/ECC](https://github.com/affaan-m/ECC) at `dd6ee538aee0f548d4a6b520118f875431fd749e`.
+
+MIT License
+
+Copyright (c) 2026 Affaan Mustafa
+
+The MIT permission and warranty terms in the Plain English section apply to this adaptation. The adaptation replaces web-oriented universal rules with repository-aware and systems-aware decisions, and composes the existing C, C++, Rust, assembly, comment, reverse-engineering, and verification skills.
+
 ## Low-level development skills
 
 `skills/assembly-systems` is adapted from [mohitmishra786/low-level-dev-skills](https://github.com/mohitmishra786/low-level-dev-skills).
