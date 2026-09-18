@@ -4,7 +4,7 @@ Use the same Pi setup on Windows, macOS, or Linux. This repository stores portab
 
 ## Install
 
-Install Git and Node.js 20 or later. Make sure that the device has network access.
+Install Git and Node.js 22.19 or later. Make sure that the device has network access.
 
 ```sh
 git clone https://github.com/meowdiocre/pi-portable-config.git

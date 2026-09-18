@@ -4,6 +4,10 @@
     "version": "1.3.55"
   },
   {
+    "name": "@firstpick/pi-extension-grill-me",
+    "version": "0.1.5"
+  },
+  {
     "name": "@firstpick/pi-themes-bundle",
     "version": "0.1.6"
   },
@@ -12,8 +16,8 @@
     "version": "0.3.0"
   },
   {
-    "name": "@neilurk12/pi-9router",
-    "version": "0.1.2"
+    "name": "pi-9router-ext",
+    "version": "0.2.4"
   },
   {
     "name": "pi-mcp-adapter",

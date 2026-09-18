@@ -42,3 +42,12 @@ Risks: destructive history advice, accidental publication, hidden user changes, 
 - [x] Install, verify, commit, and push the updated baseline.
 
 Risks: unavailable consultant models, silent model fallback, writable consultant tools, and unnecessary escalation.
+
+## Pi package changes
+
+- [x] Replace `@neilurk12/pi-9router` with `pi-9router-ext`.
+- [x] Add and pin `@firstpick/pi-extension-grill-me`.
+- [x] Update package validation and the local Pi installation.
+- [x] Verify, commit, and push the package baseline.
+
+Risks: stale router configuration, duplicate provider registration, and unpinned package updates.

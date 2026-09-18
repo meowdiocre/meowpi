@@ -1,10 +1,11 @@
 {
   "packages": [
     "npm:@arhen/pi-core-subagent",
-    "npm:@neilurk12/pi-9router",
-    "npm:pi-mcp-adapter",
+    "npm:@firstpick/pi-extension-grill-me",
     "npm:@firstpick/pi-themes-bundle",
-    "npm:@luminascale/pi-shepherd"
+    "npm:@luminascale/pi-shepherd",
+    "npm:pi-9router-ext",
+    "npm:pi-mcp-adapter"
   ],
   "theme": "tokyo-night-storm",
   "defaultProvider": "inferhub",

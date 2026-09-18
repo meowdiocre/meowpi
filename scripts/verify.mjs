@@ -105,13 +105,27 @@ export async function verifyRepository() {
 
   const settings = await readJson(path.join(repoRoot, 'config', 'settings.json'));
   const piPackages = await readJson(path.join(repoRoot, 'manifests', 'pi-packages.json'));
+  const projectPackage = await readJson(path.join(repoRoot, 'package.json'));
+  if (projectPackage.engines?.node !== '>=22.19.0') {
+    throw new Error('Grill Me requires the repository to declare Node.js >=22.19.0');
+  }
   const configuredPackages = sorted(settings.packages || []);
   const pinnedPackages = sorted(piPackages.map((entry) => `npm:${entry.name}`));
   if (JSON.stringify(configuredPackages) !== JSON.stringify(pinnedPackages)) {
     throw new Error('Pi settings packages must match the pinned package manifest');
   }
-  if (piPackages.find((entry) => entry.name === '@arhen/pi-core-subagent')?.version !== '1.3.55') {
-    throw new Error('The consult skill requires @arhen/pi-core-subagent@1.3.55');
+  const requiredPiPackages = new Map([
+    ['@arhen/pi-core-subagent', '1.3.55'],
+    ['@firstpick/pi-extension-grill-me', '0.1.5'],
+    ['pi-9router-ext', '0.2.4'],
+  ]);
+  for (const [name, version] of requiredPiPackages) {
+    if (piPackages.find((entry) => entry.name === name)?.version !== version) {
+      throw new Error(`Required Pi package is not pinned: ${name}@${version}`);
+    }
+  }
+  if (piPackages.some((entry) => entry.name === '@neilurk12/pi-9router')) {
+    throw new Error('The replaced @neilurk12/pi-9router package must not remain configured');
   }
 
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
