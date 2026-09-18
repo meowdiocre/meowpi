@@ -22,5 +22,9 @@
   {
     "name": "pi-mcp-adapter",
     "version": "2.34.0"
+  },
+  {
+    "name": "pi-multiprovider",
+    "version": "0.9.0"
   }
 ]

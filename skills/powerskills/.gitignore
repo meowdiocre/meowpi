@@ -1,0 +1,6 @@
+# PowerSkills
+
+.DS_Store
+*.log
+*.tmp
+/output/

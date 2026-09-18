@@ -122,6 +122,7 @@ export async function verifyRepository() {
     ['@arhen/pi-core-subagent', '1.3.55'],
     ['@firstpick/pi-extension-grill-me', '0.1.5'],
     ['pi-9router-ext', '0.2.4'],
+    ['pi-multiprovider', '0.9.0'],
   ]);
   for (const [name, version] of requiredPiPackages) {
     if (piPackages.find((entry) => entry.name === name)?.version !== version) {
