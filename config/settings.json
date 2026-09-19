@@ -4,6 +4,7 @@
     "npm:@firstpick/pi-extension-grill-me",
     "npm:@firstpick/pi-themes-bundle",
     "npm:@luminascale/pi-shepherd",
+    "npm:@ygncode/pi-web",
     "npm:pi-9router-ext",
     "npm:pi-mcp-adapter",
     "npm:pi-multiprovider"

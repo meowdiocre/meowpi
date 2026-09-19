@@ -16,6 +16,10 @@
     "version": "0.3.0"
   },
   {
+    "name": "@ygncode/pi-web",
+    "version": "0.0.1-beta.36"
+  },
+  {
     "name": "pi-9router-ext",
     "version": "0.2.4"
   },

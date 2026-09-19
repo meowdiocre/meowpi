@@ -14,6 +14,8 @@ const requiredFiles = [
   'scripts/bootstrap.mjs',
   'scripts/export.mjs',
   'scripts/lib.mjs',
+  'scripts/pi-web.mjs',
+  'scripts/tests/pi-web.mjs',
   'scripts/verify.mjs',
   'config/settings.json',
   'config/models.json',
@@ -162,6 +164,9 @@ export async function verifyRepository() {
   const pinnedPackages = sortedStrings(piPackages.map((entry) => `npm:${entry.name}`));
   if (JSON.stringify(configuredPackages) !== JSON.stringify(pinnedPackages)) {
     throw new Error('Pi settings packages must match the pinned package manifest');
+  }
+  if (piPackages.find((entry) => entry.name === '@ygncode/pi-web')?.version !== '0.0.1-beta.36') {
+    throw new Error('Pi Web must remain pinned for remote browser access');
   }
   if (JSON.stringify(settings.skills) !== JSON.stringify(['!**/.agents/skills/**'])) {
     throw new Error('Pi must ignore shared .agents skills and load its own skill tree only');

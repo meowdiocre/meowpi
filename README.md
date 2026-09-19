@@ -20,6 +20,7 @@ pi
 ## Included
 
 - The pinned Pi command-line tool and packages
+- Pi Web for persistent browser access to Pi sessions
 - Pi settings, model definitions, and the Herdr extension
 - Shared skills for Pi, Codex, Claude Code, and OpenCode
 - MCP definitions for Exa, Context7, DeepWiki, CodeGraph, IDA Pro, and NotebookLM

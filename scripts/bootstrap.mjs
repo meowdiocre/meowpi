@@ -15,6 +15,7 @@ import {
   userHome,
 } from './lib.mjs';
 import { verifyRepository } from './verify.mjs';
+import { ensurePiWebWindowsBinaryDiscovery } from './pi-web.mjs';
 
 async function main() {
   const options = parseCommonArgs(process.argv.slice(2));
@@ -44,6 +45,11 @@ async function main() {
         dryRun: options.dryRun,
       });
     }
+  }
+
+  if (process.platform === 'win32') {
+    console.log('\n==> Configure pi-web for Windows');
+    await ensurePiWebWindowsBinaryDiscovery(options.piHome, { dryRun: options.dryRun });
   }
 
   console.log('\n==> Restore MeowPi configuration');
