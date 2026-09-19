@@ -4,11 +4,11 @@
   <img src="assets/meowpi-logo.jpg" alt="MeowPi logo" width="420">
 </p>
 
-MeowPi keeps the same [Oh My Pi](https://omp.sh) setup on all my machines. Mainly used for OS internals and reverse engineering, or to help me with small pentest and research work.
+MeowPi keeps the same [Oh My Pi](https://omp.sh) (OMP) setup on each of my machines. I use it for OS internals, reverse engineering, and small pentest and research work.
 
 ## Install
 
-Install Git, Node.js 22.19 or later, and Bun 1.3.14 or later. Make sure that the device has network access.
+You need Git, Node.js 22.19 or later, Bun 1.3.14 or later, and network access.
 
 ```sh
 git clone https://github.com/meowdiocre/meowpi.git
@@ -17,22 +17,15 @@ npm run bootstrap
 omp
 ```
 
-`npm run bootstrap` installs the pinned OMP release with `bun install --global`, then restores the portable configuration and the complete skill snapshot. Every file it replaces is copied to `<OMP_HOME>/portable-backups/<timestamp>/` first.
+`npm run bootstrap` installs the pinned OMP release with `bun install --global`. Then it restores the configuration, the agents, and the skills. It copies each file or directory that it replaces to `<OMP_HOME>/portable-backups/<timestamp>/`.
 
-## Included
+Set `OMP_HOME` to install into a different directory. The default agent directory is `~/.omp/agent`.
 
-- The pinned Oh My Pi command-line tool
-- OMP settings, the shared model catalog, the Herdr extension, and the `consultant` task agent
-- Shared skills, installed into the OMP-native skill tree only
-- MCP definitions for Exa, Context7, DeepWiki, CodeGraph, IDA Pro, NotebookLM, and WinDbg
-
-See [`config/mcp.json.template`](config/mcp.json.template) for the required commands.
-
-## Where things install
+## Files
 
 | Repository | Installed to |
 | --- | --- |
-| `manifests/omp.json` | `bun install --global` |
+| `manifests/omp.json` | the global Bun install |
 | `config/config.yml` | `~/.omp/agent/config.yml` |
 | `config/models.yml` | `~/.omp/agent/models.yml` |
 | `config/mcp.json.template` | `~/.omp/agent/mcp.json` |
@@ -40,36 +33,32 @@ See [`config/mcp.json.template`](config/mcp.json.template) for the required comm
 | `config/agents/` | `~/.omp/agent/agents/` |
 | `skills/` | `~/.omp/agent/skills/` |
 
-Set `OMP_HOME` to install somewhere else. The default agent directory is `~/.omp/agent`.
+The setup defines MCP servers for Exa, Context7, DeepWiki, CodeGraph, IDA Pro, NotebookLM, and WinDbg. Four of these servers call a program that you install separately: `codegraph`, `idalib-mcp`, `notebooklm-mcp`, and `mcp-windbg`. Exa needs the `EXA_API_KEY` environment variable.
 
-Skills install into the OMP-native tree alone. `config/config.yml` disables every foreign skill source, so `~/.claude`, `~/.codex`, and `~/.agents` cannot load a second copy of a skill next to the one this repository installs. OMP's own `claude-plugins` and managed-skill providers are not affected.
+## Skills
 
-The installed skill tree is exact. `npm run bootstrap` removes every skill directory that `manifests/skills.json` does not list, after backing it up, so a stale copy cannot shadow the current one.
+OMP sends the `name` and the `description` of each skill to the model. The model reads the body on demand with `skill://<name>`. A companion file is at `skill://<name>/<path>`, and a skill script runs from `<OMP_HOME>/skills/<name>/`. Each skill is also a command: `/skill:<name>`.
 
-## Skills under OMP
+`npm run bootstrap` makes the installed tree match `manifests/skills.json`. It copies each unlisted skill directory to the backup before it removes the directory.
 
-OMP advertises each discovered skill to the model by `name` and `description` only; the body is read on demand with `read skill://<name>`. That is why every `description` in this repository states the trigger conditions, and why a skill that needs a companion file says where the file lives.
+`config/config.yml` disables each foreign skill source. A skill in `~/.claude`, `~/.codex`, or `~/.agents` cannot load next to the installed copy.
 
-- **Relative paths.** A skill's `references/…` and `scripts/…` paths resolve against its own directory: read them as `skill://<name>/<relative-path>`, or address the installed copy at `<OMP_HOME>/skills/<name>/`.
-- **Skill commands.** Every skill is also registered as `/skill:<name>` (`skills.enableSkillCommands`). Invoking it that way prints the resolved skill directory.
-- **Foreign metadata.** Some skills ship an `agents/openai.yaml` from their upstream source. OMP reads no such file; it is retained for other harnesses and is inert here.
-- **Consultant agent.** `skills/consult` dispatches the `consultant` task agent, which `config/agents/consultant.md` defines with a read-only tool list and `model: "@slow"`. Set `modelRoles.slow` so the consultant is a different model from the session model; the skill tells the agent to report the limitation and ask rather than pass off a same-model answer. `npm test` fails if the skill and the agent definition drift apart.
-- **Vendored snapshot.** `skills/reverse-skill-router/upstream/` is byte-exact upstream content checked against `upstream-lock.json`. Keep integration changes outside that directory, and note that some antivirus engines quarantine its XSS payload references — see "Antivirus exclusions" below.
+`config/agents/consultant.md` defines the `consultant` task agent for the `consult` skill. The agent has read-only tools and the model role `@slow`. If the configuration has no `modelRoles.slow`, the consultant uses the session model instead.
 
-## Antivirus exclusions
+## Warning for Windows
 
-The vendored reverse-engineering snapshot contains working exploit payloads. Windows Defender quarantines or rewrites them, which breaks `upstream-lock.json` verification and therefore blocks `npm test` and `npm run bootstrap`. On Windows, exclude the installed snapshot and the repository copy:
+Exclude the vendored snapshot from Windows Defender. Defender rewrites or blocks the exploit payloads in `skills/reverse-skill-router/upstream/`. The `upstream-lock.json` check then fails, and so do `npm test` and `npm run bootstrap`.
 
 ```powershell
 Add-MpPreference -ExclusionPath '<OMP_HOME>\skills\reverse-skill-router\upstream'
 Add-MpPreference -ExclusionPath '<repository>\skills\reverse-skill-router\upstream'
 ```
 
-Restore the affected files from `git` afterwards. Do not commit a redacted snapshot: the lock file is the integrity check.
+Then restore the changed files from `git`. Do not commit a redacted snapshot. The lock file is the integrity check.
 
 ## Update
 
-On the device with the current OMP setup, run:
+On the machine that holds the current setup, run:
 
 ```sh
 npm run export
@@ -77,8 +66,8 @@ npm test
 git diff
 ```
 
-Review the diff before you commit it. Edit repository skills in `skills/`, not in their installed locations.
+Before you commit the change, review the diff. Edit a skill in `skills/` only, because `npm run bootstrap` copies that directory to the installed tree.
 
-`npm run export` strips machine-local settings, which keeps `config/config.yml` portable. `npm run bootstrap` adds a Git Bash `shellPath` back on Windows when it finds one.
+`npm run export` removes machine-local keys, so `config/config.yml` stays portable. On Windows, `npm run bootstrap` adds the Git Bash `shellPath` again.
 
-On another device, pull the changes. Then run `npm run bootstrap` again.
+On each other machine, pull the changes. Then run `npm run bootstrap`.
