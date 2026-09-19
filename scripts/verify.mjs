@@ -2,7 +2,7 @@ import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { pathExists, readJson, repoRoot, userHome } from './lib.mjs';
+import { pathExists, readJson, repoRoot, runMain, sortedStrings, userHome, walkFiles } from './lib.mjs';
 import { verifyReverseBundle } from './reverse-bundle.mjs';
 
 const requiredFiles = [
@@ -32,107 +32,15 @@ const secretPatterns = [
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,
 ];
 
-async function listFiles(root, relative = '') {
-  const directory = path.join(root, relative);
-  const entries = await readdir(directory, { withFileTypes: true });
-  const files = [];
-  for (const entry of entries) {
-    if (['.git', 'node_modules'].includes(entry.name)) continue;
-    const childRelative = path.join(relative, entry.name);
-    if (entry.isDirectory()) files.push(...(await listFiles(root, childRelative)));
-    else files.push(childRelative);
-  }
-  return files;
-}
-
-function sorted(values) {
-  return [...values].sort((left, right) => left.localeCompare(right));
-}
-
-export async function verifyRepository() {
-  for (const relative of requiredFiles) {
+async function requireFiles(kind, relativeFiles) {
+  for (const relative of relativeFiles) {
     if (!(await pathExists(path.join(repoRoot, relative)))) {
-      throw new Error(`Required file is missing: ${relative}`);
+      throw new Error(`${kind} is missing: ${relative}`);
     }
   }
+}
 
-  for (const relative of jsonFiles) await readJson(path.join(repoRoot, relative));
-
-  const files = await listFiles(repoRoot);
-  const reverseBundle = await verifyReverseBundle(path.join(repoRoot, 'skills/reverse-skill-router'));
-  for (const relative of files) {
-    const normalized = relative.split(path.sep).join('/');
-    const upstreamFile = normalized.startsWith('skills/reverse-skill-router/upstream/');
-    if (forbiddenFilePattern.test(normalized) || (!upstreamFile && /\.(?:ps1|cmd)$/i.test(normalized))) {
-      throw new Error(`Forbidden platform-specific or credential file: ${normalized}`);
-    }
-    const text = await readFile(path.join(repoRoot, relative), 'utf8');
-    for (const pattern of secretPatterns) {
-      if (pattern.test(text)) throw new Error(`Potential secret found in ${normalized}`);
-    }
-  }
-
-  const escapedHome = JSON.stringify(userHome).slice(1, -1);
-  for (const relative of ['config/mcp.json.template', 'config/models.json', 'config/settings.json']) {
-    const text = await readFile(path.join(repoRoot, relative), 'utf8');
-    if (text.includes(userHome) || text.includes(escapedHome)) {
-      throw new Error(`Machine-specific home path found in ${relative}`);
-    }
-  }
-
-  const mcp = await readJson(path.join(repoRoot, 'config', 'mcp.json.template'));
-  const expectedServers = ['codegraph', 'exa', 'ida', 'notebooklm-mcp'];
-  if (JSON.stringify(sorted(Object.keys(mcp.mcpServers || {}))) !== JSON.stringify(expectedServers)) {
-    throw new Error(`Portable MCP servers must be exactly: ${expectedServers.join(', ')}`);
-  }
-  if (mcp.mcpServers.exa.url !== 'https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa') {
-    throw new Error('Exa must expose only web search and fetch');
-  }
-  if ('directTools' in mcp.mcpServers.exa) {
-    throw new Error('Exa must use the adapter default instead of directTools');
-  }
-  if (
-    mcp.mcpServers.ida.command !== 'idalib-mcp' ||
-    JSON.stringify(mcp.mcpServers.ida.args) !== JSON.stringify(['--stdio', '--max-workers', '2'])
-  ) {
-    throw new Error('IDA must use the portable idalib-mcp stdio command');
-  }
-  if (mcp.mcpServers['notebooklm-mcp'].command !== 'notebooklm-mcp') {
-    throw new Error('NotebookLM MCP must remain available');
-  }
-  if (mcp.platformServers?.win32?.windbg?.command !== 'mcp-windbg') {
-    throw new Error('WinDbg must resolve mcp-windbg from PATH');
-  }
-
-  const settings = await readJson(path.join(repoRoot, 'config', 'settings.json'));
-  const piPackages = await readJson(path.join(repoRoot, 'manifests', 'pi-packages.json'));
-  const projectPackage = await readJson(path.join(repoRoot, 'package.json'));
-  if (projectPackage.name !== 'meowpi') {
-    throw new Error('Package name must match the MeowPi repository brand');
-  }
-  if (projectPackage.engines?.node !== '>=22.19.0') {
-    throw new Error('Grill Me requires the repository to declare Node.js >=22.19.0');
-  }
-  const configuredPackages = sorted(settings.packages || []);
-  const pinnedPackages = sorted(piPackages.map((entry) => `npm:${entry.name}`));
-  if (JSON.stringify(configuredPackages) !== JSON.stringify(pinnedPackages)) {
-    throw new Error('Pi settings packages must match the pinned package manifest');
-  }
-  const requiredPiPackages = new Map([
-    ['@arhen/pi-core-subagent', '1.3.55'],
-    ['@firstpick/pi-extension-grill-me', '0.1.5'],
-    ['pi-9router-ext', '0.2.4'],
-    ['pi-multiprovider', '0.9.0'],
-  ]);
-  for (const [name, version] of requiredPiPackages) {
-    if (piPackages.find((entry) => entry.name === name)?.version !== version) {
-      throw new Error(`Required Pi package is not pinned: ${name}@${version}`);
-    }
-  }
-  if (piPackages.some((entry) => entry.name === '@neilurk12/pi-9router')) {
-    throw new Error('The replaced @neilurk12/pi-9router package must not remain configured');
-  }
-
+async function verifySkillBaseline() {
   const skillManifest = await readJson(path.join(repoRoot, 'manifests', 'skills.json'));
   const unknownSkillManifestFields = Object.keys(skillManifest)
     .filter((field) => !['skills', 'targets'].includes(field));
@@ -152,6 +60,7 @@ export async function verifyRepository() {
     'consult',
     'git-workflow',
     'modern-cpp',
+    'research-router',
     'reverse-skill-router',
     'rust-best-practices',
     'systems-coding-style',
@@ -164,10 +73,9 @@ export async function verifyRepository() {
   const skillDirectories = (await readdir(skillRoot, { withFileTypes: true }))
     .filter((entry) => entry.isDirectory())
     .map((entry) => entry.name);
-  if (JSON.stringify(sorted(skillManifest.skills)) !== JSON.stringify(sorted(skillDirectories))) {
+  if (JSON.stringify(sortedStrings(skillManifest.skills)) !== JSON.stringify(sortedStrings(skillDirectories))) {
     throw new Error('manifests/skills.json does not match the vendored skill directories');
   }
-
   for (const skillName of skillManifest.skills) {
     const skillFile = path.join(skillRoot, skillName, 'SKILL.md');
     if (!(await pathExists(skillFile))) throw new Error(`Missing SKILL.md for ${skillName}`);
@@ -178,7 +86,10 @@ export async function verifyRepository() {
       throw new Error(`Skill name mismatch: directory=${skillName}, frontmatter=${declaredName || 'missing'}`);
     }
   }
+  return skillManifest;
+}
 
+async function verifySkillSources(skillManifest, reverseBundle) {
   const sourceManifest = await readJson(path.join(repoRoot, 'manifests', 'skill-sources.json'));
   if (!Array.isArray(sourceManifest)) throw new Error('manifests/skill-sources.json must be an array');
   if (sourceManifest.find((source) => source.name === 'reverse-skill-router')?.ref !== reverseBundle.ref) {
@@ -202,6 +113,76 @@ export async function verifyRepository() {
       throw new Error(`Incomplete skill source metadata: ${source.name}`);
     }
   }
+}
+
+export async function verifyRepository() {
+  for (const relative of requiredFiles) {
+    if (!(await pathExists(path.join(repoRoot, relative)))) {
+      throw new Error(`Required file is missing: ${relative}`);
+    }
+  }
+
+  for (const relative of jsonFiles) await readJson(path.join(repoRoot, relative));
+
+  const files = await walkFiles(repoRoot, { skip: ['.git', 'node_modules'] });
+  const reverseBundle = await verifyReverseBundle(path.join(repoRoot, 'skills/reverse-skill-router'));
+  for (const relative of files) {
+    const upstreamFile = relative.startsWith('skills/reverse-skill-router/upstream/');
+    const powerskillsScript = relative.startsWith('skills/powerskills/') && relative.endsWith('.ps1');
+    if (
+      forbiddenFilePattern.test(relative) ||
+      (!upstreamFile && !powerskillsScript && /\.(?:ps1|cmd)$/i.test(relative))
+    ) {
+      throw new Error(`Forbidden platform-specific or credential file: ${relative}`);
+    }
+    const text = await readFile(path.join(repoRoot, relative), 'utf8');
+    for (const pattern of secretPatterns) {
+      if (pattern.test(text)) throw new Error(`Potential secret found in ${relative}`);
+    }
+  }
+
+  const escapedHome = JSON.stringify(userHome).slice(1, -1);
+  for (const relative of ['config/mcp.json.template', 'config/models.json', 'config/settings.json']) {
+    const text = await readFile(path.join(repoRoot, relative), 'utf8');
+    if (text.includes(userHome) || text.includes(escapedHome)) {
+      throw new Error(`Machine-specific home path found in ${relative}`);
+    }
+  }
+
+  const settings = await readJson(path.join(repoRoot, 'config', 'settings.json'));
+  const piPackages = await readJson(path.join(repoRoot, 'manifests', 'pi-packages.json'));
+  const projectPackage = await readJson(path.join(repoRoot, 'package.json'));
+  if (projectPackage.name !== 'meowpi') {
+    throw new Error('Package name must match the MeowPi repository brand');
+  }
+  if (projectPackage.engines?.node !== '>=22.19.0') {
+    throw new Error('Grill Me requires the repository to declare Node.js >=22.19.0');
+  }
+  const configuredPackages = sortedStrings(settings.packages || []);
+  const pinnedPackages = sortedStrings(piPackages.map((entry) => `npm:${entry.name}`));
+  if (JSON.stringify(configuredPackages) !== JSON.stringify(pinnedPackages)) {
+    throw new Error('Pi settings packages must match the pinned package manifest');
+  }
+  if (JSON.stringify(settings.skills) !== JSON.stringify(['!**/.agents/skills/**'])) {
+    throw new Error('Pi must ignore shared .agents skills and load its own skill tree only');
+  }
+
+  const mcp = await readJson(path.join(repoRoot, 'config', 'mcp.json.template'));
+  if (mcp.mcpServers?.exa?.url !== 'https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa') {
+    throw new Error('Exa MCP must expose search, fetch, and advanced search');
+  }
+  if (mcp.mcpServers?.exa?.headers?.['x-api-key'] !== '${EXA_API_KEY}') {
+    throw new Error('Exa MCP must read its API key from EXA_API_KEY');
+  }
+  if (mcp.mcpServers?.context7?.url !== 'https://mcp.context7.com/mcp') {
+    throw new Error('Context7 MCP is missing or misconfigured');
+  }
+  if (mcp.mcpServers?.deepwiki?.url !== 'https://mcp.deepwiki.com/mcp') {
+    throw new Error('DeepWiki MCP is missing or misconfigured');
+  }
+
+  const skillManifest = await verifySkillBaseline();
+  await verifySkillSources(skillManifest, reverseBundle);
 
   const writingSuiteFiles = [
     'skills/plain-english/REFERENCE.md',
@@ -212,11 +193,7 @@ export async function verifyRepository() {
     'skills/style-review/tests/run.mjs',
     'skills/writing-router/agents/openai.yaml',
   ];
-  for (const relative of writingSuiteFiles) {
-    if (!(await pathExists(path.join(repoRoot, relative)))) {
-      throw new Error(`Writing suite file is missing: ${relative}`);
-    }
-  }
+  await requireFiles('Writing suite file', writingSuiteFiles);
 
   const codeStandardsFiles = [
     'skills/code-standards/references/engineering-principles.md',
@@ -224,22 +201,14 @@ export async function verifyRepository() {
     'skills/code-standards/references/testing-and-verification.md',
     'skills/modern-cpp/references/core-guidelines.md',
   ];
-  for (const relative of codeStandardsFiles) {
-    if (!(await pathExists(path.join(repoRoot, relative)))) {
-      throw new Error(`Code standards reference is missing: ${relative}`);
-    }
-  }
+  await requireFiles('Code standards reference', codeStandardsFiles);
 
   const gitWorkflowFiles = [
     'skills/git-workflow/references/branches-and-conflicts.md',
     'skills/git-workflow/references/commits-and-history.md',
     'skills/git-workflow/references/prs-and-releases.md',
   ];
-  for (const relative of gitWorkflowFiles) {
-    if (!(await pathExists(path.join(repoRoot, relative)))) {
-      throw new Error(`Git workflow reference is missing: ${relative}`);
-    }
-  }
+  await requireFiles('Git workflow reference', gitWorkflowFiles);
 
   const scriptFiles = files.filter((name) => name.endsWith('.mjs'));
   for (const relative of scriptFiles) {
@@ -255,9 +224,4 @@ export async function verifyRepository() {
 }
 
 const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
-if (isMain) {
-  verifyRepository().catch((error) => {
-    console.error(`FAIL: ${error.message}`);
-    process.exitCode = 1;
-  });
-}
+if (isMain) runMain(verifyRepository);

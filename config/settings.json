@@ -8,9 +8,12 @@
     "npm:pi-mcp-adapter",
     "npm:pi-multiprovider"
   ],
+  "skills": [
+    "!**/.agents/skills/**"
+  ],
   "theme": "tokyo-night-storm",
   "defaultProvider": "inferhub",
-  "defaultModel": "deepseek-v4-flash",
+  "defaultModel": "cbcn/deepseek-v4.1-flash",
   "defaultThinkingLevel": "high",
   "fullscreenScrollbar": "always",
   "hideThinkingBlock": true

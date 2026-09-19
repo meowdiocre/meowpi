@@ -1,28 +1,16 @@
 import { createHash } from 'node:crypto';
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { readJson } from './lib.mjs';
+import { readJson, walkFiles } from './lib.mjs';
 
 function blobHash(content) {
   return createHash('sha1').update(`blob ${content.length}\0`).update(content).digest('hex');
 }
 
-async function listFiles(directory, prefix = '') {
-  const files = [];
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const relative = prefix + entry.name;
-    if (entry.isDirectory()) {
-      files.push(...await listFiles(path.join(directory, entry.name), `${relative}/`));
-    } else if (entry.isFile()) files.push(relative);
-    else throw new Error(`Unexpected upstream file type: ${relative}`);
-  }
-  return files.sort();
-}
-
 export async function verifyReverseBundle(skillRoot) {
   const lock = await readJson(path.join(skillRoot, 'upstream-lock.json'));
   const upstream = path.join(skillRoot, 'upstream');
-  const actual = await listFiles(upstream);
+  const actual = await walkFiles(upstream);
   const expected = Object.keys(lock.files).sort();
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     throw new Error('Reverse-skill snapshot has missing or untracked files; keep case data outside the bundle');

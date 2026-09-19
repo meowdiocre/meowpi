@@ -22,8 +22,8 @@ pi
 - The pinned Pi command-line tool and packages
 - Pi settings, model definitions, and the Herdr extension
 - Shared skills for Pi, Codex, Claude Code, and OpenCode
-- Model Context Protocol (MCP) definitions for Exa, CodeGraph, IDA Pro, and NotebookLM
-- WinDbg MCP support on Windows
+- MCP definitions for Exa, Context7, DeepWiki, CodeGraph, IDA Pro, and NotebookLM
+- A research router that selects external sources only when the code change needs them
 
 See [`config/mcp.json.template`](config/mcp.json.template) for the required commands.
 

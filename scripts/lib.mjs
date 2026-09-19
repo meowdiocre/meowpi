@@ -1,4 +1,4 @@
-import { cp, mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -32,6 +32,23 @@ export async function writeJson(target, value) {
   const temporary = `${target}.tmp-${process.pid}`;
   await writeFile(temporary, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
   await rename(temporary, target);
+}
+
+export async function walkFiles(root, { skip = [] } = {}) {
+  const skipped = new Set(skip);
+  const files = [];
+  async function walk(directory, relative) {
+    const entries = await readdir(directory, { withFileTypes: true });
+    for (const entry of entries) {
+      if (skipped.has(entry.name)) continue;
+      const child = relative ? `${relative}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) await walk(path.join(directory, entry.name), child);
+      else if (entry.isFile()) files.push(child);
+      else throw new Error(`Unsupported path entry: ${child}`);
+    }
+  }
+  await walk(root, '');
+  return files.sort();
 }
 
 export function run(command, args, { capture = false, dryRun = false } = {}) {
@@ -101,6 +118,17 @@ export async function installDirectory(source, target, backupRoot, label, dryRun
   console.log(`installed: ${target}`);
 }
 
+export async function installText(target, content, backupRoot, label, dryRun) {
+  await backupExisting(target, backupRoot, label, dryRun);
+  if (dryRun) {
+    console.log(`[dry-run] install -> ${target}`);
+    return;
+  }
+  await mkdir(path.dirname(target), { recursive: true });
+  await writeFile(target, content, 'utf8');
+  console.log(`installed: ${target}`);
+}
+
 export function mapStrings(value, transform) {
   if (typeof value === 'string') return transform(value);
   if (Array.isArray(value)) return value.map((item) => mapStrings(item, transform));
@@ -133,8 +161,12 @@ export function collapseTokens(value, replacements) {
   );
 }
 
+export function sortedStrings(values) {
+  return [...values].sort();
+}
+
 export function normalizeSkillSnapshot(liveSkills) {
-  return [...new Set(liveSkills)].sort((left, right) => left.localeCompare(right));
+  return sortedStrings(new Set(liveSkills));
 }
 
 export function parseCommonArgs(argv) {
@@ -161,4 +193,20 @@ export function parseCommonArgs(argv) {
     }
   }
   return options;
+}
+
+export function portablePathTokens() {
+  return {
+    HOME: userHome,
+    USERPROFILE: userHome,
+    PROGRAMFILES_X86: process.env['ProgramFiles(x86)'] || '',
+    SYSTEMDRIVE: process.env.SystemDrive || path.parse(userHome).root.replace(/[\\/]$/, ''),
+  };
+}
+
+export function runMain(main) {
+  main().catch((error) => {
+    console.error(`FAIL: ${error.message}`);
+    process.exitCode = 1;
+  });
 }

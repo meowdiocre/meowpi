@@ -1,7 +1,16 @@
 {
   "mcpServers": {
     "exa": {
-      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa"
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa",
+      "headers": {
+        "x-api-key": "${EXA_API_KEY}"
+      }
+    },
+    "context7": {
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "deepwiki": {
+      "url": "https://mcp.deepwiki.com/mcp"
     },
     "codegraph": {
       "command": "codegraph",
@@ -21,26 +30,5 @@
     "notebooklm-mcp": {
       "command": "notebooklm-mcp"
     }
-  },
-  "platformServers": {
-    "win32": {
-      "windbg": {
-        "command": "mcp-windbg",
-        "args": [
-          "--transport",
-          "stdio",
-          "--cdb-path",
-          "{{PROGRAMFILES_X86}}\\Windows Kits\\10\\Debuggers\\x64\\cdb.exe",
-          "--kd-path",
-          "{{PROGRAMFILES_X86}}\\Windows Kits\\10\\Debuggers\\x64\\kd.exe",
-          "--symbols-path",
-          "srv*{{SYSTEMDRIVE}}\\Symbols*https://msdl.microsoft.com/download/symbols",
-          "--timeout",
-          "120"
-        ]
-      }
-    },
-    "darwin": {},
-    "linux": {}
   }
 }

@@ -1,18 +1,18 @@
-import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import {
-  backupExisting,
   commandName,
   expandTokens,
   installDirectory,
   installFile,
+  installText,
   parseCommonArgs,
+  portablePathTokens,
   readJson,
   repoRoot,
   run,
+  runMain,
   timestamp,
   userHome,
-  writeJson,
 } from './lib.mjs';
 import { verifyRepository } from './verify.mjs';
 
@@ -47,7 +47,6 @@ async function main() {
   }
 
   console.log('\n==> Restore MeowPi configuration');
-  if (!options.dryRun) await mkdir(options.piHome, { recursive: true });
   await installFile(
     path.join(configRoot, 'settings.json'),
     path.join(options.piHome, 'settings.json'),
@@ -64,28 +63,21 @@ async function main() {
   );
 
   const mcpTemplate = await readJson(path.join(configRoot, 'mcp.json.template'));
-  const platformServers = mcpTemplate.platformServers?.[process.platform] || {};
   const mcpConfig = {
-    mcpServers: {
-      ...mcpTemplate.mcpServers,
-      ...platformServers,
-    },
+    mcpServers: mcpTemplate.mcpServers,
   };
   const replacements = {
-    HOME: userHome,
-    USERPROFILE: userHome,
-    PROGRAMFILES_X86: process.env['ProgramFiles(x86)'] || '',
-    SYSTEMDRIVE: process.env.SystemDrive || path.parse(userHome).root.replace(/[\\/]$/, ''),
+    ...portablePathTokens(),
     NPX: commandName('npx'),
   };
   const renderedMcp = expandTokens(mcpConfig, replacements);
-  const mcpTarget = path.join(options.piHome, 'mcp.json');
-  await backupExisting(mcpTarget, backupRoot, 'config/mcp.json', options.dryRun);
-  if (options.dryRun) console.log(`[dry-run] render MCP template -> ${mcpTarget}`);
-  else {
-    await writeJson(mcpTarget, renderedMcp);
-    console.log(`installed: ${mcpTarget}`);
-  }
+  await installText(
+    path.join(options.piHome, 'mcp.json'),
+    `${JSON.stringify(renderedMcp, null, 2)}\n`,
+    backupRoot,
+    'config/mcp.json',
+    options.dryRun,
+  );
 
   const extensions = await readJson(path.join(manifestRoot, 'extensions.json'));
   for (const extension of extensions) {
@@ -123,7 +115,4 @@ async function main() {
   if (!options.dryRun) console.log(`Backups: ${backupRoot}`);
 }
 
-main().catch((error) => {
-  console.error(`FAIL: ${error.message}`);
-  process.exitCode = 1;
-});
+runMain(main);
