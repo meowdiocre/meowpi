@@ -219,3 +219,7 @@ function App() {
 - **[references/voice.md](references/voice.md)** — `@cloudflare/voice` STT/TTS
 - **[references/codemode.md](references/codemode.md)** — Code Mode for tool orchestration
 - **[references/browse-the-web.md](references/browse-the-web.md)** — CDP browser tools
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://agents-sdk/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/agents-sdk/` — `~/.omp/agent/skills/agents-sdk/` by default. Invoking `/skill:agents-sdk` also prints the resolved location.

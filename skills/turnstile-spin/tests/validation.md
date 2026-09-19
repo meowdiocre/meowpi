@@ -48,9 +48,9 @@ Native forms that navigate do not need reset logic. For each same-page flow, ver
 After Step 11:
 
 ```sh
-test -f .claude/skills/turnstile-spin/SKILL.md \
-  || test -f .codex/skills/turnstile-spin/SKILL.md \
-  || test -f .opencode/skills/turnstile-spin/SKILL.md
+test -f "$HOME/.omp/agent/skills/turnstile-spin/SKILL.md" \
+  || test -f "$OMP_HOME/skills/turnstile-spin/SKILL.md" \
+  || test -f ./skills/turnstile-spin/SKILL.md
 ```
 
 Expected exit code: 0. File-oriented rules targets install the hosted `prompt.md` directly instead of using `persist-skill.sh`.

@@ -31,3 +31,7 @@ For decisions about abstraction, state, interfaces, errors, comments, dependenci
 - Keep temporary probes and generated artifacts out of the final diff unless they are useful project assets.
 
 The goal is a small change whose behavior, design, and verification are easy for another engineer to inspect.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://code-standards/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/code-standards/` — `~/.omp/agent/skills/code-standards/` by default. Invoking `/skill:code-standards` also prints the resolved location.

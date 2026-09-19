@@ -138,20 +138,11 @@ Error: Request failed: [Errno 8] nodename nor servname provided, or not known
 Hint: Check your internet connection.
 ```
 
-**Cause:** Running inside a sandboxed environment (OpenAI Codex, containers) that blocks network access.
+**Cause:** Running inside a sandboxed environment ([OC], containers) that blocks network access.
 
-**Solution for OpenAI Codex:**
+**Solution for sandboxed coding agents:**
 
-Add to `~/.codex/config.toml`:
-```toml
-[sandbox_workspace_write]
-network_access = true
-```
-
-Or run with full network access:
-```bash
-codex exec --sandbox danger-full-access "nlm notebook list"
-```
+Grant network access to the sandbox, or run the command outside it. For a container-based agent, allow outbound HTTPS to `notebooklm.google.com`. Oh My Pi has no built-in network sandbox; if the command fails behind a container or a restricted shell, resolve the network restriction there rather than changing the skill.
 
 **Solution for Docker/Containers:**
 Ensure the container has network access and can reach `notebooklm.google.com`.

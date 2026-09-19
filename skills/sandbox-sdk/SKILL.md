@@ -175,3 +175,7 @@ See `examples/openai-agents` for complete integration pattern.
 
 - **[references/api-quick-ref.md](references/api-quick-ref.md)** - Full API with options and return types
 - **[references/examples.md](references/examples.md)** - Example index with use cases
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://sandbox-sdk/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/sandbox-sdk/` — `~/.omp/agent/skills/sandbox-sdk/` by default. Invoking `/skill:sandbox-sdk` also prints the resolved location.

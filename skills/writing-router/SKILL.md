@@ -7,14 +7,16 @@ description: Route writing requests to the correct installed workflow. Use when 
 
 Choose one primary writing workflow. Do not stack rule sets that optimize for different readers.
 
+For repository instructions under Oh My Pi, the native locations are `.omp/AGENTS.md` and `.omp/RULES.md`; `writing-great-agents-md` documents their loading rules.
+
 ## Route
 
 | Request | Load and follow |
 |---|---|
-| README, runbook, procedure, API guide, error message, incident report, release note, localization-ready text | The sibling `simple-english/SKILL.md` |
-| Essay, blog post, email, product explanation, announcement, or other voice-led nonfiction | The sibling `plain-english/SKILL.md` |
-| `AGENTS.md`, `CLAUDE.md`, or repository instructions | The sibling `writing-great-agents-md/SKILL.md` |
-| Audit, score, compare, or polish an existing technical Markdown file | The sibling `style-review/SKILL.md` |
+| README, runbook, procedure, API guide, error message, incident report, release note, localization-ready text | `skill://simple-english` |
+| Essay, blog post, email, product explanation, announcement, or other voice-led nonfiction | `skill://plain-english` |
+| `AGENTS.md`, `CLAUDE.md`, `.omp/AGENTS.md`, `.omp/RULES.md`, or repository instructions | `skill://writing-great-agents-md` |
+| Audit, score, compare, or polish an existing technical Markdown file | `skill://style-review` |
 
 If the document mixes technical instructions with narrative prose, apply each workflow only to its matching section. Never run Plain English and Simplified Technical English over the same passage.
 
@@ -29,3 +31,7 @@ Before drafting technical documentation:
 5. Use Style Review only as a final quality pass. A style score does not prove technical correctness.
 
 The goal is clear, trustworthy prose. Do not promise that text can evade an AI detector.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://writing-router/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/writing-router/` — `~/.omp/agent/skills/writing-router/` by default. Invoking `/skill:writing-router` also prints the resolved location.

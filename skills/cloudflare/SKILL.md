@@ -246,3 +246,7 @@ Need IaC? → pulumi/ (Pulumi), terraform/ (Terraform), or api/ (REST API)
 | Static Assets | `references/static-assets/` |
 | Bindings | `references/bindings/` |
 | Cache Reserve | `references/cache-reserve/` |
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://cloudflare/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/cloudflare/` — `~/.omp/agent/skills/cloudflare/` by default. Invoking `/skill:cloudflare` also prints the resolved location.

@@ -47,3 +47,7 @@ Identify the current branch, its upstream, the intended base branch, staged and 
 - Use `--force-with-lease` rather than `--force` only when an authorized history rewrite is genuinely necessary.
 
 Finish with the resulting branch or commit, the verification run, any remaining working-tree changes, and whether anything was pushed or published.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://git-workflow/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/git-workflow/` — `~/.omp/agent/skills/git-workflow/` by default. Invoking `/skill:git-workflow` also prints the resolved location.

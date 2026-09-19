@@ -157,3 +157,7 @@ skipped: <generated / vendored / per-file-ignored paths>
 proposed (NOT applied): <code changes you would make in a separate pass>
 flagged (needs a human): <file:line and why you could not decide>
 ```
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://comment-audit/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/comment-audit/` — `~/.omp/agent/skills/comment-audit/` by default. Invoking `/skill:comment-audit` also prints the resolved location.

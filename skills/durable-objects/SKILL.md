@@ -184,3 +184,7 @@ describe("MyDO", () => {
   });
 });
 ```
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://durable-objects/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/durable-objects/` — `~/.omp/agent/skills/durable-objects/` by default. Invoking `/skill:durable-objects` also prints the resolved location.

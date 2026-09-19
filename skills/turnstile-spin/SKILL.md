@@ -122,7 +122,7 @@ The user pasted the prompt. You are in a multi-step dialog. Detect what you can,
 
 10. **Validation.** For a newly created widget, set `EXPECTED_DOMAINS_JSON` to the user-approved JSON array and run `(set +x; printf '%s' "$WIDGET_SECRET" | scripts/validate.sh --sitekey "$SITEKEY" --account-id "$ACCOUNT_ID" --expected-domains "$EXPECTED_DOMAINS_JSON")`, then unset `WIDGET_SECRET`. The validator reads the secret only from standard input and never writes it to disk or command arguments. For an existing widget, the guarded flow validates the retrieved secret before storing it. In both flows, exercise the actual protected backend with a fresh real Turnstile token, verify one successful request, then verify that replaying the token is rejected. If the backend cannot be run, report destination validation as pending and do not claim end-to-end success. **[wait for user if anything fails]**
 
-11. **Persist skill.** Ask: "Save the Spin skill to `.claude/skills/turnstile-spin/SKILL.md` so I can reuse it on follow-up tasks?" Default yes. **[wait for user]** For an agent that supports directory-based skill bundles, run `scripts/persist-skill.sh --path <bundle-directory>/SKILL.md`. For a file-oriented rules target, install the hosted `prompt.md` directly instead; do not run `persist-skill.sh`.
+11. **Persist skill.** Ask: "Save the Spin skill to `~/.omp/agent/skills/turnstile-spin/SKILL.md` so I can reuse it on follow-up tasks?" Default yes. **[wait for user]** When the target is a directory-based skill bundle, run `scripts/persist-skill.sh --path <bundle-directory>/SKILL.md`. Oh My Pi loads skills from `<OMP_HOME>/skills/<name>/SKILL.md` (`~/.omp/agent/skills/<name>/SKILL.md` by default), so use `--path` with that location. For a file-oriented rules target, install the hosted `prompt.md` directly instead; do not run `persist-skill.sh`.
 
 12. **Final report.** Print the structured summary: what was created, what was validated, what to do next.
 
@@ -328,3 +328,7 @@ Edge cases to surface to the user:
 | Token expired mid-flow                         | Stop, re-run `scripts/auth-probe.sh`, prompt for fresh credentials                                                                                                                                                                    |
 | Validation returns `invalid-input-secret`      | The secret didn't reach the backend. Re-check `TURNSTILE_SECRET` in the customer's env / secret manager. If it's a Workers backend, run `wrangler secret list` to confirm the secret is bound to the right script.                    |
 | Validation returns `invalid-input-response`    | Expected for a dummy probe token; that means the secret IS valid. validate.sh treats this as success.                                                                                                                                 |
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://turnstile-spin/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/turnstile-spin/` — `~/.omp/agent/skills/turnstile-spin/` by default. Invoking `/skill:turnstile-spin` also prints the resolved location.

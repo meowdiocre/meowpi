@@ -340,3 +340,7 @@ This skill is an unofficial aid. It is not affiliated with or endorsed by ASD or
 - `references/agent-style-quality.md` — audience, evidence, claim calibration, and document-structure checks for technical documentation
 - `references/checklist.md` — full verification pass with searchable patterns, for check mode and final audits
 - `references/use-cases.md` — long-form adaptations: error messages, runbooks, incident reports, commits, UI copy, i18n
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://simple-english/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/simple-english/` — `~/.omp/agent/skills/simple-english/` by default. Invoking `/skill:simple-english` also prints the resolved location.

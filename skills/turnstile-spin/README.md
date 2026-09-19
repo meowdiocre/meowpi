@@ -27,15 +27,15 @@ Agents that load skill bundles from `github.com/cloudflare/skills` will pick thi
 
 ```sh
 git clone https://github.com/cloudflare/skills ~/.config/cloudflare-skills
-ln -s ~/.config/cloudflare-skills/skills/turnstile-spin ~/.claude/skills/turnstile-spin
+ln -s ~/.config/cloudflare-skills/skills/turnstile-spin ~/.omp/agent/skills/turnstile-spin
 ```
 
 If cloning is not an option, the hosted single-file prompt is a read-only fallback:
 
 ```sh
-mkdir -p .claude/skills/turnstile-spin && \
+mkdir -p ~/.omp/agent/skills/turnstile-spin && \
   curl -sSL https://developers.cloudflare.com/turnstile/spin/prompt.md \
-  -o .claude/skills/turnstile-spin/SKILL.md
+  -o ~/.omp/agent/skills/turnstile-spin/SKILL.md
 ```
 
 The single-file install does not include `scripts/` or `references/`; the hosted prompt fetches those on demand with `fetch_spin_script`. `scripts/persist-skill.sh` requires the cloned bundle above and cannot be used from a single-file install. For other agents, see the table in [`SKILL.md`](./SKILL.md#step-11--persist-the-skill).

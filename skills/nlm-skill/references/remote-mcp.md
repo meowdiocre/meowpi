@@ -80,4 +80,4 @@ research; queries; Studio creation/status; and metadata operations.
 - Public multi-user, organization-wide, VPS, container, reverse-proxy, and
   tunnel deployments are not supported turnkey configurations.
 
-The full repository guide is `docs/REMOTE_MCP.md`.
+The full repository guide is `docs/REMOTE_MCP.md` in the upstream `nlm` project, not in this skill bundle.

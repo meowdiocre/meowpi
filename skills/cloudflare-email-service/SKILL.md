@@ -101,3 +101,7 @@ Read the reference that matches your situation. You don't need all of them.
 - **[references/routing.md](references/routing.md)** — Inbound `email()` handler, forwarding, replying, parsing. For receiving emails.
 - **[references/cli-and-mcp.md](references/cli-and-mcp.md)** — Domain setup, wrangler commands, MCP tools. For first-time setup.
 - **[references/deliverability.md](references/deliverability.md)** — SPF/DKIM/DMARC, bounces, suppressions, best practices.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://cloudflare-email-service/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/cloudflare-email-service/` — `~/.omp/agent/skills/cloudflare-email-service/` by default. Invoking `/skill:cloudflare-email-service` also prints the resolved location.

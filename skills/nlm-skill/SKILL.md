@@ -889,3 +889,7 @@ For detailed information, see:
 - **[references/troubleshooting.md](references/troubleshooting.md)**: Detailed error handling
 - **[references/workflows.md](references/workflows.md)**: End-to-end task sequences
 - **[references/remote-mcp.md](references/remote-mcp.md)**: Remote HTTP deployment boundaries, security, account isolation, and file-transfer limitations
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://nlm-skill/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/nlm-skill/` — `~/.omp/agent/skills/nlm-skill/` by default. Invoking `/skill:nlm-skill` also prints the resolved location.

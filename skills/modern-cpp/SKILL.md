@@ -63,3 +63,7 @@ Before finishing:
 - Check lock scope, wait predicates, callbacks under locks, cancellation, and shutdown when concurrency is involved.
 - Run the repository formatter and the narrowest relevant build, tests, static analysis, or sanitizers.
 - Keep performance claims tied to equivalent benchmarks or a clear complexity result.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://modern-cpp/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/modern-cpp/` — `~/.omp/agent/skills/modern-cpp/` by default. Invoking `/skill:modern-cpp` also prints the resolved location.

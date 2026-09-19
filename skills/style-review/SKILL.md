@@ -52,3 +52,7 @@ node <skill-directory>/scripts/audit.mjs --compare A.md B.md
 ## Attribution
 
 Based on [The Elements of Agent Style](https://github.com/yzhao062/agent-style), licensed under CC BY 4.0. This portable adaptation replaces the upstream CLI dependency with a bundled Node audit and makes heading capitalization follow the host project.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://style-review/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/style-review/` — `~/.omp/agent/skills/style-review/` by default. Invoking `/skill:style-review` also prints the resolved location.

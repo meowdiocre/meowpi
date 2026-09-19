@@ -92,3 +92,7 @@ impl Connection<Connected> {
 - `///` doc comments explain *what* and *how* for public APIs
 - Every `TODO` needs a linked issue: `// TODO(#42): ...`
 - Enable `#![deny(missing_docs)]` for libraries
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://rust-best-practices/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/rust-best-practices/` — `~/.omp/agent/skills/rust-best-practices/` by default. Invoking `/skill:rust-best-practices` also prints the resolved location.

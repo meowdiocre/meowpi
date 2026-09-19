@@ -78,3 +78,7 @@ Edit `config.json`:
 | [browser](skills/browser/SKILL.md) | Edge automation via CDP |
 | [desktop](skills/desktop/SKILL.md) | Screenshots, window management, keystrokes |
 | [system](skills/system/SKILL.md) | Shell commands, processes, system info |
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://powerskills/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/powerskills/` — `~/.omp/agent/skills/powerskills/` by default. Invoking `/skill:powerskills` also prints the resolved location.

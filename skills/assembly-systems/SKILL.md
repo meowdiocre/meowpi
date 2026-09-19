@@ -41,3 +41,7 @@ For whole binaries, symbol recovery, malware, firmware, or cross-version compari
 - Mixed-language code: write a small ABI probe and inspect both sides of the boundary before changing production code.
 
 Report the target assumptions, the evidence used, the recovered behavior, and any remaining uncertainty.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://assembly-systems/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/assembly-systems/` — `~/.omp/agent/skills/assembly-systems/` by default. Invoking `/skill:assembly-systems` also prints the resolved location.

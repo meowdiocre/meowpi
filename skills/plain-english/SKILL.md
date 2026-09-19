@@ -108,3 +108,7 @@ This skill is for prose with a voice — essays, posts, emails, chat, marketing,
 ## Reference
 
 See `REFERENCE.md` for the full banned-word substitution table and before/after examples. Load it whenever any mode runs.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://plain-english/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/plain-english/` — `~/.omp/agent/skills/plain-english/` by default. Invoking `/skill:plain-english` also prints the resolved location.

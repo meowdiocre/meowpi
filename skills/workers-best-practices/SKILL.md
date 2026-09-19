@@ -125,3 +125,7 @@ This skill covers Workers-specific best practices and code review. For related t
 - **Provide evidence.** Reference line numbers, tool output, or docs links.
 - **Focus on what developers will copy.** Workers code in examples and docs gets pasted into production.
 - **Correctness over completeness.** A concise example that works beats a comprehensive one with errors.
+
+## Loading in Oh My Pi
+
+Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://workers-best-practices/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/workers-best-practices/` — `~/.omp/agent/skills/workers-best-practices/` by default. Invoking `/skill:workers-best-practices` also prints the resolved location.

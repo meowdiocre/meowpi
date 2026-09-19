@@ -1,7 +1,7 @@
 ---
 name: verify
 description: "Verify a requested change or claim with fail-first evidence, targeted checks, live output, and exit codes. Use for 'çalışıyor mu', 'testleri çalıştır', 'doğrula', 'kanıtla', and before declaring a bugfix, feature, refactor, or API change complete. Not for silently repairing a failing project or claiming visual, security, or production behavior from an unrelated unit test."
-compatibility: Pi. Needs a runnable project command.
+compatibility: Oh My Pi (OMP). Needs a runnable project command.
 ---
 
 # Verify
