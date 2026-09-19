@@ -34,6 +34,17 @@ export async function writeJson(target, value) {
   await rename(temporary, target);
 }
 
+export async function readText(target) {
+  return (await readFile(target, 'utf8')).replace(/^\uFEFF/, '');
+}
+
+export async function writeText(target, content) {
+  await mkdir(path.dirname(target), { recursive: true });
+  const temporary = `${target}.tmp-${process.pid}`;
+  await writeFile(temporary, content, 'utf8');
+  await rename(temporary, target);
+}
+
 export async function walkFiles(root, { skip = [] } = {}) {
   const skipped = new Set(skip);
   const files = [];
@@ -124,8 +135,7 @@ export async function installText(target, content, backupRoot, label, dryRun) {
     console.log(`[dry-run] install -> ${target}`);
     return;
   }
-  await mkdir(path.dirname(target), { recursive: true });
-  await writeFile(target, content, 'utf8');
+  await writeText(target, content);
   console.log(`installed: ${target}`);
 }
 
@@ -169,25 +179,114 @@ export function normalizeSkillSnapshot(liveSkills) {
   return sortedStrings(new Set(liveSkills));
 }
 
+const yamlRootKeyPattern = /^([A-Za-z0-9_.-]+):(?:\s*(.*))?$/;
+
+/**
+ * Read a YAML document's top-level keys as `key -> inline value`.
+ *
+ * Only top-level entries are read, and a key that opens a nested block maps to
+ * `null`. That covers the portability and credential checks this repository
+ * performs without adding a YAML dependency.
+ */
+export function yamlRootEntries(text) {
+  const entries = new Map();
+  for (const line of text.split(/\r?\n/)) {
+    if (!line.trim() || /^\s/.test(line)) continue;
+    const match = yamlRootKeyPattern.exec(line);
+    if (!match) continue;
+    const value = (match[2] ?? '').trim();
+    entries.set(match[1], value === '' ? null : value);
+  }
+  return entries;
+}
+
+function isYamlComment(line) {
+  return line.trimStart().startsWith('#');
+}
+
+/**
+ * Extract one top-level YAML block, dedented so {@link yamlRootEntries} can
+ * read it as its own document.
+ */
+export function yamlBlock(text, key) {
+  const lines = text.split(/\r?\n/);
+  const start = lines.findIndex((line) => yamlRootKeyPattern.exec(line)?.[1] === key);
+  if (start === -1) return '';
+
+  const block = [];
+  for (const line of lines.slice(start + 1)) {
+    if (line.trim() && !/^\s/.test(line)) break;
+    block.push(line);
+  }
+
+  const content = block.filter((line) => line.trim());
+  if (content.length === 0) return '';
+  const indent = Math.min(...content.map((line) => /^\s*/.exec(line)[0].length));
+  return block.map((line) => line.slice(indent)).join('\n');
+}
+
+/**
+ * Drop top-level keys from YAML text, together with the comment block that
+ * documents each key. Nested blocks owned by a removed key go with it.
+ */
+export function stripYamlRootKeys(text, keys) {
+  const removed = new Set(keys);
+  const lines = text.split(/\r?\n/);
+  const kept = [];
+  let index = 0;
+
+  while (index < lines.length) {
+    const key = yamlRootKeyPattern.exec(lines[index])?.[1];
+    if (!key || !removed.has(key)) {
+      kept.push(lines[index]);
+      index += 1;
+      continue;
+    }
+
+    const opensBlock = (yamlRootKeyPattern.exec(lines[index])?.[2] ?? '').trim() === '';
+    index += 1;
+    if (opensBlock) {
+      while (index < lines.length && (/^\s/.test(lines[index]) && lines[index].trim() !== '')) index += 1;
+    }
+    while (kept.length > 0 && isYamlComment(kept[kept.length - 1])) kept.pop();
+  }
+
+  return `${kept.join('\n').replace(/\n+$/, '')}\n`;
+}
+
+/** Set one top-level scalar in YAML text, replacing an existing value in place. */
+export function setYamlRootScalar(text, key, value) {
+  const lines = text.split(/\r?\n/);
+  const replacement = `${key}: ${value}`;
+  const index = lines.findIndex((line) => yamlRootKeyPattern.exec(line)?.[1] === key);
+  if (index === -1) {
+    const trimmed = lines.filter((line, position) => !(position === lines.length - 1 && line === ''));
+    return `${[...trimmed, replacement].join('\n')}\n`;
+  }
+  lines[index] = replacement;
+  return lines.join('\n');
+}
+
 export function parseCommonArgs(argv) {
   const options = {
     dryRun: false,
-    piHome: process.env.PI_HOME || path.join(userHome, '.pi', 'agent'),
-    skipPi: false,
-    skipPackages: false,
+    ompHome:
+      process.env.OMP_HOME ||
+      process.env.PI_CODING_AGENT_DIR ||
+      path.join(userHome, '.omp', 'agent'),
+    skipOmp: false,
     skipSkills: false,
   };
 
   for (let index = 0; index < argv.length; index += 1) {
     const argument = argv[index];
     if (argument === '--dry-run') options.dryRun = true;
-    else if (argument === '--skip-pi') options.skipPi = true;
-    else if (argument === '--skip-packages') options.skipPackages = true;
+    else if (argument === '--skip-omp') options.skipOmp = true;
     else if (argument === '--skip-skills') options.skipSkills = true;
-    else if (argument === '--pi-home') {
+    else if (argument === '--omp-home') {
       index += 1;
-      if (!argv[index]) throw new Error('--pi-home requires a path');
-      options.piHome = path.resolve(argv[index]);
+      if (!argv[index]) throw new Error('--omp-home requires a path');
+      options.ompHome = path.resolve(argv[index]);
     } else {
       throw new Error(`Unknown argument: ${argument}`);
     }

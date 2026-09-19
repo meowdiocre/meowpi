@@ -33,20 +33,8 @@
   ],
   "targets": [
     {
-      "name": "shared",
-      "path": "{{HOME}}/.agents/skills"
-    },
-    {
-      "name": "pi",
-      "path": "{{PI_HOME}}/skills"
-    },
-    {
-      "name": "claude",
-      "path": "{{HOME}}/.claude/skills"
-    },
-    {
-      "name": "opencode",
-      "path": "{{HOME}}/.config/opencode/skills"
+      "name": "omp",
+      "path": "{{OMP_HOME}}/skills"
     }
   ]
 }

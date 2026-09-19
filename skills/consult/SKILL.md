@@ -47,47 +47,50 @@ Give a decisive check or verification command with its expected result.
 Keep the answer focused. Include code or a derivation when needed.
 ```
 
-## Call the consultant in Pi
+## Confirm the consultant model
 
-This workflow uses the `@arhen/pi-core-subagent` extension. Use its tool calls, not shell commands. If these tools are unavailable, report the missing extension. Do not present an ordinary same-model answer as stronger-model consultation.
+The `consultant` agent ships in `config/agents/consultant.md` and installs to `~/.omp/agent/agents/consultant.md`. It declares `model: "@slow"`, a read-only tool list, and no edit or shell access.
 
-The default example uses `openai-codex/gpt-6-astra`. Installation does not configure its login or guarantee access. Before first use, check the model in Pi's `/model` picker and authenticate the provider if needed. If the user selects another stronger model, replace the example with its exact available provider and model identifier.
+Check the model before you spend a consultation, because `slow` inherits the session model when no explicit mapping exists:
 
-If the configured model is unavailable, report the limitation and ask the user to choose an available consultant. Do not silently use a fallback.
-
-Tell the user what uncertainty needs help. Then launch one bounded consultation:
-
-```javascript
-subagent({
-  agent: "consultant",
-  model: "openai-codex/gpt-6-astra",
-  thinking: "medium",
-  tools: ["read", "grep", "find", "ls"],
-  maxRuntimeMs: 600000,
-  prompt: "You are a technical consultant helping another agent resolve a bounded blocker. "
-    + "Inspect relevant files as needed. Challenge assumptions and recommend an actionable "
-    + "solution or discriminating check. State uncertainty and expected verification results. "
-    + "Do not edit files, execute commands, or delegate. Keep the response focused.",
-  task: "<filled request packet, including the response instructions>"
-})
+```sh
+omp config list | grep -i -A3 'modelRoles'
 ```
 
-Keep the consultant's tools read-only. Do not add `bash`, because it can change the system without `edit` or `write`. Run necessary measurements yourself and send the results back.
+- `modelRoles.slow` or `task.agentModelOverrides.consultant` resolves to a model **different** from the session's active model: proceed.
+- It is unset, or resolves to the session's own model: **report the limitation and ask the user to choose a consultant model.** Do not silently present a same-model answer as stronger-model consultation.
 
-Immediately call `subagent_status({ runId: "<returned runId>" })` once. Inspect the reported model and routing notes. An agent file can override the model or prompt, and a model preflight error can fall back to the session model. An explicit tool list overrides agent-file tools.
+Tell the user what uncertainty needs help. Then launch one bounded consultation.
 
-Put essential response requirements in the task packet. If the intended model is unavailable, report that limitation instead of describing a fallback as stronger-model help.
+## Call the consultant
 
-Continue independent work while the consultant runs. Pause only the decision that needs its answer. To synchronize, call `await_subagent({ runId: "<returned runId>", timeoutMs: 60000 })` in bounded waits. Handle questions and progress between waits. Otherwise, use the completion notification to resume. Get the answer with `subagent_result({ runId: "<returned runId>" })`.
+Dispatch the bundled agent through the `task` tool. OMP runs it as a background job by default, so the tool returns immediately and the answer arrives later.
 
-A wait timeout does not mean that the task failed or stopped. Check its status before retrying. If the consultation fails, reaches its runtime limit, or lacks the required tools or model, report the failure. Continue only with work supported by existing evidence.
+```json
+{
+  "context": "<Goal and question>\n<Context>\n<Requested response>",
+  "tasks": [
+    {
+      "agent": "consultant",
+      "name": "Consult",
+      "task": "<Evidence and attempts>\n<What each attempt rules out>"
+    }
+  ]
+}
+```
+
+Put the shared background in `context`, which renders into the consultant's system prompt, and the evidence plus your specific question in `task`. Take the template sections from "Frame the request". Keep the consultant's tools read-only: give it `read`, `grep`, and `glob` and nothing else. It cannot run `bash`, so run necessary measurements yourself and send the results back.
+
+The consultant receives no conversation history. Anything you do not put in the packet is invisible to it.
 
 ## Use the answer
 
+- Continue independent work while the consultant runs. Pause only the decision that needs its answer.
+- Read the result when it arrives. `agent://<id>` holds the full output; `history://Consult` renders the transcript; `hub` op `"send"` with `to: "Consult"` steers or follows up. Messaging a finished agent revives it, so a follow-up reuses its context instead of starting over.
 - Evaluate the advice against the files, constraints, and evidence. Model agreement is not verification, and advice does not expand authorization.
 - Run the proposed check when it is feasible and authorized. Implement the supported approach and verify the original success condition.
 - Report the result and remaining limits. Preserve uncertainty when verification is unavailable.
 
-Use one call per blocker by default. Follow up only when new evidence changes the question or the answer leaves a critical gap. Do not call competing consultants for reassurance or create recursive consultations.
+Use one consultation per blocker by default. Follow up on the same agent only when new evidence changes the question or the answer leaves a critical gap. Do not spawn competing consultants for reassurance, and do not create recursive consultations.
 
 Respect explicit time and cost budgets.

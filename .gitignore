@@ -6,7 +6,8 @@
 **/*.key
 **/*.pem
 
-# Pi runtime state
+# OMP runtime state
+.omp/
 .pi/
 sessions/
 caches/

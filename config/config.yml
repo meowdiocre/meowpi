@@ -1,0 +1,24 @@
+# MeowPi: portable OMP settings, installed to <OMP_HOME>/config.yml.
+#
+# Only machine-independent settings belong here. Provider credentials and model
+# definitions live in models.yml, and per-machine additions belong in a local
+# override, so this file stays diffable and portable across Windows, macOS, and
+# Linux. A Git Bash `shellPath`, for example, is deliberately absent: OMP falls
+# back to its own shell lookup when it finds no Git Bash.
+setupVersion: 1
+theme:
+  dark: titanium
+  light: light
+symbolPreset: unicode
+modelRoles:
+  default: openai-codex/gpt-5.6-sol:xhigh
+# Skills resolve from the OMP-native tree alone. Every foreign agent tree
+# (~/.claude, ~/.codex, ~/.agents, and the same bases inside a project) is off,
+# so what this repository installs is exactly what OMP loads. OMP's own
+# `claude-plugins` and managed-skill providers are unaffected by these flags.
+skills:
+  enableCodexUser: false
+  enableClaudeUser: false
+  enableClaudeProject: false
+  enableAgentsUser: false
+  enableAgentsProject: false

@@ -1,21 +1,28 @@
-import { cp, mkdir, readdir, readFile, rm } from 'node:fs/promises';
+import { cp, mkdir, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import {
   collapseTokens,
-  commandName,
   normalizeSkillSnapshot,
   parseCommonArgs,
   pathExists,
   portablePathTokens,
   readJson,
+  readText,
   repoRoot,
   run,
   runMain,
+  stripYamlRootKeys,
   writeJson,
+  writeText,
 } from './lib.mjs';
 import { verifyRepository } from './verify.mjs';
 
-const sensitiveKeyPattern = /^(?:api[-_]?key|access[-_]?token|refresh[-_]?token|token|secret|password|credential|authorization)$/i;
+/** Keys that describe this machine rather than the MeowPi setup. */
+const machineLocalSettings = ['shellPath'];
+
+const sensitiveKeyPattern =
+  /^(?:api[-_]?key|access[-_]?token|refresh[-_]?token|token|secret|password|credential|authorization)$/i;
+const environmentReferencePattern = /^(?:[A-Z][A-Z0-9_]*|\$\{[A-Z0-9_]+\}|\{\{NPX\}\})$/;
 
 function assertNoSensitiveKeys(value, jsonPath = '$') {
   if (Array.isArray(value)) {
@@ -31,85 +38,47 @@ function assertNoSensitiveKeys(value, jsonPath = '$') {
   }
 }
 
-async function exportJson(source, target, transform = (value) => value) {
-  const value = await readJson(source);
-  assertNoSensitiveKeys(value);
-  await writeJson(target, transform(value));
-  console.log(`exported: ${target}`);
+/**
+ * Reject literal credentials in YAML while allowing environment indirection.
+ *
+ * OMP treats an `apiKey` value as an environment variable name first, so
+ * `apiKey: INFERHUB_API_KEY` is portable and stays exported.
+ */
+function assertNoLiteralSecrets(text, label) {
+  for (const line of text.split(/\r?\n/)) {
+    const match = /^\s*([A-Za-z0-9_.-]+):\s*(.+)$/.exec(line);
+    if (!match) continue;
+    const value = match[2].trim().replace(/^["']|["']$/g, '');
+    if (!sensitiveKeyPattern.test(match[1])) continue;
+    if (environmentReferencePattern.test(value)) continue;
+    throw new Error(`Refusing to export a literal credential from ${label}: ${match[1]}`);
+  }
 }
 
-function resolveInstalledVersion(installed, name, label) {
-  const version = installed.dependencies?.[name]?.version;
-  if (!version) throw new Error(`${label} is not installed: ${name}`);
+function resolveInstalledOmpVersion() {
+  const reported = run('omp', ['--version'], { capture: true }).trim();
+  const version = /^omp\/(\d+\.\d+\.\d+)/.exec(reported)?.[1];
+  if (!version) throw new Error(`Unparsable OMP version output: ${reported}`);
   return version;
 }
 
-async function refreshPinnedVersions(manifestPath, installed, label) {
-  const manifest = await readJson(manifestPath);
-  if (Array.isArray(manifest)) {
-    for (const entry of manifest) {
-      entry.version = resolveInstalledVersion(installed, entry.name, label);
-    }
-  } else {
-    manifest.version = resolveInstalledVersion(installed, manifest.package, label);
-  }
-  await writeJson(manifestPath, manifest);
-}
-
-async function refreshSkillSnapshot(piHome, skillManifestPath, skillManifest) {
-  const liveSkillRoot = path.join(piHome, 'skills');
-  const repoSkillRoot = path.join(repoRoot, 'skills');
-  const liveSkills = (await readdir(liveSkillRoot, { withFileTypes: true }))
-    .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
-    .map((entry) => entry.name);
-  const snapshotSkills = normalizeSkillSnapshot(liveSkills);
-
-  const existingSkills = await readdir(repoSkillRoot, { withFileTypes: true });
-  for (const entry of existingSkills) {
-    if (entry.isDirectory() && !snapshotSkills.includes(entry.name)) {
-      await rm(path.join(repoSkillRoot, entry.name), { recursive: true, force: true });
-    }
-  }
-  for (const skillName of snapshotSkills) {
-    const source = path.join(liveSkillRoot, skillName);
-    const target = path.join(repoSkillRoot, skillName);
-    await rm(target, { recursive: true, force: true });
-    await cp(source, target, {
-      recursive: true,
-      dereference: true,
-      force: true,
-      filter: (entry) => !['.git', 'node_modules'].includes(path.basename(entry)),
-    });
-  }
-
-  skillManifest.skills = snapshotSkills;
-  await writeJson(skillManifestPath, skillManifest);
-}
-
-async function main() {
-  const options = parseCommonArgs(process.argv.slice(2));
-  if (options.dryRun || options.skipPi || options.skipPackages || options.skipSkills) {
-    throw new Error('export accepts only --pi-home');
-  }
-
+async function exportSettings(ompHome) {
   const configRoot = path.join(repoRoot, 'config');
-  const manifestRoot = path.join(repoRoot, 'manifests');
-  await mkdir(path.join(configRoot, 'extensions'), { recursive: true });
-
-  await exportJson(
-    path.join(options.piHome, 'settings.json'),
-    path.join(configRoot, 'settings.json'),
-    (settings) => {
-      const { lastChangelogVersion, ...portable } = settings;
-      return portable;
-    },
+  const settings = stripYamlRootKeys(
+    await readText(path.join(ompHome, 'config.yml')),
+    machineLocalSettings,
   );
-  await exportJson(
-    path.join(options.piHome, 'models.json'),
-    path.join(configRoot, 'models.json'),
-  );
+  await writeText(path.join(configRoot, 'config.yml'), settings);
+  console.log(`exported: ${path.join(configRoot, 'config.yml')}`);
 
-  const liveMcp = await readJson(path.join(options.piHome, 'mcp.json'));
+  const models = await readText(path.join(ompHome, 'models.yml'));
+  assertNoLiteralSecrets(models, 'models.yml');
+  await writeText(path.join(configRoot, 'models.yml'), models);
+  console.log(`exported: ${path.join(configRoot, 'models.yml')}`);
+}
+
+async function exportMcp(ompHome) {
+  const liveMcp = await readJson(path.join(ompHome, 'mcp.json'));
   assertNoSensitiveKeys(liveMcp);
 
   const portableMcp = collapseTokens(
@@ -119,38 +88,116 @@ async function main() {
   for (const server of Object.values(portableMcp.mcpServers)) {
     if (server.command === 'npx' || server.command === 'npx.cmd') server.command = '{{NPX}}';
   }
-  await writeJson(path.join(configRoot, 'mcp.json.template'), portableMcp);
+  await writeJson(path.join(repoRoot, 'config', 'mcp.json.template'), portableMcp);
+  console.log('exported: config/mcp.json.template');
+}
 
-  const extensions = await readJson(path.join(manifestRoot, 'extensions.json'));
-  for (const extension of extensions) {
-    const source = path.join(options.piHome, 'extensions', extension);
+async function exportExtensions(ompHome) {
+  const configRoot = path.join(repoRoot, 'config');
+  const extensionsRoot = path.join(configRoot, 'extensions');
+  await mkdir(extensionsRoot, { recursive: true });
+
+  for (const extension of await readdir(extensionsRoot)) {
+    const source = path.join(ompHome, 'extensions', extension);
     if (!(await pathExists(source))) throw new Error(`Configured extension is missing: ${source}`);
-    await cp(source, path.join(configRoot, 'extensions', extension), { force: true });
+    await cp(source, path.join(extensionsRoot, extension), { force: true });
+    console.log(`exported: ${path.join('config/extensions', extension)}`);
+  }
+}
+
+async function exportAgents(ompHome) {
+  const agentsRoot = path.join(repoRoot, 'config', 'agents');
+  await mkdir(agentsRoot, { recursive: true });
+
+  const repoAgents = await readdir(agentsRoot);
+  const liveAgentsRoot = path.join(ompHome, 'agents');
+  const liveAgents = (await pathExists(liveAgentsRoot)) ? await readdir(liveAgentsRoot) : [];
+
+  // A configured agent file missing from the install means the install drifted;
+  // report it instead of silently dropping the agent from the portable set.
+  for (const agent of repoAgents) {
+    if (!liveAgents.includes(agent)) throw new Error(`Configured agent is missing from the install: ${agent}`);
+    await cp(path.join(liveAgentsRoot, agent), path.join(agentsRoot, agent), { force: true });
+    console.log(`exported: ${path.join('config/agents', agent)}`);
+  }
+}
+
+async function refreshPinnedVersion() {
+  const manifestPath = path.join(repoRoot, 'manifests', 'omp.json');
+  const manifest = await readJson(manifestPath);
+  manifest.version = resolveInstalledOmpVersion();
+  await writeJson(manifestPath, manifest);
+}
+
+/**
+ * Skill entries this repository owns outright.
+ *
+ * `skills/reverse-skill-router/upstream` is a byte-exact vendored snapshot that
+ * `upstream-lock.json` verifies, and no install can reproduce it: a live tree
+ * may hold a modified or tooling-redacted copy of those files. Export reads
+ * skills *from* an install, so it must leave these entries alone.
+ */
+const repoOwnedSkillEntries = {
+  'reverse-skill-router': ['upstream', 'upstream-lock.json'],
+};
+
+async function syncSkillTree(skillName, source, target) {
+  const excluded = new Set(repoOwnedSkillEntries[skillName] ?? []);
+  const existing = (await pathExists(target)) ? await readdir(target) : [];
+
+  for (const entry of existing) {
+    if (excluded.has(entry)) continue;
+    await rm(path.join(target, entry), { recursive: true, force: true });
+  }
+  for (const entry of await readdir(source, { withFileTypes: true })) {
+    if (excluded.has(entry.name)) continue;
+    await cp(path.join(source, entry.name), path.join(target, entry.name), {
+      recursive: true,
+      dereference: true,
+      force: true,
+      filter: (item) => !['.git', 'node_modules'].includes(path.basename(item)),
+    });
+  }
+}
+
+async function refreshSkillSnapshot(ompHome, skillManifestPath, skillManifest) {
+  const liveSkillRoot = path.join(ompHome, 'skills');
+  const repoSkillRoot = path.join(repoRoot, 'skills');
+  const liveSkills = (await readdir(liveSkillRoot, { withFileTypes: true }))
+    .filter((entry) => entry.isDirectory() || entry.isSymbolicLink())
+    .map((entry) => entry.name);
+  const snapshotSkills = normalizeSkillSnapshot(liveSkills);
+
+  for (const entry of await readdir(repoSkillRoot, { withFileTypes: true })) {
+    if (entry.isDirectory() && !snapshotSkills.includes(entry.name)) {
+      await rm(path.join(repoSkillRoot, entry.name), { recursive: true, force: true });
+    }
+  }
+  for (const skillName of snapshotSkills) {
+    await syncSkillTree(skillName, path.join(liveSkillRoot, skillName), path.join(repoSkillRoot, skillName));
   }
 
-  const npm = commandName('npm');
-  const installedPackages = JSON.parse(
-    run(npm, ['--prefix', path.join(options.piHome, 'npm'), 'list', '--depth=0', '--json'], {
-      capture: true,
-    }),
-  );
-  await refreshPinnedVersions(
-    path.join(manifestRoot, 'pi-packages.json'),
-    installedPackages,
-    'Pinned Pi package',
-  );
+  skillManifest.skills = snapshotSkills;
+  await writeJson(skillManifestPath, skillManifest);
+}
 
-  const globalPackages = JSON.parse(
-    run(npm, ['list', '--global', '--depth=0', '--json'], { capture: true }),
-  );
-  await refreshPinnedVersions(path.join(manifestRoot, 'pi.json'), globalPackages, 'Configured Pi package');
+async function main() {
+  const options = parseCommonArgs(process.argv.slice(2));
+  if (options.dryRun || options.skipOmp || options.skipSkills) {
+    throw new Error('export accepts only --omp-home');
+  }
 
-  const skillManifestPath = path.join(manifestRoot, 'skills.json');
-  const skillManifest = await readJson(skillManifestPath);
-  await refreshSkillSnapshot(options.piHome, skillManifestPath, skillManifest);
+  await exportSettings(options.ompHome);
+  await exportMcp(options.ompHome);
+  await exportExtensions(options.ompHome);
+  await exportAgents(options.ompHome);
+  await refreshPinnedVersion();
+
+  const skillManifestPath = path.join(repoRoot, 'manifests', 'skills.json');
+  await refreshSkillSnapshot(options.ompHome, skillManifestPath, await readJson(skillManifestPath));
 
   await verifyRepository();
-  console.log('MeowPi configuration and complete skill snapshot refreshed. Review git diff.');
+  console.log('MeowPi OMP configuration and complete skill snapshot refreshed. Review git diff.');
 }
 
 runMain(main);

@@ -14,4 +14,4 @@ assert.deepEqual(snapshot, [
   'z-live',
 ]);
 
-console.log('PASS: all live Pi skills form the baseline snapshot');
+console.log('PASS: all live OMP skills form the baseline snapshot');

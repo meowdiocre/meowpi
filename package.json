@@ -3,15 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Portable Pi configuration and shared agent skills for Pi, Codex, Claude Code, and OpenCode",
+  "description": "Portable Oh My Pi configuration, model catalog, and shared agent skills",
   "engines": {
-    "node": ">=22.19.0"
+    "node": ">=22.19.0",
+    "bun": ">=1.3.14"
   },
   "scripts": {
     "bootstrap": "node scripts/bootstrap.mjs",
     "export": "node scripts/export.mjs",
     "review-docs": "node skills/style-review/scripts/audit.mjs",
     "verify": "node scripts/verify.mjs",
-    "test": "node scripts/verify.mjs && node scripts/tests/pi-web.mjs && node scripts/tests/export-skills.mjs && node scripts/tests/reverse-bundle.mjs && node skills/style-review/tests/run.mjs && node scripts/bootstrap.mjs --dry-run"
+    "test": "node scripts/verify.mjs && node scripts/tests/export-skills.mjs && node scripts/tests/reverse-bundle.mjs && node skills/style-review/tests/run.mjs && node scripts/bootstrap.mjs --dry-run"
   }
 }

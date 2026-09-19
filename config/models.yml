@@ -1,0 +1,26 @@
+# MeowPi: shared OMP provider definitions, installed to <OMP_HOME>/models.yml.
+#
+# Credentials are read from the environment, never committed. OMP treats an
+# apiKey value as an environment variable name first and only falls back to the
+# literal string, so a missing variable degrades to an auth failure instead of
+# writing a secret into the repository.
+#
+# inferhub is not in OMP's bundled catalog, so it is declared here. Models are
+# discovered from the endpoint rather than pinned, which keeps the shared catalog
+# in sync with what the gateway actually serves.
+providers:
+  inferhub:
+    baseUrl: https://api.inferhub.dev/v1
+    api: openai-completions
+    apiKey: INFERHUB_API_KEY
+    authHeader: true
+    discovery:
+      type: openai-models-list
+    compat:
+      supportsStore: false
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+      supportsUsageInStreaming: false
+      supportsStrictMode: false
+      supportsLongPromptCacheRetention: false
+      maxTokensField: max_tokens
