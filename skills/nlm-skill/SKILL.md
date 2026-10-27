@@ -1,7 +1,7 @@
 ---
 name: nlm-skill
 description: "Expert guide for the NotebookLM CLI (`nlm`) and MCP server - interfaces for Google NotebookLM. Use this skill when users want to interact with NotebookLM programmatically, including: creating/managing notebooks, adding sources (URLs, YouTube, text, Google Drive), generating content (podcasts, reports, quizzes, flashcards, mind maps, slides, infographics, videos, data tables), conducting research, chatting with sources, or automating NotebookLM workflows. Triggers on mentions of \"nlm\", \"notebooklm\", \"notebook lm\", \"podcast generation\", \"audio overview\", \"refactor document\", \"critique draft\", or any NotebookLM-related automation task."
-version: "0.8.7"
+version: "0.15.8"
 ---
 
 # NotebookLM CLI & MCP Expert
@@ -10,30 +10,18 @@ This skill provides comprehensive guidance for using NotebookLM via both the `nl
 
 ## Tool Detection (CRITICAL - Read First!)
 
-**ALWAYS check which tools are available before proceeding:**
+Inspect the tools advertised by the current host; namespace punctuation and the
+tool inventory vary between clients and releases. Prefer the mounted NotebookLM
+MCP tools when available. Use the `nlm` CLI for authentication, installation,
+diagnostics, or a capability absent from that MCP surface. Do not ask the user to
+choose a transport when either one satisfies the request.
 
-1. **Check for MCP tools**: Look for tools starting with `mcp__notebooklm-mcp__*` or `mcp_notebooklm_*`
-2. **If BOTH MCP tools AND CLI are available**: **ASK the user** which they prefer to use before proceeding
-3. **If only MCP tools are available**: Use them directly (refer to tool docstrings for parameters)
-4. **If only CLI is available**: Use `nlm` CLI commands via Bash
-
-**Decision Logic:**
-```
-has_mcp_tools = check_available_tools()  # Look for mcp__notebooklm-mcp__* or mcp_notebooklm_*
-has_cli = check_bash_available()  # Can run nlm commands
-
-if has_mcp_tools and has_cli:
-    # ASK USER: "I can use either MCP tools or the nlm CLI. Which do you prefer?"
-    user_preference = ask_user()
-else if has_mcp_tools:
-    # Use MCP tools directly
-    mcp__notebooklm-mcp__notebook_list()
-else:
-    # Use CLI via Bash
-    bash("nlm notebook list")
-```
-
-This skill documents BOTH approaches. Choose the appropriate one based on tool availability and **user preference**.
+If neither surface is available, report the missing installation rather than
+inventing a tool name. The CLI and MCP executable are installed together by
+`uv tool install notebooklm-mcp-cli`; updates use
+`uv tool upgrade notebooklm-mcp-cli`. Run `nlm --version` to check the package
+version: `notebooklm-mcp --version` is not a supported option. After an update,
+restart the MCP host and verify `initialize` plus `tools/list`.
 
 ## Quick Reference
 
@@ -65,9 +53,9 @@ nlm --version           # Check installed version
 12. **Use `--help` when unsure**: Run `nlm <command> --help` to see available options and flags for any command.
 13. **Studio: fast track by default**: Infer format/style/prompt silently—one compact line, then `studio_create(confirm=True)`. No intake questionnaires. Fast track reduces clarifying questions, not the confirm gate. **Cinematic video is always guided** (quota-limited). Full preview only when vague, high-stakes, cinematic, or user asks. See **[references/studio-prompting-guide.md](references/studio-prompting-guide.md)**.
 
-**Current MCP surface:** 39 tools. Consolidated action tools include `note`,
-`label`, `studio_status`, `batch`, `pipeline`, and `tag`. Consolidated type
-tools include `source_add`, `studio_create`, and `download_artifact`.
+The MCP surface changes between releases. Discover the actual tools and read
+their schemas instead of relying on a fixed count or a remembered namespace.
+Use `nlm <command> --help` when the installed CLI differs from examples below.
 
 ## Workflow Decision Tree
 

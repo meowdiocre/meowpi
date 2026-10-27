@@ -28,12 +28,39 @@ Set `OMP_HOME` to install into a different directory. The default agent director
 | `manifests/omp.json` | the global Bun install |
 | `config/config.yml` | `~/.omp/agent/config.yml` |
 | `config/models.yml` | `~/.omp/agent/models.yml` |
-| `config/mcp.json.template` | `~/.omp/agent/mcp.json` |
+| `config/mcp.json.template` + local override | `~/.omp/agent/mcp.json` |
 | `config/extensions/` | `~/.omp/agent/extensions/` |
 | `config/agents/` | `~/.omp/agent/agents/` |
 | `skills/` | `~/.omp/agent/skills/` |
 
-The setup defines MCP servers for Exa, Context7, DeepWiki, CodeGraph, IDA Pro, NotebookLM, and WinDbg. Four of these servers call a program that you install separately: `codegraph`, `idalib-mcp`, `notebooklm-mcp`, and `mcp-windbg`. Exa needs the `EXA_API_KEY` environment variable.
+Context7 and DeepWiki are enabled by default. Exa, CodeGraph, IDA, NotebookLM, WinDbg, CloakBrowser, and js-reverse remain in the catalog but are disabled until enabled on a host. Bootstrap checks enabled servers' executable and environment prerequisites before replacing configuration.
+
+### Host-specific MCP configuration
+
+Create `<OMP_HOME>/mcp.local.json` on each machine. This file is private and is never exported:
+
+```json
+{
+  "mcpServers": {
+    "codegraph": { "enabled": true },
+    "ida": { "enabled": true },
+    "notebooklm-mcp": { "enabled": true }
+  }
+}
+```
+
+Overrides merge objects recursively; arrays such as `args` replace the catalog value. A local entry may define another server, override an executable path, or disable a shared server. OMP's native `disabledServers` denylist takes precedence over `enabledServers`.
+
+Install optional programs separately. IDA uses the official `uvx ida-mcp` launcher and needs an installed, licensed IDA. NotebookLM uses `uv tool install notebooklm-mcp-cli`; update it with `uv tool upgrade notebooklm-mcp-cli`. WinDbg requires Windows. Exa needs `EXA_API_KEY`; js-reverse needs `MEOWPI_JS_REVERSE_ROOT`, unless its local `args` supply the project root. Put secrets in the host environment or `<OMP_HOME>/.env`, never in this repository.
+
+Then apply and check:
+
+```sh
+npm run bootstrap
+npm run doctor
+```
+
+Doctor checks the OMP version selected by PATH and enabled MCP prerequisites. It does not contact servers or invoke a model. After a server update, restart OMP and verify that its MCP tools load. An older Tern-managed `omp` can shadow the Bun installation; doctor reports the selected executable rather than claiming the new version is active.
 
 ## Skills
 
@@ -66,8 +93,16 @@ npm test
 git diff
 ```
 
-Before you commit the change, review the diff. Edit a skill in `skills/` only, because `npm run bootstrap` copies that directory to the installed tree.
+Before committing, review the diff. Export refreshes the installed configuration, model catalog, agents, skill snapshot, and OMP version pin. It deliberately leaves the repository's MCP catalog unchanged: a server disabled or absent on one machine must not disappear from every other machine. Edit `config/mcp.json.template` to change the shared catalog. Review/export before editing repository skills, so a stale installed copy cannot overwrite an intended edit.
 
-`npm run export` removes machine-local keys, so `config/config.yml` stays portable. On Windows, `npm run bootstrap` adds the Git Bash `shellPath` again.
+`npm run export` removes machine-local keys from `config/config.yml`. On Windows, bootstrap adds the Git Bash `shellPath` again. Local MCP overrides, authentication, `.env`, sessions, runtime databases, and managed operational notes are not portable repository content.
 
-On each other machine, pull the changes. Then run `npm run bootstrap`.
+On another machine:
+
+```sh
+git pull --ff-only
+npm run bootstrap
+npm run doctor
+```
+
+The current OMP pin is 18.13.1. Update that pin deliberately on the maintainer machine and test before pushing; do not replace it with an arbitrary older host's version. Authenticate providers locally on each new device.

@@ -1,11 +1,9 @@
 import { cp, mkdir, readdir, rm } from 'node:fs/promises';
 import path from 'node:path';
 import {
-  collapseTokens,
   normalizeSkillSnapshot,
   parseCommonArgs,
   pathExists,
-  portablePathTokens,
   readJson,
   readText,
   repoRoot,
@@ -24,19 +22,6 @@ const sensitiveKeyPattern =
   /^(?:api[-_]?key|access[-_]?token|refresh[-_]?token|token|secret|password|credential|authorization)$/i;
 const environmentReferencePattern = /^(?:[A-Z][A-Z0-9_]*|\$\{[A-Z0-9_]+\}|\{\{NPX\}\})$/;
 
-function assertNoSensitiveKeys(value, jsonPath = '$') {
-  if (Array.isArray(value)) {
-    value.forEach((item, index) => assertNoSensitiveKeys(item, `${jsonPath}[${index}]`));
-    return;
-  }
-  if (!value || typeof value !== 'object') return;
-  for (const [key, item] of Object.entries(value)) {
-    if (sensitiveKeyPattern.test(key)) {
-      throw new Error(`Refusing to export credential-shaped property: ${jsonPath}.${key}`);
-    }
-    assertNoSensitiveKeys(item, `${jsonPath}.${key}`);
-  }
-}
 
 /**
  * Reject literal credentials in YAML while allowing environment indirection.
@@ -77,19 +62,9 @@ async function exportSettings(ompHome) {
   console.log(`exported: ${path.join(configRoot, 'models.yml')}`);
 }
 
-async function exportMcp(ompHome) {
-  const liveMcp = await readJson(path.join(ompHome, 'mcp.json'));
-  assertNoSensitiveKeys(liveMcp);
-
-  const portableMcp = collapseTokens(
-    { mcpServers: { ...(liveMcp.mcpServers || {}) } },
-    portablePathTokens(),
-  );
-  for (const server of Object.values(portableMcp.mcpServers)) {
-    if (server.command === 'npx' || server.command === 'npx.cmd') server.command = '{{NPX}}';
-  }
-  await writeJson(path.join(repoRoot, 'config', 'mcp.json.template'), portableMcp);
-  console.log('exported: config/mcp.json.template');
+function exportMcp() {
+  console.log('kept: config/mcp.json.template (shared catalog; edit it in the repository)');
+  console.log('not exported: host-rendered mcp.json and private mcp.local.json');
 }
 
 async function exportExtensions(ompHome) {
@@ -188,7 +163,7 @@ async function main() {
   }
 
   await exportSettings(options.ompHome);
-  await exportMcp(options.ompHome);
+  exportMcp();
   await exportExtensions(options.ompHome);
   await exportAgents(options.ompHome);
   await refreshPinnedVersion();

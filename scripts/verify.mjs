@@ -34,13 +34,16 @@ const requiredFiles = [
   'scripts/export.mjs',
   'scripts/lib.mjs',
   'scripts/verify.mjs',
+  'scripts/mcp.mjs',
+  'scripts/doctor.mjs',
+  'scripts/tests/mcp.mjs',
   'scripts/tests/export-skills.mjs',
   'scripts/tests/reverse-bundle.mjs',
 ];
 
 const yamlFiles = ['config/config.yml', 'config/models.yml'];
 const portableFiles = [...yamlFiles, 'config/mcp.json.template'];
-const forbiddenFilePattern = /(^|\/)(auth\.json|\.env(?:\..*)?|[^/]+\.(?:pem|key))$/i;
+const forbiddenFilePattern = /(^|\/)(auth\.json|mcp\.local\.json|\.env(?:\..*)?|[^/]+\.(?:pem|key))$/i;
 const secretPatterns = [
   /\b(?:sk|ghp|github_pat|xox[baprs])[-_][A-Za-z0-9_-]{16,}/i,
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/,

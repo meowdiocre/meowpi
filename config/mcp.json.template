@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "exa": {
+      "enabled": false,
       "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,web_search_advanced_exa",
       "headers": {
         "x-api-key": "${EXA_API_KEY}"
@@ -13,6 +14,7 @@
       "url": "https://mcp.deepwiki.com/mcp"
     },
     "codegraph": {
+      "enabled": false,
       "command": "codegraph",
       "args": [
         "serve",
@@ -20,17 +22,21 @@
       ]
     },
     "ida": {
-      "command": "idalib-mcp",
+      "enabled": false,
+      "command": "uvx",
       "args": [
-        "--stdio",
-        "--max-workers",
-        "2"
+        "--exclude-newer=1s",
+        "ida-mcp",
+        "stdio",
+        "--agent=oh-my-pi"
       ]
     },
     "notebooklm-mcp": {
+      "enabled": false,
       "command": "notebooklm-mcp"
     },
     "windbg": {
+      "enabled": false,
       "command": "mcp-windbg",
       "args": [
         "--transport",
@@ -44,6 +50,40 @@
         "--timeout",
         "120"
       ]
+    },
+    "cloakbrowser": {
+      "enabled": false,
+      "command": "cloakbrowser-mcp",
+      "args": [
+        "--humanize",
+        "--geoip-proxy-match"
+      ],
+      "env": {
+        "CLOAKBROWSER_LICENSE_KEY": "${CLOAKBROWSER_LICENSE_KEY:-}",
+        "CLOAKBROWSER_RELEASE_CHANNEL": "preview",
+        "IPROYAL_USER": "${IPROYAL_USER:-}",
+        "IPROYAL_PASS": "${IPROYAL_PASS:-}",
+        "CLOAK_REGION": "${CLOAK_REGION:-}",
+        "PLAYWRIGHT_MCP_HEADLESS": "false",
+        "CLOAK_PLAYWRIGHT_MCP_CONSOLE_FALLBACK": "false",
+        "CLOAK_PLAYWRIGHT_MCP_STEALTH_ARGS": "false",
+        "CLOAK_PLAYWRIGHT_MCP_EXTRA_ARGS": "--no-sandbox --fingerprint-noise=false"
+      }
+    },
+    "js-reverse": {
+      "enabled": false,
+      "command": "js-reverse-mcp",
+      "args": [
+        "--cloak",
+        "--allowedRoots",
+        "${MEOWPI_JS_REVERSE_ROOT}"
+      ],
+      "env": {
+        "CLOAKBROWSER_LICENSE_KEY": "${CLOAKBROWSER_LICENSE_KEY:-}",
+        "IPROYAL_USER": "${IPROYAL_USER:-}",
+        "IPROYAL_PASS": "${IPROYAL_PASS:-}",
+        "CLOAK_PLAYWRIGHT_MCP_STEALTH_ARGS": "false"
+      }
     }
   }
 }

@@ -11,6 +11,8 @@ Resolve a concrete uncertainty with the smallest reliable evidence set. Do not r
 
 Inspect repository instructions, manifests, lockfiles, vendored sources, callers, and tests first. Record the exact dependency version or target standard when it affects the answer. Use repository-native search or CodeGraph for checked-out code; external tools are not substitutes for local inspection.
 
+For a MeowPi-managed OMP installation, keep the shared MCP catalog in the repository and host-specific enablement, paths, and project roots in `<OMP_HOME>/mcp.local.json`. From the checkout, `npm run doctor` checks the selected OMP version and enabled MCP prerequisites; it does not establish a transport connection. After a launcher change, verify MCP `initialize` and `tools/list`, then exercise the relevant read-only tool. Do not export credentials, runtime databases, or incident-specific managed skills into the portable baseline.
+
 ## Choose the source
 
 - **Context7 MCP**: current, version-specific library or framework documentation. Resolve the library ID, then query the exact API and topic. Reconcile results with the version pinned by the project.

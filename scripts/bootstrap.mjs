@@ -21,6 +21,7 @@ import {
   userHome,
 } from './lib.mjs';
 import { verifyRepository } from './verify.mjs';
+import { inspectMcp, readLocalMcp, renderMcp } from './mcp.mjs';
 
 const minimumBun = [1, 3, 14];
 const gitBashCandidates = [
@@ -67,6 +68,19 @@ async function installOmp(options) {
 
 async function installConfiguration(options, backupRoot) {
   const configRoot = path.join(repoRoot, 'config');
+  const envFile = path.join(options.ompHome, '.env');
+  if (await pathExists(envFile)) process.loadEnvFile(envFile);
+  const renderedMcp = renderMcp(
+    await readJson(path.join(configRoot, 'mcp.json.template')),
+    await readLocalMcp(options.ompHome),
+    { ...portablePathTokens(), NPX: isWindows ? 'npx.cmd' : 'npx' },
+  );
+  const checks = await inspectMcp(renderedMcp, { cwd: options.ompHome });
+  const failures = checks.filter(({ status }) => status === 'error');
+  if (failures.length) {
+    throw new Error(`MCP prerequisites failed: ${failures.map(({ name, detail }) => `${name}: ${detail}`).join('; ')}`);
+  }
+  for (const { name, status } of checks) console.log(`MCP ${name}: ${status}`);
 
   let settings = await readText(path.join(configRoot, 'config.yml'));
   if (isWindows) {
@@ -90,11 +104,6 @@ async function installConfiguration(options, backupRoot) {
     options.dryRun,
   );
 
-  const mcpTemplate = await readJson(path.join(configRoot, 'mcp.json.template'));
-  const renderedMcp = expandTokens(
-    { mcpServers: mcpTemplate.mcpServers },
-    { ...portablePathTokens(), NPX: isWindows ? 'npx.cmd' : 'npx' },
-  );
   await installText(
     path.join(options.ompHome, 'mcp.json'),
     `${JSON.stringify(renderedMcp, null, 2)}\n`,

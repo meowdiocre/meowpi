@@ -29,6 +29,11 @@ Read [upstream/RULES.md](upstream/RULES.md), then open the selected module's ful
 
 The upstream snapshot is preserved verbatim and checked against `upstream-lock.json`. Keep changes to this portable integration outside `upstream/` so source updates remain reviewable.
 
+## IDA MCP setup
+
+The official Hex-Rays server uses `uvx --exclude-newer=1s ida-mcp stdio --agent=oh-my-pi`, not the obsolete `idalib-mcp` launcher. Check the current [official installation instructions](https://github.com/HexRaysSA/ida-mcp), the host's IDA installation/license, and executable availability before enabling it. Keep an absolute `uvx` path or machine-specific IDA settings in the host's MCP override, not the shared catalog. An IDA installation alone does not install an MCP launcher. Verify initialization and tool discovery without opening or changing a user's database.
+
+
 ## Loading in Oh My Pi
 
 Relative paths in this skill (`references/…`, `scripts/…`) resolve against the skill's own directory. Read them with `skill://reverse-skill-router/<relative-path>`. When a shell command needs a real filesystem path, that directory is `<OMP_HOME>/skills/reverse-skill-router/` — `~/.omp/agent/skills/reverse-skill-router/` by default. Invoking `/skill:reverse-skill-router` also prints the resolved location.
