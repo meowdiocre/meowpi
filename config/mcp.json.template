@@ -13,6 +13,24 @@
     "deepwiki": {
       "url": "https://mcp.deepwiki.com/mcp"
     },
+    "mitmproxy": {
+      "enabled": false,
+      "command": "mitmproxy-mcp",
+      "args": [
+        "--dump-file",
+        "/tmp/omp-flows.mitm"
+      ]
+    },
+    "chrome-devtools": {
+      "enabled": false,
+      "command": "chrome-devtools-mcp",
+      "args": [
+        "--headless",
+        "--isolated",
+        "--executablePath",
+        "${CHROME_PATH}"
+      ]
+    },
     "codegraph": {
       "enabled": false,
       "command": "codegraph",

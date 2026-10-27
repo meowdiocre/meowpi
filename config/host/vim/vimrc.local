@@ -1,0 +1,12 @@
+" Adapted from hackerschoice/segfault guest vimrc.local, minus `set paste`
+" (paste mode kills autoindent for normal editing).
+set showcmd
+set showmatch
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+set viminfo=""
+set noswapfile
+set backspace=indent,eol,start
+set encoding=utf-8

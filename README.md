@@ -32,8 +32,16 @@ Set `OMP_HOME` to install into a different directory. The default agent director
 | `config/extensions/` | `~/.omp/agent/extensions/` |
 | `config/agents/` | `~/.omp/agent/agents/` |
 | `skills/` | `~/.omp/agent/skills/` |
+| `config/host/zsh/` | `~/.zshrc`, `~/.p10k.zsh` |
+| `config/host/profile.d/` | `/etc/profile.d/10-redteam.sh` |
+| `config/host/ssh/` | `/etc/ssh/ssh_config.d/99-redteam.conf` |
+| `config/host/vim/` | `/etc/vim/vimrc.local` |
+| `config/host/tern/` | `~/.config/tern/settings.json` (pane shell) |
+| `scripts/install-redteam-toolchain.sh` | installs the OS toolchain in stages |
+| `scripts/install-host-config.sh` | installs the host files above, with backups |
+| `scripts/redteam-check.sh` | `/opt/redteam-check.sh` and `/usr/local/bin/redteam-check` |
 
-Context7 and DeepWiki are enabled by default. Exa, CodeGraph, IDA, NotebookLM, WinDbg, CloakBrowser, and js-reverse remain in the catalog but are disabled until enabled on a host. Bootstrap checks enabled servers' executable and environment prerequisites before replacing configuration.
+Context7 and DeepWiki are enabled by default. Exa, CodeGraph, IDA, NotebookLM, WinDbg, CloakBrowser, and js-reverse remain in the catalog but are disabled until enabled on a host. The catalog also carries `mitmproxy` (traffic capture, replay, OpenAPI export) and `chrome-devtools` (Chrome DevTools Protocol), both disabled by default because they need a local binary and, for DevTools, a Chrome build; enable them per host in `mcp.local.json`. Bootstrap checks enabled servers' executable and environment prerequisites before replacing configuration.
 
 ### Host-specific MCP configuration
 
@@ -61,6 +69,21 @@ npm run doctor
 ```
 
 Doctor checks the OMP version selected by PATH and enabled MCP prerequisites. It does not contact servers or invoke a model. After a server update, restart OMP and verify that its MCP tools load. An older Tern-managed `omp` can shadow the Bun installation; doctor reports the selected executable rather than claiming the new version is active.
+
+## Host toolchain
+
+`skills/` describes the tools; two scripts install them. Both are idempotent and non-Windows.
+
+```sh
+bash scripts/install-redteam-toolchain.sh        # all stages
+bash scripts/install-redteam-toolchain.sh base go  # selected stages
+bash scripts/install-host-config.sh              # shell, ssh, vim, tern, checker
+redteam-check --full                             # ok=N missing=0
+```
+
+Stages: `base` (apt), `go` (1.26 for nuclei plus 1.27, all Go tools, jsluice with cgo), `pipx` (impacket, netexec from git, certipy, garak, mitmproxy, …), `release` (feroxbuster, sliver, GhostPack, PEASS, PrivescCheck), `wordlists` (SecLists links plus rockyou), `metasploit` (omnibus plus the Postgres role and `~/.msf4/database.yml`), `node` (Node 24, webcrack, chrome-devtools-mcp, Chrome for Testing), `mitm`, `shell` (PATH, `/etc/zsh/zshenv`, login shell).
+
+The tool skills are routed by `skills/toolchain-router/SKILL.md`; the inventory, versions, layout and known version traps live in `skills/redteam-toolchain/SKILL.md`. Two cross-tool workflows are described end to end: `skills/web-traffic-js-reversing/SKILL.md` and `skills/ai-security-testing/SKILL.md`.
 
 ## Skills
 

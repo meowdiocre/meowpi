@@ -16,6 +16,8 @@ backups/
 node_modules/
 *.log
 *.tmp
+*.mitm
+**/mitm_mcp_traffic.db
 
 # Editors and operating systems
 .idea/
