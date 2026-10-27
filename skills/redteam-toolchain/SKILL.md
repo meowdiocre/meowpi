@@ -62,6 +62,7 @@ Order is fixed: apt first (provides compilers and libraries), then Go, then pipx
 | `hashcat` ships without an OpenCL loader | `ATTENTION! No OpenCL, Metal, HIP or CUDA installation found.` | `apt install ocl-icd-libopencl1 pocl-opencl-icd` (≈44 MH/s MD5 on this 2 vCPU box) |
 | Chrome for Testing lacks 11 shared libraries | `error while loading shared libraries: libatk-1.0.so.0` | `apt install libatk1.0-0t64 libatk-bridge2.0-0t64 libatspi2.0-0t64 libcups2t64 libasound2t64 libgbm1 libpango-1.0-0 libXcomposite1 libXdamage1 libXfixes3 libXrandr2` |
 | `enum4linux-ng` exits before parsing arguments | `tools are missing: nmblookup, net` | `apt install samba-common-bin` |
+| `/usr/bin/jq` is a jaq 3.1.1 build on this image | `jq --version` prints `jaq`, esoteric builtins differ | real jq 1.8.2 installed at `/opt/tools/jq`, which wins on PATH; use it in scripts |
 | jumbo finds no `john.conf` when invoked through a symlink | `fopen: /usr/local/bin/john.conf` | invoke the wrapper script, or set `JOHN=/opt/john/jumbo` |
 
 ## Shell and host config

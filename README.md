@@ -85,6 +85,26 @@ Stages: `base` (apt), `go` (1.26 for nuclei plus 1.27, all Go tools, jsluice wit
 
 The tool skills are routed by `skills/toolchain-router/SKILL.md`; the inventory, versions, layout and known version traps live in `skills/redteam-toolchain/SKILL.md`. Two cross-tool workflows are described end to end: `skills/web-traffic-js-reversing/SKILL.md` and `skills/ai-security-testing/SKILL.md`.
 
+## Task agents
+
+`config/agents/` installs into `~/.omp/agent/agents/`. Dispatch one by naming it in a `task` call; each runs with its own system prompt, tool allowlist and model role.
+
+| Agent | Use it for | Tools | Model |
+| --- | --- | --- | --- |
+| `consultant` | bounded blocker, second opinion, discriminating check | read-only | `@slow` |
+| `ad-specialist` | AD attack path from credentials to objective | bash, read, grep, glob | `@task` |
+| `web-reverser` | traffic capture, endpoint and auth mapping, bundle reversing | bash, read, grep, glob | `@task` |
+| `recon-specialist` | scope to verified host and service inventory | bash, read, grep, glob | `@task` |
+| `exploit-dev` | deterministic proof of concept for a suspected bug | bash, read, write, grep, glob | `@task` |
+| `opsec-reviewer` | pre-flight review of a noisy or irreversible plan | read-only | `@slow` |
+| `pivot-engineer` | tunnelling, routing, multi-hop pivots, teardown | bash, read, grep, glob | `@task` |
+| `credential-operator` | spray, roast, crack, credential graph | bash, read, grep, glob | `@task` |
+| `c2-operator` | sliver and Metasploit setup, tasking, cleanup | bash, read, grep, glob | `@task` |
+
+Read-only agents (`consultant`, `opsec-reviewer`) cannot change state. `exploit-dev` is the only agent with `write`. `@slow` and `@task` resolve through `modelRoles`; without a `modelRoles.slow`, `@slow` falls back to the session model.
+
+Agents that name skills in `autoload-skills` receive those skill bodies before their first prompt, so an `ad-specialist` starts with the router plus the netexec/impacket/certipy procedures already loaded.
+
 ## Skills
 
 OMP sends the `name` and the `description` of each skill to the model. The model reads the body on demand with `skill://<name>`. A companion file is at `skill://<name>/<path>`, and a skill script runs from `<OMP_HOME>/skills/<name>/`. Each skill is also a command: `/skill:<name>`.

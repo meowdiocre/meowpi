@@ -2,7 +2,7 @@
 # Tool inventory / smoke test for the red-team workstation.
 # Usage: redteam-check [--full]      (--full also runs <tool> --version, slower)
 set -u
-export PATH="/opt/segfault/bin:/root/.local/bin:/opt/tools:/usr/local/go/bin:/opt/repos/Responder:$PATH"
+export PATH="/opt/node/bin:/opt/segfault/bin:/root/.local/bin:/opt/tools:/usr/local/go/bin:/opt/repos/Responder:$PATH"
 FULL=0; [[ ${1:-} == --full ]] && FULL=1
 ok=0; bad=0; miss=()
 
@@ -89,6 +89,7 @@ chk pivot sshuttle --version
 chk pivot nmap --version
 chk pivot masscan --version
 chk pivot sliver-server version
+chk pivot sliver-client
 chk pivot msfconsole --version
 echo "== re / misc =="
 chk re    gdb --version

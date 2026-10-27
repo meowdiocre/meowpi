@@ -59,6 +59,22 @@ One task, one tool skill. Read this table, open the matching skill, follow it. D
 5. **Record the command, timestamp and raw output** for every step that changes a target's state.
 6. **Do not chain tools the skill did not sanction.** If two skills disagree, the more specific one wins; if neither covers the case, stop and ask.
 
+## Specialist agents
+
+These are `task` agents from `~/.omp/agent/agents/`, not skills. Dispatch one when the work should run with its own tool allowlist and prompt:
+
+| Delegate when… | Agent |
+| --- | --- |
+| the objective is an AD path, not a single command | `ad-specialist` |
+| the target is a SPA, API capture, or obfuscated bundle | `web-reverser` |
+| the surface is unmapped and scope is fixed | `recon-specialist` |
+| a suspected bug needs a deterministic repro | `exploit-dev` |
+| a plan is noisy, irreversible, or near the scope edge | `opsec-reviewer` |
+| the target is only reachable from a foothold | `pivot-engineer` |
+| hashes or passwords must turn into access | `credential-operator` |
+| an implant or channel is the objective, not a tunnel | `c2-operator` |
+| the blocker is conceptual and no tool fixes it | `consultant` |
+
 ## Ambiguous cases
 
 - **"Get domain admin"** — not a tool. Route to [bloodhound-python](../bloodhound-python/SKILL.md) for the map, then the tool the path needs (certipy, impacket, netexec).

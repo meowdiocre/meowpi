@@ -5,7 +5,7 @@ description: "Drive the Sliver C2 server console to build implants, run mTLS/HTT
 
 # Sliver
 
-Sliver is a Bishop Fox C2 framework shipped as one compiled server binary. The server owns the database, the certificate authority, the implant builder and an interactive console; operators either sit at that console or connect over multiplayer gRPC with an operator config. On this host the binary is `/opt/tools/sliver-server` (v1.7.9, linux/amd64); there is no `sliver-server` on `PATH` and no `sliver-client`.
+Sliver is a Bishop Fox C2 framework shipped as one compiled server binary. The server owns the database, the certificate authority, the implant builder and an interactive console; operators either sit at that console or connect over multiplayer gRPC with an operator config. On this host the binaries are `/opt/tools/sliver-server` and `/opt/tools/sliver-client` (v1.7.9, linux/amd64); neither is on `PATH`, so call them by absolute path or add `/opt/tools`.
 
 Use it only against hosts you own or are explicitly authorized to test. Everything the console does is written to `~/.sliver/sliver.db` and to the operator log.
 
@@ -31,7 +31,7 @@ Single-player means the console you launched is the only operator. Multiplayer m
 - `/opt/tools/sliver-server version` prints `v1.7.9`. Always call it by full path or add `/opt/tools` to `PATH`.
 - First start is not interactive: it prints the GPL banner, then `Unpacking assets ...`, and spends roughly 30 seconds writing `~/.sliver` (Go toolchain, zig, `sliver.db`, `configs`, `traffic-encoders`). Do not kill it before the console prompt appears.
 - Generating implants needs that unpacked toolchain and disk space; `generate info` reports the compiler the server will use.
-- `sliver-client` is not installed here, so an operator config produced by `new-operator` cannot be used on this box yet. Work from the local server console, or install the client elsewhere.
+- `sliver-client` is installed at `/opt/tools/sliver-client`. It needs an operator config: `new-operator --name op --lhost <ip> --save ./op.cfg` in the server console, then `sliver-client --config ./op.cfg` (or drop the file in `~/.sliver-client/configs/`).
 - Lab hosts must be able to reach the listener address you pass to `generate`. Localhost callbacks fail from a VM.
 
 ## Core invocations
@@ -156,7 +156,7 @@ printf 'new-operator --name op2 --lhost 10.0.0.5 --lport 31337 --permissions all
 | `generate` fails immediately | no unpacked compiler, or wrong `--os/--arch` pair | run `generate info`, then `unpack` |
 | Implant runs but never calls back | callback address unreachable from target, or listener not in `jobs` | `jobs`, then test the port from the target subnet |
 | New session never appears | implant built for a different arch or blocked at egress | `implants -o <os>`, check egress filtering |
-| Operator config rejected | no client binary, or permissions too narrow | install `sliver-client`; `new-operator -P all` for full access |
+| Operator config rejected | config path wrong, or file permissions too narrow | `sliver-client --config /abs/path.cfg`; `new-operator -P all` for full access |
 | `socks5` connects but traffic dies | session dropped or proxy id stale | `sessions`, `socks5 stop -i <id>`, restart |
 
 ## Verification

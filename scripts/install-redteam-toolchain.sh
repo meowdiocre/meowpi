@@ -125,6 +125,8 @@ if want release; then
     && tar -xzf /tmp/fx.tgz -C /opt/tools && chmod +x /opt/tools/feroxbuster && rm -f /tmp/fx.tgz
   curl -fsSL -o /opt/tools/sliver-server https://github.com/BishopFox/sliver/releases/latest/download/sliver-server_linux-amd64 \
     && chmod +x /opt/tools/sliver-server
+  curl -fsSL -o /opt/tools/sliver-client https://github.com/BishopFox/sliver/releases/latest/download/sliver-client_linux-amd64 \
+    && chmod +x /opt/tools/sliver-client
   for f in Rubeus.exe Certify.exe Seatbelt.exe; do
     curl -fsSL -o "/opt/windows-tools/$f" "https://github.com/r3motecontrol/Ghostpack-CompiledBinaries/raw/master/$f" || log "warn: $f"
   done
