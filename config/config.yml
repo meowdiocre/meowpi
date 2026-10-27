@@ -22,3 +22,10 @@ skills:
   enableClaudeProject: false
   enableAgentsUser: false
   enableAgentsProject: false
+# Host every interactive session on the OMP collab relay as it starts, so a
+# running session can be watched live from any browser, phone included. The
+# registry hands out view-only links; retrieve one with:
+#   omp collab list
+#   omp collab link <pid> --view
+collab:
+  autoStart: view
